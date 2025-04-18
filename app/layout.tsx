@@ -9,8 +9,7 @@ const inter = Inter({ subsets: ["latin"], variable: "--font-sans" })
 export const metadata: Metadata = {
   title: "Iranopedia Farsi Academy",
   description: "Learn Farsi. Reconnect with Your Roots.",
-  viewport: "width=device-width, initial-scale=1, maximum-scale=1",
-    generator: 'v0.dev'
+  viewport: "width=device-width, initial-scale=1, maximum-scale=1"
 }
 
 export default function RootLayout({
@@ -19,9 +18,14 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
-        <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
+        <ThemeProvider 
+          attribute="class" 
+          defaultTheme="light" 
+          enableSystem={false} 
+          disableTransitionOnChange
+        >
           {children}
         </ThemeProvider>
       </body>
