@@ -7,6 +7,8 @@ import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { ChevronRight } from "lucide-react"
+import { motion, AnimatePresence } from "framer-motion"
+import { CheckCircle2, Sparkles } from "lucide-react"
 
 export default function HomePage() {
   const [quizAnswer, setQuizAnswer] = useState<string | null>(null)
@@ -37,8 +39,15 @@ export default function HomePage() {
 
   // Waitlist Section
   const [email, setEmail] = useState("")
-  const [isSubscribed, setIsSubscribed] = useState(false)
   const [error, setError] = useState("")
+  const [isSubscribed, setIsSubscribed] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('isSubscribed') === 'true'
+    }
+    return false
+  })
+  const [waitlistCount, setWaitlistCount] = useState(0)
+  const [isLoading, setIsLoading] = useState(false)
 
   // Animate progress bar on page load
   useEffect(() => {
@@ -98,6 +107,7 @@ export default function HomePage() {
   const handleWaitlistSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError("")
+    setIsLoading(true)
 
     try {
       const response = await fetch("/api/waitlist", {
@@ -108,14 +118,31 @@ export default function HomePage() {
         body: JSON.stringify({ email }),
       })
 
-      if (!response.ok) {
-        throw new Error("Failed to subscribe")
-      }
+      // Check if the response is JSON
+      const contentType = response.headers.get("content-type")
+      if (contentType && contentType.includes("application/json")) {
+        const data = await response.json()
+        if (!response.ok) {
+          throw new Error(data.error || 'Failed to subscribe')
+        }
+        setIsSubscribed(true)
+        localStorage.setItem('isSubscribed', 'true')
+        setShowConfetti(true)
+        setWaitlistCount(prev => prev + 1)
+        setEmail("")
 
-      setIsSubscribed(true)
-      setEmail("")
+        // Hide confetti after 3 seconds
+        setTimeout(() => setShowConfetti(false), 3000)
+      } else {
+        // If not JSON, get the text and throw an error
+        const text = await response.text()
+        throw new Error('Server error: ' + text)
+      }
     } catch (err) {
-      setError("Failed to subscribe. Please try again.")
+      console.error('Waitlist submission error:', err)
+      setError(err instanceof Error ? err.message : 'Failed to subscribe. Please try again.')
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -149,6 +176,7 @@ export default function HomePage() {
               size="lg"
               className="bg-accent hover:bg-accent/90 text-white transition-all duration-300 hover:scale-105 hover:shadow-lg rounded-full px-8 py-6 text-lg"
               onClick={() => document.getElementById("lesson-1")?.scrollIntoView({ behavior: "smooth" })}
+              aria-label="Start Lesson 1"
             >
               Start Lesson 1
             </Button>
@@ -162,6 +190,13 @@ export default function HomePage() {
               Over 4,500+ learners have already started learning Persian through Iranopedia
             </h2>
             <p className="text-lg sm:text-xl text-gray-600 mb-6">Iranian culture is everywhere. You belong here.</p>
+            <Button
+              size="lg"
+              className="bg-accent hover:bg-accent/90 text-white transition-all duration-300 hover:scale-105 hover:shadow-lg rounded-full px-8 py-6 text-lg"
+              onClick={scrollToWaitlist}
+            >
+              Click Here for Free Beta Access
+            </Button>
           </div>
         </section>
 
@@ -587,83 +622,148 @@ export default function HomePage() {
       </main>
 
       {/* Waitlist Section */}
-      <section id="waitlist" className="py-10 px-3 sm:px-4 bg-green-50">
-        <div className="max-w-4xl mx-auto">
-          <h3 className="text-xl sm:text-2xl font-medium mb-6 text-primary text-center">Join the Waitlist</h3>
-          {isSubscribed ? (
-            <div className="text-center">
-              <p className="text-green-600 mb-4">Thank you for joining our waitlist! We'll keep you updated.</p>
-              <Button onClick={() => setIsSubscribed(false)} variant="outline">
-                Add Another Email
-              </Button>
-            </div>
-          ) : (
-            <form onSubmit={handleWaitlistSubmit} className="max-w-md mx-auto">
-              <div className="flex flex-col sm:flex-row gap-2">
-                <Input
-                  type="email"
-                  placeholder="Enter your email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                  className="flex-1"
-                />
-                <Button type="submit" className="bg-primary hover:bg-primary/90 text-white">
-                  Join Waitlist
-                </Button>
+      <section id="waitlist" className="py-8 px-3 sm:px-4 bg-green-50 relative overflow-hidden min-h-[200px] flex items-center justify-center">
+        {showConfetti && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="absolute inset-0 pointer-events-none"
+          >
+            <div className="absolute inset-0 bg-primary/5" />
+            <Sparkles className="absolute top-0 left-1/2 -translate-x-1/2 text-primary" size={48} />
+          </motion.div>
+        )}
+        
+        <div className="max-w-4xl mx-auto relative w-full">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+            className="flex flex-col items-center justify-center"
+          >
+            {isSubscribed ? (
+              <div className="text-center">
+                <h3 className="text-2xl sm:text-3xl font-bold text-primary mb-2">You're on the list! 🎉</h3>
+                <p className="text-lg sm:text-xl text-gray-700">
+                  Thanks for joining the waitlist. We'll keep you updated on our progress.
+                </p>
               </div>
-              {error && <p className="text-red-500 mt-2 text-sm">{error}</p>}
-            </form>
-          )}
+            ) : (
+              <>
+                <h3 className="text-2xl sm:text-3xl font-bold mb-4 text-primary text-center">
+                  Join the Beta Waitlist
+                </h3>
+                <p className="text-lg sm:text-xl text-center text-gray-600 mb-6">
+                  Be among the first to experience our Persian language learning platform
+                </p>
+                <form onSubmit={handleWaitlistSubmit} className="w-full max-w-md mx-auto">
+                  <div className="flex flex-col sm:flex-row gap-2">
+                    <Input
+                      type="email"
+                      placeholder="Enter your email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      required
+                      className="flex-1 text-lg"
+                      disabled={isLoading}
+                      aria-label="Email address"
+                      aria-describedby="email-error"
+                    />
+                    <Button 
+                      type="submit" 
+                      className="bg-primary hover:bg-primary/90 text-white text-lg"
+                      disabled={isLoading}
+                      aria-label="Join waitlist"
+                    >
+                      {isLoading ? 'Joining...' : 'Join Waitlist'}
+                    </Button>
+                  </div>
+                  {error && (
+                    <p id="email-error" className="text-red-500 mt-2 text-sm text-center" role="alert">
+                      {error}
+                    </p>
+                  )}
+                </form>
+              </>
+            )}
+          </motion.div>
         </div>
       </section>
 
       {/* Footer with What is Iranopedia section */}
-      <footer className="bg-gradient-to-b from-white to-green-50 pt-12 pb-8 px-4 sm:px-6">
+      <footer className="bg-gradient-to-b from-white to-green-50 pt-8 pb-8 px-3 sm:px-4">
         <div className="max-w-4xl mx-auto">
           {/* What is Iranopedia Card */}
-          <div className="bg-white rounded-xl shadow-sm p-6 sm:p-8 mb-10 text-center mx-auto">
-            <h3 className="text-2xl font-bold text-primary mb-4">What is Iranopedia?</h3>
-            <p className="text-gray-600 text-base leading-relaxed mb-6">
+          <div className="bg-white rounded-xl shadow-sm p-6 mb-8 text-center mx-auto">
+            <h3 className="text-2xl sm:text-3xl font-bold text-primary mb-4">What is Iranopedia?</h3>
+            <p className="text-lg sm:text-xl text-gray-600 mb-6">
               Iranopedia is your modern guide to Persian culture — from food and cities to art, history, and language.
               Built for Iranians and anyone curious to connect with Iran.
             </p>
             <a
               href="https://iranopedia.com"
-              className="inline-flex items-center justify-center bg-primary/10 hover:bg-primary/15 text-primary px-6 py-3 rounded-full text-base font-medium transition-all duration-300 hover:scale-105"
+              className="inline-flex items-center justify-center bg-primary/10 hover:bg-primary/15 text-primary px-6 py-3 rounded-full text-lg font-medium transition-all duration-300 hover:scale-105"
             >
               Visit Iranopedia.com →
             </a>
           </div>
 
           {/* Divider */}
-          <div className="h-px bg-gray-200 max-w-3xl mx-auto mb-8"></div>
+          <div className="h-px bg-gray-200 max-w-3xl mx-auto mb-6"></div>
 
           {/* Copyright and Links */}
           <div className="text-center">
-            <p className="text-gray-500 text-sm mb-6">
+            <p className="text-gray-500 text-sm mb-8">
               © 2025 Iranopedia Farsi Academy — Made with ❤️ for anyone learning Farsi
             </p>
 
             {/* Nav Links */}
-            <nav className="flex flex-wrap justify-center gap-x-8 gap-y-3">
-              <a href="#" className="text-gray-400 hover:text-gray-600 transition-colors text-sm">
+            <nav className="flex flex-wrap justify-center gap-x-8 gap-y-4">
+              <a 
+                href="#waitlist" 
+                onClick={(e) => {
+                  e.preventDefault();
+                  scrollToWaitlist();
+                }}
+                className="text-gray-400 hover:text-gray-600 transition-colors text-sm"
+              >
                 Start Learning
               </a>
-              <a href="#" className="text-gray-400 hover:text-gray-600 transition-colors text-sm">
+              <a 
+                href="#waitlist" 
+                onClick={(e) => {
+                  e.preventDefault();
+                  scrollToWaitlist();
+                }}
+                className="text-gray-400 hover:text-gray-600 transition-colors text-sm"
+              >
                 Learn Phrases
               </a>
-              <a href="#" className="text-gray-400 hover:text-gray-600 transition-colors text-sm">
-                What Is Iranopedia?
+              <a 
+                href="https://iranopedia.com" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-gray-400 hover:text-gray-600 transition-colors text-sm"
+              >
+                Iranopedia
               </a>
-              <a href="#" className="text-gray-400 hover:text-gray-600 transition-colors text-sm">
-                Culture, Not Just Grammar
+              <a 
+                href="https://www.instagram.com/iranopediaofficial/" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-gray-400 hover:text-gray-600 transition-colors text-sm"
+              >
+                Instagram
               </a>
-              <a href="#" className="text-gray-400 hover:text-gray-600 transition-colors text-sm">
-                Support
-              </a>
-              <a href="#" className="text-gray-400 hover:text-gray-600 transition-colors text-sm">
-                Privacy
+              <a 
+                href="https://www.tiktok.com/@iranopedia" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-gray-400 hover:text-gray-600 transition-colors text-sm"
+              >
+                TikTok
               </a>
             </nav>
           </div>
