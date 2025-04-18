@@ -35,6 +35,11 @@ export default function HomePage() {
   const [showConfetti, setShowConfetti] = useState(false)
   const [showIncorrect, setShowIncorrect] = useState(false)
 
+  // Waitlist Section
+  const [email, setEmail] = useState("")
+  const [isSubscribed, setIsSubscribed] = useState(false)
+  const [error, setError] = useState("")
+
   // Animate progress bar on page load
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -87,6 +92,30 @@ export default function HomePage() {
         setShowIncorrect(false)
         setMiniGameAnswer(null)
       }, 800)
+    }
+  }
+
+  const handleWaitlistSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setError("")
+
+    try {
+      const response = await fetch("/api/waitlist", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email }),
+      })
+
+      if (!response.ok) {
+        throw new Error("Failed to subscribe")
+      }
+
+      setIsSubscribed(true)
+      setEmail("")
+    } catch (err) {
+      setError("Failed to subscribe. Please try again.")
     }
   }
 
@@ -559,18 +588,33 @@ export default function HomePage() {
 
       {/* Waitlist Section */}
       <section id="waitlist" className="py-10 px-3 sm:px-4 bg-green-50">
-        <div className="max-w-6xl mx-auto">
-          <div className="bg-white p-6 sm:p-8 rounded-xl shadow-sm max-w-md mx-auto">
-            <h3 className="text-xl sm:text-2xl font-medium mb-6 text-primary text-center">Join the Waitlist</h3>
-            <div className="flex flex-col sm:flex-row gap-3">
-              <Input
-                type="email"
-                placeholder="Your email"
-                className="border-primary/20 focus:border-primary py-6 text-lg"
-              />
-              <Button className="bg-accent hover:bg-accent/90 text-white py-6 text-lg">Join</Button>
+        <div className="max-w-4xl mx-auto">
+          <h3 className="text-xl sm:text-2xl font-medium mb-6 text-primary text-center">Join the Waitlist</h3>
+          {isSubscribed ? (
+            <div className="text-center">
+              <p className="text-green-600 mb-4">Thank you for joining our waitlist! We'll keep you updated.</p>
+              <Button onClick={() => setIsSubscribed(false)} variant="outline">
+                Add Another Email
+              </Button>
             </div>
-          </div>
+          ) : (
+            <form onSubmit={handleWaitlistSubmit} className="max-w-md mx-auto">
+              <div className="flex flex-col sm:flex-row gap-2">
+                <Input
+                  type="email"
+                  placeholder="Enter your email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  className="flex-1"
+                />
+                <Button type="submit" className="bg-primary hover:bg-primary/90 text-white">
+                  Join Waitlist
+                </Button>
+              </div>
+              {error && <p className="text-red-500 mt-2 text-sm">{error}</p>}
+            </form>
+          )}
         </div>
       </section>
 
