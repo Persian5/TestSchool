@@ -40,14 +40,16 @@ export default function HomePage() {
   // Waitlist Section
   const [email, setEmail] = useState("")
   const [error, setError] = useState("")
-  const [isSubscribed, setIsSubscribed] = useState(() => {
-    if (typeof window !== 'undefined') {
-      return localStorage.getItem('isSubscribed') === 'true'
-    }
-    return false
-  })
+  const [isSubscribed, setIsSubscribed] = useState(false)
+  const [isClient, setIsClient] = useState(false)
   const [waitlistCount, setWaitlistCount] = useState(0)
   const [isLoading, setIsLoading] = useState(false)
+
+  useEffect(() => {
+    setIsClient(true)
+    const storedValue = localStorage.getItem('isSubscribed')
+    setIsSubscribed(storedValue === 'true')
+  }, [])
 
   // Animate progress bar on page load
   useEffect(() => {
@@ -146,6 +148,33 @@ export default function HomePage() {
     }
   }
 
+  // Only render the button content after hydration
+  const buttonContent = isClient ? (
+    <Button
+      size="lg"
+      className="bg-accent hover:bg-accent/90 text-white transition-all duration-300 hover:scale-105 hover:shadow-lg rounded-full px-8 py-6 text-lg"
+      aria-label="Preview Lesson 1"
+      onClick={() => {
+        if (isSubscribed) {
+          window.location.href = '/modules';
+        } else {
+          scrollToWaitlist();
+        }
+      }}
+    >
+      Preview Lesson 1
+    </Button>
+  ) : (
+    <Button
+      size="lg"
+      className="bg-accent hover:bg-accent/90 text-white transition-all duration-300 hover:scale-105 hover:shadow-lg rounded-full px-8 py-6 text-lg"
+      aria-label="Preview Lesson 1"
+      disabled
+    >
+      Loading...
+    </Button>
+  );
+
   return (
     <div className="flex min-h-screen flex-col bg-background">
       {/* Navbar */}
@@ -172,14 +201,7 @@ export default function HomePage() {
               Bite-sized lessons, real culture, zero pressure.
             </p>
             <p className="text-sm sm:text-base text-muted-foreground mb-5">Connect with your heritage</p>
-            <Button
-              size="lg"
-              className="bg-accent hover:bg-accent/90 text-white transition-all duration-300 hover:scale-105 hover:shadow-lg rounded-full px-8 py-6 text-lg"
-              onClick={() => document.getElementById("lesson-1")?.scrollIntoView({ behavior: "smooth" })}
-              aria-label="Start Lesson 1"
-            >
-              Start Lesson 1
-            </Button>
+            {buttonContent}
           </div>
         </section>
 
@@ -194,8 +216,9 @@ export default function HomePage() {
               size="lg"
               className="bg-accent hover:bg-accent/90 text-white transition-all duration-300 hover:scale-105 hover:shadow-lg rounded-full px-8 py-6 text-lg"
               onClick={scrollToWaitlist}
+              aria-label="Click Here For Free Beta Access"
             >
-              Click Here for Free Beta Access
+              Click Here For Free Beta Access
             </Button>
           </div>
         </section>
@@ -272,7 +295,7 @@ export default function HomePage() {
         </section>
 
         {/* Gamified Features Section - Replacing Track Your Progress */}
-        <section className="py-16 sm:py-20 px-3 sm:px-6 bg-gradient-to-br from-blue-50 via-white to-green-50 my-8 sm:my-12 border-y border-primary/10">
+        <section className="py-8 px-3 sm:px-6 bg-gradient-to-br from-blue-50 via-white to-green-50 border-y border-primary/10">
           <div className="max-w-6xl mx-auto">
             <div className="text-center max-w-3xl mx-auto mb-10 animate-fade-in">
               <h2 className="text-2xl sm:text-3xl font-bold mb-4 text-primary inline-flex items-center">
@@ -287,10 +310,10 @@ export default function HomePage() {
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
               {/* Card 1: Leaderboard Mockup */}
-              <div className="bg-white rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 p-6 card-hover">
-                <h3 className="text-xl font-bold mb-4 flex items-center">
+              <div className="bg-white rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 p-6 card-hover h-full">
+                <h3 className="text-xl font-bold mb-4 flex justify-center items-center">
                   <span className="text-2xl mr-2">🏆</span> Leaderboard
                 </h3>
                 <div className="space-y-3">
@@ -314,7 +337,7 @@ export default function HomePage() {
               </div>
 
               {/* Card 2: Streak Popup Mockup */}
-              <div className="bg-gradient-to-br from-yellow-100 via-orange-50 to-amber-100 rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 p-6 card-hover text-center">
+              <div className="bg-gradient-to-br from-yellow-100 via-orange-50 to-amber-100 rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 p-6 card-hover text-center h-full">
                 <h3 className="text-xl font-bold mb-3 flex justify-center items-center">
                   <span className="text-2xl mr-2">🔥</span> Well Done!
                 </h3>
@@ -329,7 +352,7 @@ export default function HomePage() {
               </div>
 
               {/* Card 3: Pronunciation Score Mockup */}
-              <div className="bg-gradient-to-br from-purple-50 via-white to-pink-50 rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 p-6 card-hover text-center">
+              <div className="bg-gradient-to-br from-purple-50 via-white to-pink-50 rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 p-6 card-hover text-center h-full">
                 <h3 className="text-xl font-bold mb-4 flex justify-center items-center">
                   <span className="text-2xl mr-2">🎤</span> Pronunciation Score
                 </h3>
@@ -338,6 +361,27 @@ export default function HomePage() {
                 <button className="bg-primary/10 hover:bg-primary/20 text-primary font-medium py-3 px-6 rounded-full transition-all duration-300 hover:scale-105">
                   Try Again!
                 </button>
+              </div>
+
+              {/* Card 4: Mini Games */}
+              <div className="bg-white rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 p-6 card-hover h-full">
+                <h3 className="text-xl font-bold mb-4 flex justify-center items-center">
+                  <span className="text-2xl mr-2">🎮</span> Mini Games
+                </h3>
+                <div className="space-y-4">
+                  <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl p-4 text-center">
+                    <div className="text-4xl mb-2">🎯</div>
+                    <p className="font-medium text-primary">Today's Challenge</p>
+                    <p className="text-lg font-bold text-gray-700">Match 10 Persian Words</p>
+                  </div>
+
+                  <div className="relative">
+                    <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+                      <div className="h-full bg-primary rounded-full" style={{ width: '20%' }}></div>
+                    </div>
+                    <div className="text-center text-sm text-gray-500 mt-2">2/10 Words</div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -404,192 +448,65 @@ export default function HomePage() {
         {/* Lesson Block - Removed purple emoji */}
         <section id="lesson-1" className="py-8 px-3 sm:px-4 bg-accent/5">
           <div className="max-w-6xl mx-auto">
-            <h2 className="text-2xl sm:text-3xl font-bold mb-6 text-accent text-center">
-              Lesson 1 – Say Hi Like a Persian
-            </h2>
-
-            <div className="space-y-5">
-              <Card className="shadow-sm hover:shadow-md transition-shadow overflow-hidden rounded-xl">
-                <CardHeader className="pb-3 bg-primary/5">
-                  <CardTitle className="text-lg sm:text-xl text-primary">Hello / Hi</CardTitle>
-                </CardHeader>
-                <CardContent className="pt-4 pb-6">
-                  <div className="grid grid-cols-3 gap-2 sm:gap-3 mb-4">
-                    <div className="text-base font-medium text-muted-foreground px-2 sm:px-3 py-2 bg-gray-100 rounded">
-                      English
-                    </div>
-                    <div className="text-base font-medium text-muted-foreground px-2 sm:px-3 py-2 bg-gray-100 rounded">
-                      Finglish
-                    </div>
-                    <div className="text-base font-medium text-muted-foreground px-2 sm:px-3 py-2 bg-gray-100 rounded">
-                      Persian
-                    </div>
+            {/* Coming Up Next Section */}
+            <Card className="shadow-sm rounded-xl border-primary/20 bg-primary/5">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-lg sm:text-xl text-primary flex items-center gap-3">
+                  <span>🔮</span> Coming Up Next
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-5 pb-6">
+                <div className="flex items-start gap-4">
+                  <div className="bg-white rounded-full p-2 shadow-sm flex items-center justify-center w-14 h-14 shrink-0">
+                    <span className="text-2xl">👋</span>
                   </div>
-                  <div className="grid grid-cols-3 gap-2 sm:gap-3 items-center">
-                    <div className="text-base sm:text-lg px-2 sm:px-3 py-2">Hello</div>
-                    <div className="text-base sm:text-lg px-2 sm:px-3 py-2">Salaam</div>
-                    <div className="text-base sm:text-lg font-persian px-2 sm:px-3 py-2 font-bold text-primary">
-                      سلام
-                    </div>
+                  <div>
+                    <h4 className="font-medium text-lg mb-1">Lesson 1: Persian Greetings</h4>
+                    <p className="text-base text-muted-foreground">Learn basic Farsi greetings and introductions</p>
                   </div>
-                </CardContent>
-              </Card>
+                </div>
 
-              <Card className="shadow-sm hover:shadow-md transition-shadow overflow-hidden rounded-xl">
-                <CardHeader className="pb-3 bg-primary/5">
-                  <CardTitle className="text-lg sm:text-xl text-primary">How are you?</CardTitle>
-                </CardHeader>
-                <CardContent className="pt-4 pb-6">
-                  <div className="grid grid-cols-3 gap-2 sm:gap-3 mb-4">
-                    <div className="text-base font-medium text-muted-foreground px-2 sm:px-3 py-2 bg-gray-100 rounded">
-                      English
-                    </div>
-                    <div className="text-base font-medium text-muted-foreground px-2 sm:px-3 py-2 bg-gray-100 rounded">
-                      Finglish
-                    </div>
-                    <div className="text-base font-medium text-muted-foreground px-2 sm:px-3 py-2 bg-gray-100 rounded">
-                      Persian
-                    </div>
+                <div className="flex items-start gap-4">
+                  <div className="bg-white rounded-full p-2 shadow-sm flex items-center justify-center w-14 h-14 shrink-0">
+                    <span className="text-2xl">🧮</span>
                   </div>
-                  <div className="grid grid-cols-3 gap-2 sm:gap-3 items-center">
-                    <div className="text-base sm:text-lg px-2 sm:px-3 py-2">How are you?</div>
-                    <div className="text-base sm:text-lg px-2 sm:px-3 py-2">Chetori?</div>
-                    <div className="text-base sm:text-lg font-persian px-2 sm:px-3 py-2 font-bold text-primary">
-                      چطوری؟
-                    </div>
+                  <div>
+                    <h4 className="font-medium text-lg mb-1">Lesson 2: Numbers 1–10</h4>
+                    <p className="text-base text-muted-foreground">Count like a Persian</p>
                   </div>
-                </CardContent>
-              </Card>
+                </div>
 
-              <Card className="border-accent/20 bg-accent/5 shadow-sm rounded-xl">
-                <CardContent className="py-6 px-4 sm:px-6">
-                  <div className="flex gap-4 items-start">
-                    <span className="text-3xl">🌸</span>
-                    <div>
-                      <p className="font-medium text-lg mb-2">Grandma Tip:</p>
-                      <p className="text-base">
-                        In Iran, even strangers say salaam. It's polite <em>and</em> warm.
-                      </p>
-                    </div>
+                <div className="flex items-start gap-4">
+                  <div className="bg-white rounded-full p-2 shadow-sm flex items-center justify-center w-14 h-14 shrink-0">
+                    <span className="text-2xl">👪</span>
                   </div>
-                </CardContent>
-              </Card>
-
-              {/* Interactive Mini-Game - Updated title and behavior */}
-              <Card className="shadow-sm rounded-xl overflow-hidden relative">
-                <CardHeader className="bg-primary/10 pb-4">
-                  <CardTitle className="text-lg sm:text-xl text-primary text-center">Mini-Game</CardTitle>
-                </CardHeader>
-                <CardContent className="pt-6 pb-8">
-                  <h3 className="text-lg sm:text-xl font-medium text-center mb-6">
-                    How do you say "Hello" in Persian?
-                  </h3>
-
-                  <div className="grid grid-cols-2 gap-4">
-                    {["Khoshgel", "Salam", "Merci", "Halet chetore"].map((option) => (
-                      <Button
-                        key={option}
-                        variant={
-                          miniGameAnswer === option ? (option === "Salam" ? "default" : "destructive") : "outline"
-                        }
-                        className={`py-6 text-lg ${miniGameAnswer === option && option === "Salam" ? "bg-green-600" : ""}`}
-                        onClick={() => handleMiniGameAnswer(option)}
-                      >
-                        {option}
-                      </Button>
-                    ))}
+                  <div>
+                    <h4 className="font-medium text-lg mb-1">Lesson 3: Family Words</h4>
+                    <p className="text-base text-muted-foreground">Learn to introduce your family</p>
                   </div>
+                </div>
 
-                  {showConfetti && (
-                    <div className="absolute inset-0 z-10 pointer-events-none">
-                      <div className="absolute top-0 left-1/4 text-4xl animate-bounce">🎉</div>
-                      <div
-                        className="absolute top-10 left-1/2 text-4xl animate-bounce"
-                        style={{ animationDelay: "0.2s" }}
-                      >
-                        🎊
-                      </div>
-                      <div
-                        className="absolute top-0 right-1/4 text-4xl animate-bounce"
-                        style={{ animationDelay: "0.4s" }}
-                      >
-                        ✨
-                      </div>
-                    </div>
-                  )}
-
-                  {miniGameAnswer === "Salam" && (
-                    <div className="mt-6 p-4 bg-green-100 text-green-800 rounded-lg text-center">
-                      <p className="font-medium">Nice! You just learned your first word — Salam 👋 means Hello!</p>
-                    </div>
-                  )}
-
-                  {showIncorrect && (
-                    <div className="mt-6 p-4 bg-red-100 text-red-800 rounded-lg text-center">
-                      <p className="font-medium">Incorrect. Try Again!</p>
-                    </div>
-                  )}
-
-                  {miniGameAnswer === "Salam" && (
-                    <div className="mt-6 flex justify-center">
-                      <Button className="bg-primary hover:bg-primary/90 text-white" onClick={scrollToWaitlist}>
-                        Next word →
-                      </Button>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-
-              {/* Coming Up Next Section */}
-              <Card className="shadow-sm rounded-xl border-primary/20 bg-primary/5">
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-lg sm:text-xl text-primary flex items-center gap-3">
-                    <span>🔮</span> Coming Up Next
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-5 pb-6">
-                  <div className="flex items-start gap-4">
-                    <div className="bg-white rounded-full p-2 shadow-sm flex items-center justify-center w-14 h-14 shrink-0">
-                      <span className="text-2xl">🧮</span>
-                    </div>
-                    <div>
-                      <h4 className="font-medium text-lg mb-1">Lesson 2: Numbers 1–10</h4>
-                      <p className="text-base text-muted-foreground">Count like a Persian</p>
-                    </div>
+                <div className="flex items-start gap-4">
+                  <div className="bg-white rounded-full p-2 shadow-sm flex items-center justify-center w-14 h-14 shrink-0">
+                    <span className="text-2xl">🎁</span>
                   </div>
-
-                  <div className="flex items-start gap-4">
-                    <div className="bg-white rounded-full p-2 shadow-sm flex items-center justify-center w-14 h-14 shrink-0">
-                      <span className="text-2xl">👪</span>
-                    </div>
-                    <div>
-                      <h4 className="font-medium text-lg mb-1">Lesson 3: Family Words</h4>
-                      <p className="text-base text-muted-foreground">Learn to introduce your family</p>
-                    </div>
+                  <div>
+                    <h4 className="font-medium text-lg mb-1">Bonus: Cultural Insights</h4>
+                    <p className="text-base text-muted-foreground">Unlock special rewards as you progress</p>
                   </div>
-
-                  <div className="flex items-start gap-4">
-                    <div className="bg-white rounded-full p-2 shadow-sm flex items-center justify-center w-14 h-14 shrink-0">
-                      <span className="text-2xl">🎁</span>
-                    </div>
-                    <div>
-                      <h4 className="font-medium text-lg mb-1">Bonus: Cultural Insights</h4>
-                      <p className="text-base text-muted-foreground">Unlock special rewards as you progress</p>
-                    </div>
-                  </div>
-                </CardContent>
-                <CardFooter className="py-4">
-                  <Button
-                    variant="outline"
-                    className="w-full justify-between group hover:bg-primary/10 py-6 text-lg"
-                    onClick={scrollToWaitlist}
-                  >
-                    Join the Waitlist
-                    <ChevronRight className="h-6 w-6 group-hover:translate-x-1 transition-transform" />
-                  </Button>
-                </CardFooter>
-              </Card>
-            </div>
+                </div>
+              </CardContent>
+              <CardFooter className="py-4">
+                <Button
+                  variant="outline"
+                  className="w-full justify-between group hover:bg-primary/10 py-6 text-lg"
+                  onClick={scrollToWaitlist}
+                >
+                  Join the Waitlist
+                  <ChevronRight className="h-6 w-6 group-hover:translate-x-1 transition-transform" />
+                </Button>
+              </CardFooter>
+            </Card>
           </div>
         </section>
 
@@ -646,17 +563,26 @@ export default function HomePage() {
             {isSubscribed ? (
               <div className="text-center">
                 <h3 className="text-2xl sm:text-3xl font-bold text-primary mb-2">You're on the list! 🎉</h3>
-                <p className="text-lg sm:text-xl text-gray-700">
+                <p className="text-lg sm:text-xl text-gray-700 mb-6">
                   Thanks for joining the waitlist. We'll keep you updated on our progress.
                 </p>
+                <Link href="/modules">
+                  <Button 
+                    size="lg"
+                    className="bg-accent hover:bg-accent/90 text-white transition-all duration-300 hover:scale-105 hover:shadow-lg rounded-full px-8 py-6 text-lg"
+                    aria-label="Preview Lesson 1"
+                  >
+                    Preview Lesson 1
+                  </Button>
+                </Link>
               </div>
             ) : (
               <>
                 <h3 className="text-2xl sm:text-3xl font-bold mb-4 text-primary text-center">
-                  Join the Beta Waitlist
+                  Join Our Free Beta Waitlist + Instant Access to Module 1 Today
                 </h3>
                 <p className="text-lg sm:text-xl text-center text-gray-600 mb-6">
-                  Be among the first to experience our Persian language learning platform
+                  Join the Waitlist to be Notified when the Full Platform Launches!
                 </p>
                 <form onSubmit={handleWaitlistSubmit} className="w-full max-w-md mx-auto">
                   <div className="flex flex-col sm:flex-row gap-2">
