@@ -4,7 +4,7 @@ import { useState } from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { ChevronRight } from "lucide-react"
+import { ChevronRight, ChevronLeft } from "lucide-react"
 
 export default function Module1Page() {
   const [selectedLesson, setSelectedLesson] = useState<string | null>(null)
@@ -50,8 +50,9 @@ export default function Module1Page() {
       <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="flex h-16 items-center justify-between px-3 sm:px-4">
           <Link href="/modules" className="flex items-center gap-2 font-bold text-base sm:text-lg text-primary">
-            <span className="hidden sm:inline">Module 1: Greetings</span>
-            <span className="sm:hidden">Module 1</span>
+            <ChevronLeft className="h-5 w-5" />
+            <span className="hidden sm:inline">Back to Modules</span>
+            <span className="sm:hidden">Back</span>
           </Link>
           <Button size="sm" className="bg-accent hover:bg-accent/90 text-white">
             Start Learning
@@ -94,17 +95,18 @@ export default function Module1Page() {
                     <p className="text-base sm:text-lg">{lesson.description}</p>
                   </CardContent>
                   <CardFooter className="py-4">
-                    <Button
-                      variant="outline"
-                      className={`w-full justify-between group hover:bg-primary/10 py-6 text-lg ${
-                        lesson.locked ? "cursor-not-allowed" : ""
-                      }`}
-                      disabled={lesson.locked}
-                      onClick={() => setSelectedLesson(lesson.id)}
-                    >
-                      {lesson.locked ? "Locked" : "Start Lesson"}
-                      {!lesson.locked && <ChevronRight className="h-6 w-6 group-hover:translate-x-1 transition-transform" />}
-                    </Button>
+                    <Link href={`/modules/module1/${lesson.id}`} className="w-full">
+                      <Button
+                        variant="outline"
+                        className={`w-full justify-between group hover:bg-primary/10 py-6 text-lg ${
+                          lesson.locked ? "cursor-not-allowed" : ""
+                        }`}
+                        disabled={lesson.locked}
+                      >
+                        {lesson.locked ? "Locked" : "Start Lesson"}
+                        {!lesson.locked && <ChevronRight className="h-6 w-6 group-hover:translate-x-1 transition-transform" />}
+                      </Button>
+                    </Link>
                   </CardFooter>
                 </Card>
               ))}
