@@ -39,22 +39,37 @@ export function Flashcard({ front, back, onContinue }: FlashcardProps) {
       <div className="bg-white rounded-xl shadow-lg p-4 sm:p-6 relative w-full">
         <XpAnimation amount={2} show={showXp} />
         
-        <div 
-          className={`relative w-full aspect-[4/3] sm:aspect-[5/3] transition-transform duration-500 [transform-style:preserve-3d] ${
-            isFlipped ? '[transform:rotateY(180deg)]' : ''
-          }`}
-          onClick={handleFlip}
-        >
-          {/* Front of card */}
-          <div className="absolute inset-0 bg-white rounded-xl shadow-sm p-4 sm:p-6 flex flex-col items-center justify-center [backface-visibility:hidden]">
-            <h2 className="text-3xl sm:text-4xl font-bold text-primary text-center">{front}</h2>
-            <p className="text-muted-foreground mt-2">Click to flip</p>
-          </div>
+        <div className="w-full max-w-[600px] mx-auto">
+          <div 
+            className="relative w-full aspect-[4/3] sm:aspect-[5/3] cursor-pointer"
+            onClick={handleFlip}
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                handleFlip()
+              }
+            }}
+          >
+            {/* Front of card */}
+            <div 
+              className={`absolute inset-0 bg-white rounded-xl shadow-sm p-4 sm:p-6 flex flex-col items-center justify-center border-2 border-primary/20 hover:border-primary/40 transition-all duration-300 ${
+                isFlipped ? 'opacity-0 z-0' : 'opacity-100 z-10'
+              }`}
+            >
+              <h2 className="text-3xl sm:text-4xl font-bold text-primary text-center">{front}</h2>
+              <p className="text-muted-foreground mt-2">Click to flip</p>
+            </div>
 
-          {/* Back of card */}
-          <div className="absolute inset-0 bg-white rounded-xl shadow-sm p-4 sm:p-6 flex flex-col items-center justify-center [backface-visibility:hidden] [transform:rotateY(180deg)]">
-            <h2 className="text-3xl sm:text-4xl font-bold text-primary text-center">{back}</h2>
-            <p className="text-muted-foreground mt-2">Click to flip back</p>
+            {/* Back of card */}
+            <div 
+              className={`absolute inset-0 bg-white rounded-xl shadow-sm p-4 sm:p-6 flex flex-col items-center justify-center border-2 border-primary/20 hover:border-primary/40 transition-all duration-300 ${
+                isFlipped ? 'opacity-100 z-10' : 'opacity-0 z-0'
+              }`}
+            >
+              <h2 className="text-3xl sm:text-4xl font-bold text-primary text-center">{back}</h2>
+              <p className="text-muted-foreground mt-2">Click to flip back</p>
+            </div>
           </div>
         </div>
 

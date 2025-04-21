@@ -27,11 +27,7 @@ export function Quiz({ onComplete }: QuizProps) {
     setIsDisabled(true)
     
     if (options[index].correct) {
-      setShowXp(true)
-      setTimeout(() => {
-        setShowXp(false)
-        onComplete(true)
-      }, 1500)
+      setShowXp(true)  // trigger XP animation
     } else {
       setTimeout(() => {
         setShowFeedback(false)
@@ -42,16 +38,24 @@ export function Quiz({ onComplete }: QuizProps) {
   }
 
   return (
-    <div className="w-full max-w-md mx-auto">
-      <div className="text-center mb-8">
-        <h2 className="text-2xl font-bold mb-2 text-primary">Quick Quiz</h2>
+    <div className="w-full max-w-md mx-auto py-2">
+      <div className="text-center mb-4">
+        <h2 className="text-2xl sm:text-3xl font-bold mb-1 text-primary">Quick Quiz</h2>
         <p className="text-muted-foreground">Test what you've learned!</p>
       </div>
 
-      <div className="bg-white rounded-xl shadow-lg p-6 relative">
-        <XpAnimation amount={5} show={showXp} />
+      <div className="bg-white rounded-xl shadow-lg p-4 relative">
+        <XpAnimation 
+          amount={5} 
+          show={showXp}
+          onComplete={() => {
+            // Removed storage-based XP update; using setXp in parent
+            onComplete(true)  // advance parent immediately
+            setShowXp(false)  // reset for next use
+          }}
+        />
         
-        <h3 className="text-xl font-semibold mb-6 text-center">
+        <h3 className="text-lg sm:text-xl font-semibold mb-4 text-center">
           Ali smiles and says "Hello". What's the right Persian word?
         </h3>
 
@@ -73,7 +77,7 @@ export function Quiz({ onComplete }: QuizProps) {
             >
               <Button
                 variant={selectedOption === index ? "default" : "outline"}
-                className={`w-full justify-start gap-2 ${
+                className={`w-full justify-start gap-2 text-base sm:text-lg py-3 ${
                   showFeedback && selectedOption === index
                     ? option.correct
                       ? "bg-green-500 hover:bg-green-600"
@@ -110,7 +114,7 @@ export function Quiz({ onComplete }: QuizProps) {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0 }}
-              className="text-center text-red-500 mt-4"
+              className="text-center text-red-500 mt-3"
             >
               Try again!
             </motion.p>

@@ -36,7 +36,7 @@ export function DragDropGame({ onComplete }: DragDropGameProps) {
     }
     
     const droppedWord = e.dataTransfer.getData("text/plain")
-    const isCorrectMatch = droppedWord === "Khosh Amadid" && optionId === "welcome"
+    const isCorrectMatch = droppedWord === "Khosh Ahmadid" && optionId === "welcome"
     
     setMatches(prev => ({ ...prev, [optionId]: droppedWord }))
     setShowFeedback(true)
@@ -44,11 +44,7 @@ export function DragDropGame({ onComplete }: DragDropGameProps) {
     setIncorrectOption(isCorrectMatch ? null : optionId)
 
     if (isCorrectMatch) {
-      setShowXp(true)
-      setTimeout(() => {
-        setShowXp(false)
-        onComplete(true)
-      }, 1500)
+      setShowXp(true)  // trigger XP animation
     } else {
       setTimeout(() => {
         setShowFeedback(false)
@@ -64,31 +60,39 @@ export function DragDropGame({ onComplete }: DragDropGameProps) {
   }
 
   return (
-    <div className="w-full max-w-md mx-auto">
-      <div className="text-center mb-8">
-        <h2 className="text-2xl font-bold mb-2 text-primary">Match the Words</h2>
+    <div className="w-full max-w-md mx-auto py-2">
+      <div className="text-center mb-4">
+        <h2 className="text-2xl sm:text-3xl font-bold mb-1 text-primary">Match the Words</h2>
         <p className="text-muted-foreground">Drag the Finglish word to its English meaning</p>
       </div>
 
-      <div className="bg-white rounded-xl shadow-lg p-6 relative">
-        <XpAnimation amount={3} show={showXp} />
+      <div className="bg-white rounded-xl shadow-lg p-4 relative">
+        <XpAnimation 
+          amount={3} 
+          show={showXp}
+          onComplete={() => {
+            // Removed storage-based XP update; using setXp in parent
+            onComplete(true)  // advance parent immediately
+            setShowXp(false)  // reset for next use
+          }}
+        />
         
-        <div className="space-y-6">
-          <div className="flex items-center justify-between gap-4">
-            <div className="flex-1">
+        <div className="space-y-4">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
+            <div className="flex-1 flex justify-center">
               <div 
-                className="p-4 border-2 border-solid rounded-lg text-center cursor-move bg-white shadow-sm"
+                className="p-3 sm:p-4 border-2 border-solid rounded-lg text-center cursor-move bg-white shadow-sm w-3/4 sm:w-full"
                 draggable
-                onDragStart={(e) => handleDragStart(e, "Khosh Amadid")}
+                onDragStart={(e) => handleDragStart(e, "Khosh Ahmadid")}
               >
-                <p className="text-xl font-semibold">Khosh Amadid</p>
+                <p className="text-lg sm:text-xl font-semibold">Khosh Ahmadid</p>
               </div>
             </div>
-            <div className="flex-1 space-y-4">
+            <div className="flex-1 space-y-3">
               {options.map(option => (
                 <motion.div
                   key={option.id}
-                  className={`p-4 border-2 border-dashed rounded-lg ${
+                  className={`p-3 border-2 border-dashed rounded-lg ${
                     matches[option.id]
                       ? isCorrect && option.id === "welcome"
                         ? "border-green-500 bg-green-50"
@@ -102,7 +106,7 @@ export function DragDropGame({ onComplete }: DragDropGameProps) {
                   } : {}}
                   transition={{ duration: 0.5 }}
                 >
-                  <p className="text-center">{option.text}</p>
+                  <p className="text-center text-base sm:text-lg">{option.text}</p>
                 </motion.div>
               ))}
             </div>
@@ -114,7 +118,7 @@ export function DragDropGame({ onComplete }: DragDropGameProps) {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0 }}
-                className="text-center text-red-500"
+                className="text-center text-red-500 mt-3 text-sm"
               >
                 Almost! Try again.
               </motion.p>

@@ -1,6 +1,8 @@
 import { useState, useRef, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Card, CardContent } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import { XpAnimation } from "./XpAnimation"
 
 interface FinalChallengeProps {
   onComplete: (correct: boolean) => void
@@ -9,7 +11,7 @@ interface FinalChallengeProps {
 export function FinalChallenge({ onComplete }: FinalChallengeProps) {
   const [items, setItems] = useState([
     { id: "salam", text: "Salam", order: null as number | null },
-    { id: "khosh_amadid", text: "Khosh Amadid", order: null as number | null },
+    { id: "khosh_ahmadid", text: "Khosh Ahmadid", order: null as number | null },
     { id: "chetori", text: "Chetori", order: null as number | null },
     { id: "khodahafez", text: "Khodahafez", order: null as number | null },
   ])
@@ -87,7 +89,7 @@ export function FinalChallenge({ onComplete }: FinalChallengeProps) {
   const checkOrder = () => {
     const correctOrder = [
       "salam",
-      "khosh_amadid",
+      "khosh_ahmadid",
       "chetori",
       "khodahafez"
     ]
@@ -103,22 +105,19 @@ export function FinalChallenge({ onComplete }: FinalChallengeProps) {
     setIsCorrect(isOrderCorrect)
     
     if (isOrderCorrect) {
-      setShowXp(true)
+      setShowXp(true)  // trigger XP animation
       
       // Trigger confetti
       if (typeof window !== 'undefined') {
         import('canvas-confetti').then((confetti) => {
           confetti.default({
-            particleCount: 100,
-            spread: 70,
-            origin: { y: 0.6 }
+            particleCount: 150,
+            spread: 90,
+            origin: { y: 0.5 },
+            gravity: 0.8,
           })
         })
       }
-      
-      setTimeout(() => {
-        onComplete(true)
-      }, 3000)
     } else {
       // Shake effect for incorrect order provided by the animate-shake class
       setTimeout(() => {
@@ -139,32 +138,43 @@ export function FinalChallenge({ onComplete }: FinalChallengeProps) {
     const slot = slots.find(s => s.id === slotId)
     if (!slot || !slot.itemId) return
 
+    const itemIdToRemove = slot.itemId;
+
     setSlots(slots.map(s => 
       s.id === slotId ? { ...s, itemId: null } : s
     ))
     
     setItems(items.map(item => 
-      item.id === slot.itemId ? { ...item, order: null } : item
+      item.id === itemIdToRemove ? { ...item, order: null } : item
     ))
   }
 
   return (
-    <div className="w-full">
+    <div className="w-full py-2">
       <div ref={confettiCanvasRef} className="fixed inset-0 pointer-events-none z-50"></div>
       
-      <div className="text-center mb-6">
-        <h2 className="text-2xl sm:text-3xl font-bold mb-2 text-primary">Final Challenge</h2>
-        <p className="text-muted-foreground mb-4">
+      <div className="text-center mb-4">
+        <h2 className="text-2xl sm:text-3xl font-bold mb-1 text-primary">Final Challenge</h2>
+        <p className="text-muted-foreground text-sm sm:text-base mb-2">
           Ali meets a new friend in Tehran. Put their conversation in the correct order: 
           Ali says Hello, welcomes his friend, asks how they are, and finally says Goodbye.
         </p>
       </div>
 
-      <Card className="mb-6 w-full">
-        <CardContent className="pt-6">
+      <Card className="mb-4 w-full">
+        <CardContent className="pt-4">
+          <XpAnimation 
+            amount={20} 
+            show={showXp}
+            onComplete={() => {
+              // Removed storage-based XP update; using setXp in parent
+              onComplete(true)  // advance parent immediately
+              setShowXp(false)  // reset for next use
+            }}
+          />
           {/* Slots for ordering */}
           <div 
-            className={`grid grid-cols-1 gap-4 mb-6 ${
+            className={`grid grid-cols-1 gap-3 mb-4 ${
               showFeedback && !isCorrect ? 'animate-shake' : ''
             }`}
           >
@@ -175,29 +185,29 @@ export function FinalChallenge({ onComplete }: FinalChallengeProps) {
                 <div 
                   key={slot.id}
                   className={`
-                    flex items-center p-3 sm:p-4 rounded-lg border-2 border-dashed transition-all 
+                    flex items-center p-3 rounded-lg border-2 border-dashed transition-all 
                     ${item ? 'border-primary bg-primary/5' : 'border-gray-300'}
                     ${showFeedback && isCorrect ? 'border-green-500 bg-green-50' : ''}
                   `}
                   onDragOver={handleDragOver}
                   onDrop={(e) => handleDrop(e, slot.id)}
                 >
-                  <div className="flex-shrink-0 w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-primary/10 flex items-center justify-center mr-2 sm:mr-3">
-                    <span className="text-primary font-semibold text-sm sm:text-base">{slot.id}</span>
+                  <div className="flex-shrink-0 w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center mr-2">
+                    <span className="text-primary font-semibold text-sm">{slot.id}</span>
                   </div>
                   
                   {item ? (
                     <div className="flex justify-between items-center flex-1">
-                      <span className="text-base sm:text-lg">{item.text}</span>
+                      <span className="text-base">{item.text}</span>
                       <button 
-                        className="text-gray-400 hover:text-gray-600"
+                        className="text-gray-400 hover:text-red-500 text-xl ml-2"
                         onClick={() => removeFromSlot(slot.id)}
                       >
                         ×
                       </button>
                     </div>
                   ) : (
-                    <div className="text-gray-400 italic text-sm sm:text-base">Drop phrase here</div>
+                    <div className="text-gray-400 italic text-sm">Drop phrase here</div>
                   )}
                 </div>
               )
@@ -205,14 +215,14 @@ export function FinalChallenge({ onComplete }: FinalChallengeProps) {
           </div>
           
           {/* Draggable items */}
-          <div className="flex flex-wrap gap-2 sm:gap-3 justify-center mb-6">
+          <div className="flex flex-wrap gap-2 justify-center mb-4">
             {items.filter(item => item.order === null).map((item) => (
               <div
                 key={item.id}
                 draggable
                 onDragStart={(e) => handleDragStart(e, item.id)}
                 className="
-                  px-3 py-2 bg-accent text-white rounded-lg cursor-move
+                  px-3 py-1.5 bg-accent text-white rounded-lg cursor-move
                   shadow-sm hover:shadow-md transition-all text-sm sm:text-base
                 "
               >
@@ -222,19 +232,19 @@ export function FinalChallenge({ onComplete }: FinalChallengeProps) {
           </div>
           
           {/* Submit button */}
-          <div className="text-center mt-4">
-            <button
+          <div className="text-center mt-3">
+            <Button
               className={`
-                px-4 py-2 sm:px-6 sm:py-3 rounded-lg font-semibold transition-all w-full sm:w-auto
+                px-4 py-2 rounded-lg font-semibold transition-all w-full sm:w-auto text-base
                 ${allSlotsFilled 
                   ? 'bg-primary text-white hover:bg-primary/90'
                   : 'bg-gray-200 text-gray-400 cursor-not-allowed'}
               `}
-              disabled={!allSlotsFilled}
+              disabled={!allSlotsFilled || (showFeedback && isCorrect)}
               onClick={checkOrder}
             >
               Check My Answer
-            </button>
+            </Button>
           </div>
         </CardContent>
       </Card>
@@ -243,11 +253,11 @@ export function FinalChallenge({ onComplete }: FinalChallengeProps) {
       <AnimatePresence>
         {showFeedback && (
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
+            exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.3 }}
-            className={`text-center p-4 rounded-lg ${
+            className={`text-center p-3 rounded-lg text-sm ${
               isCorrect 
                 ? 'bg-green-100 text-green-800' 
                 : 'bg-red-100 text-red-800'
@@ -255,10 +265,10 @@ export function FinalChallenge({ onComplete }: FinalChallengeProps) {
           >
             {isCorrect ? (
               <div>
-                <div className="font-bold text-xl mb-2">
+                <div className="font-bold text-base sm:text-lg mb-1">
                   🎉 You're a natural—Ali made a great impression!
                 </div>
-                <div className="text-lg">
+                <div className="text-base">
                   +20 XP!
                 </div>
               </div>

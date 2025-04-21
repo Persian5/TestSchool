@@ -95,7 +95,7 @@ export default function Module1Page() {
                     <p className="text-base sm:text-lg">{lesson.description}</p>
                   </CardContent>
                   <CardFooter className="py-4">
-                    <Link href={`/modules/module1/${lesson.id}`} className="w-full">
+                    <Link href={`/modules/module1/${lesson.id === 'lesson1' ? 'lesson1' : lesson.id}`} className="w-full">
                       <Button
                         variant="outline"
                         className={`w-full justify-between group hover:bg-primary/10 py-6 text-lg ${

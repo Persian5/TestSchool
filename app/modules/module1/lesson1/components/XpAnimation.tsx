@@ -1,12 +1,13 @@
 import { motion, AnimatePresence } from "framer-motion"
-import { Star } from "lucide-react"
 
 interface XpAnimationProps {
   amount: number
   show: boolean
+  onStart?: () => void     // Called at animation start
+  onComplete?: () => void  // Called at animation end
 }
 
-export function XpAnimation({ amount, show }: XpAnimationProps) {
+export function XpAnimation({ amount, show, onStart, onComplete }: XpAnimationProps) {
   return (
     <AnimatePresence>
       {show && (
@@ -14,11 +15,12 @@ export function XpAnimation({ amount, show }: XpAnimationProps) {
           initial={{ opacity: 0, y: 0, scale: 0 }}
           animate={{ opacity: 1, y: -20, scale: 1 }}
           exit={{ opacity: 0, y: -40, scale: 0 }}
-          transition={{ duration: 0.5 }}
-          className="absolute top-4 right-4 z-10 flex items-center gap-1 bg-yellow-500/20 px-3 py-2 rounded-full"
+          transition={{ duration: 0.8 }}   // XP animation slightly slower
+          onAnimationStart={onStart}        // XP fires now
+          onAnimationComplete={onComplete}  // next-item fires here
+          className="absolute -top-4 -right-4 bg-primary text-primary-foreground rounded-full px-3 py-1 text-sm font-bold shadow-lg z-50"
         >
-          <Star className="h-4 w-4 text-yellow-500" />
-          <span className="text-sm font-medium text-yellow-500">+{amount} XP</span>
+          +{amount} XP
         </motion.div>
       )}
     </AnimatePresence>

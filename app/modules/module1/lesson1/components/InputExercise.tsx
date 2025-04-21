@@ -29,27 +29,31 @@ export function InputExercise({ onComplete }: InputExerciseProps) {
     setShowFeedback(true)
 
     if (isAnswerCorrect) {
-      setShowXp(true)
-      setTimeout(() => {
-        setShowXp(false)
-        onComplete(true)
-      }, 1500)
+      setShowXp(true)  // trigger XP animation
     }
   }
 
   return (
-    <div className="w-full max-w-md mx-auto">
-      <div className="text-center mb-8">
-        <h2 className="text-2xl font-bold mb-2 text-primary">Practice</h2>
+    <div className="w-full max-w-md mx-auto py-2">
+      <div className="text-center mb-4">
+        <h2 className="text-2xl sm:text-3xl font-bold mb-1 text-primary">Practice</h2>
         <p className="text-muted-foreground">Type the correct word in Finglish</p>
       </div>
 
-      <div className="bg-white rounded-xl shadow-lg p-6 relative">
-        <XpAnimation amount={5} show={showXp} />
+      <div className="bg-white rounded-xl shadow-lg p-4 relative">
+        <XpAnimation 
+          amount={5} 
+          show={showXp}
+          onComplete={() => {
+            // Removed storage-based XP update; using setXp in parent
+            onComplete(true)  // advance parent immediately
+            setShowXp(false)  // reset for next use
+          }}
+        />
         
-        <div className="space-y-6">
+        <div className="space-y-4">
           <div className="text-center">
-            <p className="text-lg">
+            <p className="text-lg sm:text-xl">
               Ali says: Salam, <span className="font-semibold">___?</span> (How Are You)
             </p>
           </div>
@@ -61,7 +65,7 @@ export function InputExercise({ onComplete }: InputExerciseProps) {
                 value={input}
                 onChange={handleInputChange}
                 placeholder="Type your answer..."
-                className={`pr-10 ${
+                className={`pr-10 text-base sm:text-lg ${
                   showFeedback
                     ? isCorrect
                       ? "border-green-500 focus-visible:ring-green-500"
@@ -90,7 +94,7 @@ export function InputExercise({ onComplete }: InputExerciseProps) {
 
             <Button
               type="submit"
-              className="w-full"
+              className="w-full text-base sm:text-lg py-3"
               disabled={showFeedback && isCorrect}
             >
               Check Answer
@@ -98,12 +102,12 @@ export function InputExercise({ onComplete }: InputExerciseProps) {
           </form>
 
           <AnimatePresence>
-            {showFeedback && !isCorrect && input === "" && (
+            {showFeedback && !isCorrect && (
               <motion.p
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0 }}
-                className="text-center text-red-500"
+                className="text-center text-red-500 mt-3 text-sm"
               >
                 Almost! Try again.
               </motion.p>
