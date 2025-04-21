@@ -1,94 +1,110 @@
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { ArrowRight } from "lucide-react"
-import { XpAnimation } from "@/components/XpAnimation"
+import { XpAnimation } from "../../components/XpAnimation"
 
 interface FlashcardProps {
   front: string
   back: string
-  points: number
+  points?: number
   onContinue: () => void
   onXpStart?: () => void
+  isFlipped?: boolean
+  onFlip?: () => void
+  showContinueButton?: boolean
 }
 
-export function Flashcard({ front, back, points, onContinue, onXpStart }: FlashcardProps) {
-  const [isFlipped, setIsFlipped] = useState(false)
-  const [showContinue, setShowContinue] = useState(false)
+export function Flashcard({
+  front,
+  back,
+  points = 2,
+  onContinue,
+  onXpStart,
+  isFlipped: extFlipped,
+  onFlip: extFlip,
+  showContinueButton,
+}: FlashcardProps) {
+  const [localFlip, setLocalFlip] = useState(false)
+  const [localShowNext, setLocalShowNext] = useState(false)
   const [showXp, setShowXp] = useState(false)
 
-  const handleFlip = () => {
-    setIsFlipped(!isFlipped)
-    if (!isFlipped) {
-      setShowContinue(true)
-    }
-  }
+  const isFlipped = extFlipped ?? localFlip
+  const showNext  = showContinueButton ?? localShowNext
 
-  const handleContinue = () => {
-    setShowXp(true)
-    setTimeout(() => {
-      setShowXp(false)
-      onContinue()
-    }, 800)
+  const handleFlip = () => {
+    if (extFlip) {
+      extFlip()
+    } else {
+      setLocalFlip(!localFlip)
+      if (!localFlip) setLocalShowNext(true)
+    }
   }
 
   return (
     <div className="w-full">
       <div className="text-center mb-6">
-        <h2 className="text-2xl sm:text-3xl font-bold mb-2 text-primary">Basic Greetings</h2>
-        <p className="text-muted-foreground">Click the card to see the Finglish translation</p>
+        <h2 className="text-2xl sm:text-3xl font-bold mb-2 text-primary">
+          Basic Greetings
+        </h2>
+        <p className="text-muted-foreground">
+          Click the card to see the Finglish translation
+        </p>
       </div>
-      
+
       <div className="bg-white rounded-xl shadow-lg p-4 sm:p-6 relative w-full">
-        <XpAnimation 
-          amount={points} 
-          show={showXp} 
+        <XpAnimation
+          amount={points}
+          show={showXp}
           onStart={onXpStart}
           onComplete={() => {
             setShowXp(false)
             onContinue()
           }}
         />
-        
+
         <div className="w-full max-w-[600px] mx-auto">
-          <div 
+          <div
             className="relative w-full aspect-[3/4] xs:aspect-[4/3] sm:aspect-[5/3] cursor-pointer"
             onClick={handleFlip}
             role="button"
             tabIndex={0}
             onKeyDown={(e) => {
-              if (e.key === 'Enter' || e.key === ' ') {
-                handleFlip()
-              }
+              if (e.key === "Enter" || e.key === " ") handleFlip()
             }}
           >
-            {/* Front of card */}
-            <div 
+            {/* Front */}
+            <div
               className={`absolute inset-0 bg-white rounded-xl shadow-sm p-4 sm:p-6 flex flex-col items-center justify-center border-2 border-primary/20 hover:border-primary/40 transition-all duration-300 ${
-                isFlipped ? 'opacity-0 z-0' : 'opacity-100 z-10'
+                isFlipped ? "opacity-0 z-0" : "opacity-100 z-10"
               }`}
             >
-              <h2 className="text-2xl xs:text-3xl sm:text-4xl font-bold text-primary text-center">{front}</h2>
+              <h2 className="text-2xl xs:text-3xl sm:text-4xl font-bold text-primary text-center">
+                {front}
+              </h2>
               <p className="text-muted-foreground mt-2">Click to flip</p>
             </div>
 
-            {/* Back of card */}
-            <div 
+            {/* Back */}
+            <div
               className={`absolute inset-0 bg-white rounded-xl shadow-sm p-4 sm:p-6 flex flex-col items-center justify-center border-2 border-primary/20 hover:border-primary/40 transition-all duration-300 ${
-                isFlipped ? 'opacity-100 z-10' : 'opacity-0 z-0'
+                isFlipped ? "opacity-100 z-10" : "opacity-0 z-0"
               }`}
             >
-              <h2 className="text-2xl xs:text-3xl sm:text-4xl font-bold text-primary text-center">{back}</h2>
+              <h2 className="text-2xl xs:text-3xl sm:text-4xl font-bold text-primary text-center">
+                {back}
+              </h2>
               <p className="text-muted-foreground mt-2">Click to flip back</p>
             </div>
           </div>
         </div>
 
-        {/* Continue button */}
-        {showContinue && (
+        {showNext && (
           <div className="mt-6 text-center">
-            <Button 
-              className="gap-2 w-full sm:w-auto" 
-              onClick={handleContinue}
+            <Button
+              className="gap-2 w-full sm:w-auto"
+              onClick={() => {
+                setShowXp(true)
+              }}
               disabled={showXp}
             >
               Continue <ArrowRight className="h-4 w-4" />

@@ -16,12 +16,12 @@ export function XpAnimation({ amount, show, onStart, onComplete }: XpAnimationPr
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
       transition={{ duration: 0.8 }}
-      className="absolute top-2 right-2 xs:-top-4 xs:-right-4 bg-primary text-primary-foreground z-50"
+      className="absolute top-2 right-2 xs:-top-4 xs:-right-4 z-50"
       onAnimationStart={onStart}
       onAnimationComplete={onComplete}
     >
-      <div className="bg-primary/10 backdrop-blur-sm rounded-full px-4 py-2">
-        <span className="text-primary font-bold">+{amount} XP</span>
+      <div className="bg-primary text-white rounded-full px-4 py-2 shadow-md">
+        <span className="font-bold">+{amount} XP</span>
       </div>
     </motion.div>
   )

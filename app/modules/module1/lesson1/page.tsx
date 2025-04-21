@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { ChevronLeft, Star, ArrowRight, CheckCircle2, XCircle, Medal, Sparkles } from "lucide-react"
 import { Progress } from "@/components/ui/progress"
 import { WelcomeIntro } from "./components/WelcomeIntro"
-import { Flashcard } from "./components/Flashcard"
+import { Flashcard } from "../../../components/games/Flashcard"
 import { Quiz } from "./components/Quiz"
 import { InputExercise } from "./components/InputExercise"
 import { DragDropGame } from "./components/DragDropGame"
@@ -303,6 +303,7 @@ export default function Lesson1Page() {
             key={cards[currentCardIndex].id} // Add key for re-render on change
             front={cards[currentCardIndex].front}
             back={cards[currentCardIndex].back}
+            points={2}
             onContinue={handleNext}
             isFlipped={isFlipped}
             onFlip={handleFlip}

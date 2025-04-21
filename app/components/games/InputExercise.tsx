@@ -2,7 +2,7 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { ArrowRight } from "lucide-react"
-import { XpAnimation } from "@/components/XpAnimation"
+import { XpAnimation } from "../../components/XpAnimation"
 
 interface InputExerciseProps {
   question: string

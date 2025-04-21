@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { ArrowRight } from "lucide-react"
-import { XpAnimation } from "@/components/XpAnimation"
+import { XpAnimation } from "../../components/XpAnimation"
 
 interface QuizProps {
   prompt: string
