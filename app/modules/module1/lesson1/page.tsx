@@ -323,7 +323,7 @@ export default function Lesson1Page() {
             <span className="sm:hidden">Back</span>
           </Link>
           <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 overflow-x-auto">
               <Star className="h-5 w-5 text-yellow-500" />
               <span className="text-sm font-medium">{xp} XP</span>
             </div>
