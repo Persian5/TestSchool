@@ -10,7 +10,7 @@ import { WelcomeIntro } from "./components/WelcomeIntro"
 import { Flashcard } from "../../../components/games/Flashcard"
 import { Quiz } from "./components/Quiz"
 import { InputExercise } from "./components/InputExercise"
-import { DragDropGame } from "./components/DragDropGame"
+import { DragDropGame } from "@/components/games/DragDropGame"
 import { FinalChallenge } from "./components/FinalChallenge"
 import "./styles.css"
 
@@ -160,10 +160,8 @@ export default function Lesson1Page() {
   // Logic after completing the Drag Drop Game (Khosh Ahmadid)
   const handleDragDropComplete = (correct: boolean) => {
     if (correct) {
-      setXp(prev => prev + 3)  // XP state updated here
       saveState()
-      // Removed setTimeout; advancing immediately on animation complete
-      setCurrentCardIndex(3) // Move to Khodafez card
+      setCurrentCardIndex(3)
       setCurrentView('flashcard')
       setProgress(75)
       setIsFlipped(false)
@@ -207,8 +205,19 @@ export default function Lesson1Page() {
       case 'input':
         return <InputExercise onComplete={handleInputComplete} />
       case 'dragdrop':
-        // Ensure DragDropGame uses the correct spelling if needed
-        return <DragDropGame onComplete={handleDragDropComplete} />
+        return (
+          <DragDropGame
+            items={[
+              cards[0].back,
+              cards[1].back,
+              cards[2].back,
+              cards[3].back,
+            ]}
+            points={3}
+            onXpStart={() => setXp(prev => prev + 3)}  // award XP when animation starts
+            onComplete={handleDragDropComplete}
+          />
+        )
       case 'final':
         return <FinalChallenge onComplete={handleFinalChallengeComplete} />
       case 'completion':

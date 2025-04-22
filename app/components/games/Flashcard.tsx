@@ -42,16 +42,16 @@ export function Flashcard({
 
   return (
     <div className="w-full">
-      <div className="text-center mb-6">
-        <h2 className="text-2xl sm:text-3xl font-bold mb-2 text-primary">
+      <div className="text-center mb-4 sm:mb-6">
+        <h2 className="text-xl xs:text-2xl sm:text-3xl font-bold mb-1 sm:mb-2 text-primary">
           Basic Greetings
         </h2>
-        <p className="text-muted-foreground">
+        <p className="text-sm xs:text-base text-muted-foreground">
           Click the card to see the Finglish translation
         </p>
       </div>
 
-      <div className="bg-white rounded-xl shadow-lg p-4 sm:p-6 relative w-full">
+      <div className="bg-white rounded-xl shadow-lg p-3 sm:p-6 relative w-full">
         <XpAnimation
           amount={points}
           show={showXp}
@@ -64,7 +64,7 @@ export function Flashcard({
 
         <div className="w-full max-w-[600px] mx-auto">
           <div
-            className="relative w-full aspect-[3/4] xs:aspect-[4/3] sm:aspect-[5/3] cursor-pointer"
+            className="relative w-full aspect-[4/3] xs:aspect-[3/2] sm:aspect-[5/3] cursor-pointer touch-manipulation"
             onClick={handleFlip}
             role="button"
             tabIndex={0}
@@ -74,34 +74,34 @@ export function Flashcard({
           >
             {/* Front */}
             <div
-              className={`absolute inset-0 bg-white rounded-xl shadow-sm p-4 sm:p-6 flex flex-col items-center justify-center border-2 border-primary/20 hover:border-primary/40 transition-all duration-300 ${
+              className={`absolute inset-0 bg-white rounded-xl shadow-sm p-3 sm:p-6 flex flex-col items-center justify-center border-2 border-primary/20 hover:border-primary/40 transition-all duration-300 ${
                 isFlipped ? "opacity-0 z-0" : "opacity-100 z-10"
               }`}
             >
-              <h2 className="text-2xl xs:text-3xl sm:text-4xl font-bold text-primary text-center">
+              <h2 className="text-xl xs:text-2xl sm:text-3xl md:text-4xl font-bold text-primary text-center px-2">
                 {front}
               </h2>
-              <p className="text-muted-foreground mt-2">Click to flip</p>
+              <p className="text-xs xs:text-sm text-muted-foreground mt-1 sm:mt-2">Click to flip</p>
             </div>
 
             {/* Back */}
             <div
-              className={`absolute inset-0 bg-white rounded-xl shadow-sm p-4 sm:p-6 flex flex-col items-center justify-center border-2 border-primary/20 hover:border-primary/40 transition-all duration-300 ${
+              className={`absolute inset-0 bg-white rounded-xl shadow-sm p-3 sm:p-6 flex flex-col items-center justify-center border-2 border-primary/20 hover:border-primary/40 transition-all duration-300 ${
                 isFlipped ? "opacity-100 z-10" : "opacity-0 z-0"
               }`}
             >
-              <h2 className="text-2xl xs:text-3xl sm:text-4xl font-bold text-primary text-center">
+              <h2 className="text-xl xs:text-2xl sm:text-3xl md:text-4xl font-bold text-primary text-center px-2">
                 {back}
               </h2>
-              <p className="text-muted-foreground mt-2">Click to flip back</p>
+              <p className="text-xs xs:text-sm text-muted-foreground mt-1 sm:mt-2">Click to flip back</p>
             </div>
           </div>
         </div>
 
         {showNext && (
-          <div className="mt-6 text-center">
+          <div className="mt-4 sm:mt-6 text-center">
             <Button
-              className="gap-2 w-full sm:w-auto"
+              className="gap-2 w-full sm:w-auto text-sm xs:text-base"
               onClick={() => {
                 setShowXp(true)
               }}

@@ -25,12 +25,12 @@ export function InputExercise({ question, answer, points, onComplete, onXpStart 
 
   return (
     <div className="w-full">
-      <div className="text-center mb-6">
-        <h2 className="text-xl xs:text-2xl sm:text-3xl font-bold mb-2 text-primary">Type It Out</h2>
-        <p className="text-muted-foreground">Type the correct answer</p>
+      <div className="text-center mb-4 sm:mb-6">
+        <h2 className="text-xl xs:text-2xl sm:text-3xl font-bold mb-1 sm:mb-2 text-primary">Type It Out</h2>
+        <p className="text-sm xs:text-base text-muted-foreground">Type the correct answer</p>
       </div>
       
-      <div className="bg-white rounded-xl shadow-lg p-4 sm:p-6 relative w-full">
+      <div className="bg-white rounded-xl shadow-lg p-3 sm:p-6 relative w-full">
         <XpAnimation 
           amount={points} 
           show={showXp} 
@@ -42,26 +42,27 @@ export function InputExercise({ question, answer, points, onComplete, onXpStart 
         />
         
         <div className="w-full max-w-[600px] mx-auto">
-          <p className="text-lg sm:text-xl mb-6 text-center">{question}</p>
+          <p className="text-base sm:text-lg md:text-xl mb-4 sm:mb-6 text-center px-2">{question}</p>
           
-          <div className="flex gap-2">
+          <div className="flex flex-col xs:flex-row gap-2">
             <Input
               value={input}
               onChange={(e) => setInput(e.target.value)}
               placeholder="Type your answer..."
-              className="flex-1"
+              className="flex-1 text-sm xs:text-base"
               disabled={showXp}
             />
             <Button 
               onClick={handleSubmit}
               disabled={!input.trim() || showXp}
+              className="text-sm xs:text-base"
             >
               Submit
             </Button>
           </div>
           
           {showXp && (
-            <div className={`mt-4 text-center ${isCorrect ? 'text-green-600' : 'text-red-600'}`}>
+            <div className={`mt-3 sm:mt-4 text-center text-sm xs:text-base ${isCorrect ? 'text-green-600' : 'text-red-600'}`}>
               {isCorrect ? "Correct! 🎉" : "Try again! 💪"}
             </div>
           )}
