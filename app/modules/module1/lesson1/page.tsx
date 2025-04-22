@@ -331,10 +331,10 @@ export default function Lesson1Page() {
       {/* Header */}
       <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="flex h-16 items-center justify-between px-3 sm:px-4">
-          <Link href="/modules/module1" className="flex items-center gap-2 font-bold text-base sm:text-lg text-primary">
+          <Link href="/modules" className="flex items-center gap-2 font-bold text-base sm:text-lg text-primary">
             <ChevronLeft className="h-5 w-5" />
-            <span className="hidden sm:inline">Back to Module 1</span>
-            <span className="sm:hidden">Back</span>
+            <span className="hidden sm:inline">Modules</span>
+            <span className="sm:hidden">Modules</span>
           </Link>
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2 overflow-x-auto">
@@ -353,20 +353,20 @@ export default function Lesson1Page() {
       )}
 
       <main className="flex-1 flex flex-col px-4 pt-4 pb-4 w-full">
-        {/* Back Button container - Conditionally rendered */} 
+        {/* Main content area top-aligned */}
+        <div className="w-full max-w-4xl mx-auto flex-1 flex flex-col items-start justify-start pt-4">
+          <RenderCurrentView />
+        </div>
+        
+        {/* Back Button container - Now below content */} 
         {currentView !== 'welcome' && currentView !== 'completion' && previousStates.length > 0 && (
-           <div className="w-full max-w-4xl mx-auto mb-4 flex justify-start">
+           <div className="w-full max-w-4xl mx-auto mt-4 flex justify-start">
             <Button variant="ghost" onClick={handleBack} className="text-sm flex items-center self-start">
               <ChevronLeft className="h-4 w-4 mr-1" />
               Go Back
             </Button>
           </div>
         )}
-        
-        {/* Main content area top-aligned */}
-        <div className="w-full max-w-4xl mx-auto flex-1 flex flex-col items-start justify-start pt-4">
-          <RenderCurrentView />
-        </div>
       </main>
     </div>
   )
