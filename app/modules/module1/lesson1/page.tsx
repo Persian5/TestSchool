@@ -365,15 +365,7 @@ export default function Lesson1Page() {
         
         {/* Main content area top-aligned */}
         <div className="w-full max-w-4xl mx-auto flex-1 flex flex-col items-start justify-start pt-4">
-          {currentView === 'welcome' ? (
-            <RenderCurrentView />
-          ) : (
-            <LessonRunner
-              steps={lesson1}
-              onXpChange={setXp}
-              onProgressChange={setProgress}
-            />
-          )}
+          <RenderCurrentView />
         </div>
       </main>
     </div>
