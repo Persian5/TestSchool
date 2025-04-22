@@ -155,11 +155,7 @@ export default function HomePage() {
       className="bg-accent hover:bg-accent/90 text-white transition-all duration-300 hover:scale-105 hover:shadow-lg rounded-full px-8 py-6 text-lg"
       aria-label="Preview Lesson 1"
       onClick={() => {
-        if (isSubscribed) {
-          window.location.href = '/modules';
-        } else {
-          scrollToWaitlist();
-        }
+        window.location.href = '/modules';
       }}
     >
       Preview Lesson 1

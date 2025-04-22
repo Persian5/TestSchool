@@ -9,20 +9,11 @@ import { useRouter } from "next/navigation"
 
 export default function ModulesPage() {
   const [mounted, setMounted] = useState(false)
-  const [isSubscribed, setIsSubscribed] = useState(false)
   const router = useRouter()
 
   useEffect(() => {
     setMounted(true)
-    // Check if user is subscribed
-    const subscribed = localStorage.getItem('isSubscribed') === 'true'
-    setIsSubscribed(subscribed)
-    
-    // If not subscribed, redirect to home page
-    if (!subscribed) {
-      router.push('/')
-    }
-  }, [router])
+  }, [])
 
   const modules = [
     {
@@ -70,10 +61,6 @@ export default function ModulesPage() {
   ]
 
   if (!mounted) {
-    return null
-  }
-
-  if (!isSubscribed) {
     return null
   }
 
