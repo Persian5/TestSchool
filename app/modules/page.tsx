@@ -27,8 +27,8 @@ export default function ModulesPage() {
       id: 2,
       title: "Module 2: Numbers",
       description: "Master counting in Farsi from 1 to 100",
-      href: "/modules/module2",
-      available: true
+      href: "#",
+      available: false
     },
     {
       id: 3,
