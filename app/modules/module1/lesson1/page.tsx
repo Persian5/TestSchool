@@ -2,15 +2,15 @@
 
 import { useState } from "react"
 import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Button } from "../../../../components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "../../../../components/ui/card"
 import { ChevronLeft, Star, ArrowRight, CheckCircle2, XCircle, Medal, Sparkles } from "lucide-react"
-import { Progress } from "@/components/ui/progress"
+import { Progress } from "../../../../components/ui/progress"
 import { WelcomeIntro } from "./components/WelcomeIntro"
 import { Flashcard } from "../../../components/games/Flashcard"
 import { Quiz } from "./components/Quiz"
 import { InputExercise } from "./components/InputExercise"
-import { DragDropGame } from "@/components/games/DragDropGame"
+import { DragDropGame } from "../../../components/games/DragDropGame"
 import { FinalChallenge } from "./components/FinalChallenge"
 import "./styles.css"
 
@@ -207,14 +207,18 @@ export default function Lesson1Page() {
       case 'dragdrop':
         return (
           <DragDropGame
-            items={[
-              cards[0].back,
-              cards[1].back,
-              cards[2].back,
-              cards[3].back,
+            words={[
+              { id: 'salam',          text: 'Salam',         slotId: 'hello'   },
+              { id: 'khosh_ahmadid',  text: 'Khosh Ahmadid', slotId: 'welcome' },
             ]}
-            points={3}
-            onXpStart={() => setXp(prev => prev + 3)}  // award XP when animation starts
+            slots={[
+              { id: 'hello',      text: 'Hello'      },
+              { id: 'welcome',    text: 'Welcome'    },
+              { id: 'goodbye',    text: 'Goodbye'    },
+              { id: 'goodnight',  text: 'Good Night' },
+            ]}
+            points={2 /* or sum of both if you like */}
+            onXpStart={() => setXp(prev => prev + 2)}
             onComplete={handleDragDropComplete}
           />
         )
