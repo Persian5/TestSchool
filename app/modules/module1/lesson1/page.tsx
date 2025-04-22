@@ -363,9 +363,17 @@ export default function Lesson1Page() {
           </div>
         )}
         
-        {/* Main content area centered */} 
-        <div className="w-full max-w-4xl mx-auto flex-1 flex items-center justify-center">
-          <RenderCurrentView />
+        {/* Main content area top-aligned */}
+        <div className="w-full max-w-4xl mx-auto flex-1 flex flex-col items-start justify-start pt-4">
+          {currentView === 'welcome' ? (
+            <RenderCurrentView />
+          ) : (
+            <LessonRunner
+              steps={lesson1}
+              onXpChange={setXp}
+              onProgressChange={setProgress}
+            />
+          )}
         </div>
       </main>
     </div>
