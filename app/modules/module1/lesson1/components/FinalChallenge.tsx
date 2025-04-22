@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { XpAnimation } from "./XpAnimation"
+import { X } from "lucide-react"
 
 interface FinalChallengeProps {
   onComplete: (correct: boolean) => void
@@ -23,63 +24,32 @@ export function FinalChallenge({ onComplete }: FinalChallengeProps) {
     { id: 4, itemId: null as string | null },
   ])
   
-  const [isDragging, setIsDragging] = useState(false)
-  const [draggedItem, setDraggedItem] = useState<string | null>(null)
   const [showFeedback, setShowFeedback] = useState(false)
   const [isCorrect, setIsCorrect] = useState(false)
   const [showXp, setShowXp] = useState(false)
   const confettiCanvasRef = useRef<HTMLDivElement>(null)
 
-  // Handle drag start for an item
-  const handleDragStart = (e: React.DragEvent, itemId: string) => {
-    e.dataTransfer.setData("text/plain", itemId)
-    setIsDragging(true)
-    setDraggedItem(itemId)
-  }
-
-  // Handle drop into a slot
-  const handleDrop = (e: React.DragEvent, slotId: number) => {
-    e.preventDefault()
-    const itemId = e.dataTransfer.getData("text/plain")
-    if (!itemId) return
+  // Handle clicking on a phrase to add it to the next available slot
+  const handlePhraseClick = (itemId: string) => {
+    // Find the first empty slot
+    const firstEmptySlot = slots.find(slot => slot.itemId === null);
+    if (!firstEmptySlot) return; // No empty slots
     
-    // Check if the slot already has an item - don't replace it
-    const targetSlot = slots.find(s => s.id === slotId)
-    if (targetSlot && targetSlot.itemId !== null) {
-      return
-    }
-    
-    // Check if the item is already in another slot
-    const previousSlot = slots.find(slot => slot.itemId === itemId)
-    
-    // Update slots state
+    // Update the slots state
     setSlots(slots.map(slot => {
-      if (slot.id === slotId) {
+      if (slot.id === firstEmptySlot.id) {
         return { ...slot, itemId }
-      } else if (previousSlot && slot.id === previousSlot.id) {
-        return { ...slot, itemId: null }
-      } else {
-        return slot
       }
+      return slot;
     }))
 
     // Update items state with their order
     setItems(items.map(item => {
       if (item.id === itemId) {
-        return { ...item, order: slotId }
-      } else if (previousSlot && item.order === slotId) {
-        return { ...item, order: null }
-      } else {
-        return item
+        return { ...item, order: firstEmptySlot.id }
       }
+      return item;
     }))
-
-    setIsDragging(false)
-    setDraggedItem(null)
-  }
-  
-  const handleDragOver = (e: React.DragEvent) => {
-    e.preventDefault()
   }
   
   // Check if all slots are filled
@@ -149,6 +119,14 @@ export function FinalChallenge({ onComplete }: FinalChallengeProps) {
     ))
   }
 
+  // Reset the challenge
+  const resetChallenge = () => {
+    setSlots(slots.map(slot => ({ ...slot, itemId: null })));
+    setItems(items.map(item => ({ ...item, order: null })));
+    setShowFeedback(false);
+    setIsCorrect(false);
+  }
+
   return (
     <div className="w-full py-2">
       <div ref={confettiCanvasRef} className="fixed inset-0 pointer-events-none z-50"></div>
@@ -188,9 +166,8 @@ export function FinalChallenge({ onComplete }: FinalChallengeProps) {
                     flex items-center p-3 rounded-lg border-2 border-dashed transition-all 
                     ${item ? 'border-primary bg-primary/5' : 'border-gray-300'}
                     ${showFeedback && isCorrect ? 'border-green-500 bg-green-50' : ''}
+                    ${showFeedback && !isCorrect ? 'border-red-500 bg-red-50' : ''}
                   `}
-                  onDragOver={handleDragOver}
-                  onDrop={(e) => handleDrop(e, slot.id)}
                 >
                   <div className="flex-shrink-0 w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center mr-2">
                     <span className="text-primary font-semibold text-sm">{slot.id}</span>
@@ -200,51 +177,62 @@ export function FinalChallenge({ onComplete }: FinalChallengeProps) {
                     <div className="flex justify-between items-center flex-1">
                       <span className="text-base">{item.text}</span>
                       <button 
-                        className="text-gray-400 hover:text-red-500 text-xl ml-2"
+                        className="text-gray-400 hover:text-red-500 flex items-center ml-2"
                         onClick={() => removeFromSlot(slot.id)}
+                        disabled={showFeedback && isCorrect}
                       >
-                        ×
+                        <X size={16} />
                       </button>
                     </div>
                   ) : (
-                    <div className="text-gray-400 italic text-sm">Drop phrase here</div>
+                    <div className="text-gray-400 italic text-sm">Click a phrase below</div>
                   )}
                 </div>
               )
             })}
           </div>
           
-          {/* Draggable items */}
+          {/* Clickable phrases */}
           <div className="flex flex-wrap gap-2 justify-center mb-4">
             {items.filter(item => item.order === null).map((item) => (
-              <div
+              <button
                 key={item.id}
-                draggable
-                onDragStart={(e) => handleDragStart(e, item.id)}
+                onClick={() => handlePhraseClick(item.id)}
+                disabled={showFeedback && isCorrect}
                 className="
-                  px-3 py-1.5 bg-accent text-white rounded-lg cursor-move
-                  shadow-sm hover:shadow-md transition-all text-sm sm:text-base
+                  px-3 py-1.5 bg-accent text-white rounded-lg
+                  shadow-sm hover:shadow-md active:scale-95 transition-all text-sm sm:text-base
+                  disabled:opacity-50 disabled:cursor-not-allowed
                 "
               >
                 {item.text}
-              </div>
+              </button>
             ))}
           </div>
           
           {/* Submit button */}
           <div className="text-center mt-3">
-            <Button
-              className={`
-                px-4 py-2 rounded-lg font-semibold transition-all w-full sm:w-auto text-base
-                ${allSlotsFilled 
-                  ? 'bg-primary text-white hover:bg-primary/90'
-                  : 'bg-gray-200 text-gray-400 cursor-not-allowed'}
-              `}
-              disabled={!allSlotsFilled || (showFeedback && isCorrect)}
-              onClick={checkOrder}
-            >
-              Check My Answer
-            </Button>
+            {showFeedback && !isCorrect ? (
+              <Button
+                className="px-4 py-2 rounded-lg font-semibold transition-all w-full sm:w-auto text-base"
+                onClick={resetChallenge}
+              >
+                Retry
+              </Button>
+            ) : (
+              <Button
+                className={`
+                  px-4 py-2 rounded-lg font-semibold transition-all w-full sm:w-auto text-base
+                  ${allSlotsFilled 
+                    ? 'bg-primary text-white hover:bg-primary/90'
+                    : 'bg-gray-200 text-gray-400 cursor-not-allowed'}
+                `}
+                disabled={!allSlotsFilled || (showFeedback && isCorrect)}
+                onClick={checkOrder}
+              >
+                Check My Answer
+              </Button>
+            )}
           </div>
         </CardContent>
       </Card>
