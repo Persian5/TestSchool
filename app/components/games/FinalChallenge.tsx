@@ -9,12 +9,14 @@ export interface FinalChallengeProps {
   targetWords: string[];
   points: number;
   onComplete: (success: boolean) => void;
+  onXpStart?: () => void;
 }
 
 export function FinalChallenge({ 
   targetWords = ["salam", "chetori", "khodafez"], 
   points = 20, 
-  onComplete 
+  onComplete,
+  onXpStart
 }: FinalChallengeProps) {
   const [items, setItems] = useState([
     { id: "salam", text: "Salam", order: null as number | null },
@@ -84,6 +86,8 @@ export function FinalChallenge({
     if (isOrderCorrect) {
       setShowXp(true)  // trigger XP animation
       
+      // Don't award XP here - it will be handled by XpAnimation onStart
+      
       // Trigger confetti
       if (typeof window !== 'undefined') {
         import('canvas-confetti').then((confetti) => {
@@ -151,10 +155,13 @@ export function FinalChallenge({
           <XpAnimation 
             amount={points} 
             show={showXp}
+            onStart={onXpStart}
             onComplete={() => {
-              // Removed storage-based XP update; using setXp in parent
-              onComplete(true)  // advance parent immediately
+              // Don't call onComplete here - it will award XP again
+              // Just reset component state
               setShowXp(false)  // reset for next use
+              // Now call onComplete only after animation is done
+              onComplete(true)
             }}
           />
           {/* Slots for ordering */}

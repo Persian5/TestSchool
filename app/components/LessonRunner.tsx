@@ -9,12 +9,12 @@ import { LessonStep, WelcomeStep, FlashcardStep, QuizStep, InputStep, DragDropSt
 
 interface LessonRunnerProps {
   steps: LessonStep[];
-  // eventually we will replace this with moduleId, but for now keep steps
+  xp: number;
+  onXpChange: (xp: number) => void;
 }
 
-export function LessonRunner({ steps }: LessonRunnerProps) {
+export function LessonRunner({ steps, xp, onXpChange }: LessonRunnerProps) {
   const [idx, setIdx] = useState(0)
-  const [xp, setXp] = useState(0)
   const [isFlipped, setIsFlipped] = useState(false) // For flashcard
   const [showContinue, setShowContinue] = useState(false) // For flashcard
 
@@ -33,7 +33,14 @@ export function LessonRunner({ steps }: LessonRunnerProps) {
   const next = () => setIdx(i => i + 1)
 
   // Increment XP when each game completes
-  const handleXpStart = () => setXp(prev => prev + step.points)
+  const handleXpStart = () => onXpChange(xp + step.points)
+  
+  // Generic handler for all components except Flashcard
+  const handleItemComplete = () => {
+    // Don't award XP here - it's already handled in each component via onXpStart
+    // Just advance to next step
+    next();
+  }
 
   // Flashcard specific handlers
   const handleFlip = () => {
@@ -44,9 +51,8 @@ export function LessonRunner({ steps }: LessonRunnerProps) {
   }
 
   const handleFlashcardContinue = () => {
-    // First, we'll award XP
-    handleXpStart();
-    // Then advance to the next step
+    // Don't award XP here - it's already handled in the Flashcard component via onXpStart
+    // Just advance to the next step
     next();
     // Reset flashcard state for next time we see a flashcard
     setIsFlipped(false);
@@ -85,7 +91,8 @@ export function LessonRunner({ steps }: LessonRunnerProps) {
           options={quizStep.data.options}
           correct={quizStep.data.correct}
           points={quizStep.points}
-          onComplete={next}
+          onComplete={handleItemComplete}
+          onXpStart={handleXpStart}
         />
       );
       
@@ -96,7 +103,8 @@ export function LessonRunner({ steps }: LessonRunnerProps) {
           question={inputStep.data.question}
           answer={inputStep.data.answer}
           points={inputStep.points}
-          onComplete={next}
+          onComplete={handleItemComplete}
+          onXpStart={handleXpStart}
         />
       );
       
@@ -107,7 +115,8 @@ export function LessonRunner({ steps }: LessonRunnerProps) {
           words={dragDropStep.data.words}
           slots={dragDropStep.data.slots}
           points={dragDropStep.points}
-          onComplete={next}
+          onComplete={handleItemComplete}
+          onXpStart={handleXpStart}
         />
       );
       
@@ -117,7 +126,8 @@ export function LessonRunner({ steps }: LessonRunnerProps) {
         <FinalChallenge
           targetWords={finalStep.data.targetWords}
           points={finalStep.points}
-          onComplete={next}
+          onComplete={handleItemComplete}
+          onXpStart={handleXpStart}
         />
       );
       

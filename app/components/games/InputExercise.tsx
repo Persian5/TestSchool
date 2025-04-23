@@ -10,13 +10,15 @@ export interface InputExerciseProps {
   answer: string
   points?: number
   onComplete: (correct: boolean) => void
+  onXpStart?: () => void
 }
 
 export function InputExercise({ 
   question = "Type 'How are you?' in Persian (Finglish)",
   answer = "Chetori",
   points = 2,
-  onComplete 
+  onComplete,
+  onXpStart
 }: InputExerciseProps) {
   const [input, setInput] = useState("")
   const [showFeedback, setShowFeedback] = useState(false)
@@ -52,10 +54,10 @@ export function InputExercise({
         <XpAnimation 
           amount={points} 
           show={showXp}
+          onStart={onXpStart}
           onComplete={() => {
-            // Removed storage-based XP update; using setXp in parent
-            onComplete(true)  // advance parent immediately
             setShowXp(false)  // reset for next use
+            onComplete(true)
           }}
         />
         

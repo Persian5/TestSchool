@@ -40,9 +40,10 @@ export function DragDropGame({
       // Show XP animation
       setShowXp(true);
       
-      // After animation completes, add points and advance
+      // Don't award XP here - it will be handled by XpAnimation onStart
+      
+      // After animation completes, advance
       const timer = setTimeout(() => {
-        if (onXpStart) onXpStart();
         onComplete(true);
         setShowXp(false);
       }, 800);
@@ -105,6 +106,11 @@ export function DragDropGame({
         <XpAnimation 
           amount={points} 
           show={showXp}
+          onStart={onXpStart}
+          onComplete={() => {
+            // Just hide animation - don't call onComplete again
+            setShowXp(false);
+          }}
         />
         
         <div className="w-full max-w-[600px] mx-auto">

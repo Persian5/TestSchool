@@ -15,6 +15,7 @@ export interface QuizProps {
   correct: number;
   points?: number;
   onComplete: (correct: boolean) => void;
+  onXpStart?: () => void;
 }
 
 export function Quiz({ 
@@ -27,7 +28,8 @@ export function Quiz({
   ],
   correct = 0,
   points = 2,
-  onComplete 
+  onComplete,
+  onXpStart
 }: QuizProps) {
   const [selectedOption, setSelectedOption] = useState<number | null>(null)
   const [showFeedback, setShowFeedback] = useState(false)
@@ -66,10 +68,10 @@ export function Quiz({
         <XpAnimation 
           amount={points} 
           show={showXp}
+          onStart={onXpStart}
           onComplete={() => {
-            // Removed storage-based XP update; using setXp in parent
-            onComplete(true)  // advance parent immediately
             setShowXp(false)  // reset for next use
+            onComplete(true)
           }}
         />
         

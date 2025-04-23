@@ -6,9 +6,11 @@ import { useParams } from "next/navigation"
 import { getLessonSteps, getLesson, getModule } from "@/lib/config/curriculum"
 import { LessonRunner } from "@/app/components/LessonRunner"
 import "./styles.css"
+import { useState } from "react"
 
 export default function LessonPage() {
   const { moduleId, lessonId } = useParams();
+  const [xp, setXp] = useState(0);
   
   // Get data from config
   const lesson = getLesson(moduleId as string, lessonId as string);
@@ -36,7 +38,7 @@ export default function LessonPage() {
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2 overflow-x-auto">
               <Star className="h-5 w-5 text-yellow-500" />
-              <span className="text-sm font-medium">XP</span>
+              <span className="text-sm font-medium">{xp} XP</span>
             </div>
           </div>
         </div>
@@ -46,7 +48,11 @@ export default function LessonPage() {
         {/* Main content area top-aligned */}
         <div className="w-full max-w-4xl mx-auto flex-1 flex flex-col items-start justify-start pt-4">
           {/* Always drive from config */}
-          <LessonRunner steps={getLessonSteps(moduleId as string, lessonId as string)} />
+          <LessonRunner 
+            steps={getLessonSteps(moduleId as string, lessonId as string)} 
+            xp={xp}
+            onXpChange={setXp}
+          />
         </div>
       </main>
     </div>

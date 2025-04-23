@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { ArrowRight } from "lucide-react"
-import { XpAnimation } from "@/app/components/XpAnimation"
+import { XpAnimation } from "@/app/components/games/XpAnimation"
 
 interface FlashcardProps {
   front: string
@@ -50,7 +50,8 @@ export function Flashcard({
   }
 
   function handleContinueClick() {
-    // First trigger XP animation
+    // Don't award XP here - it will be handled by XpAnimation
+    // Trigger XP animation
     setShowXp(true);
   }
 
