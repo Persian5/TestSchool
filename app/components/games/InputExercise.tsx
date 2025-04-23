@@ -1,71 +1,118 @@
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { ArrowRight } from "lucide-react"
-import { XpAnimation } from "../../components/XpAnimation"
+import { CheckCircle2, XCircle } from "lucide-react"
+import { motion, AnimatePresence } from "framer-motion"
+import { XpAnimation } from "./XpAnimation"
 
 interface InputExerciseProps {
-  question: string
-  answer: string
-  points: number
   onComplete: (correct: boolean) => void
-  onXpStart?: () => void
 }
 
-export function InputExercise({ question, answer, points, onComplete, onXpStart }: InputExerciseProps) {
+export function InputExercise({ onComplete }: InputExerciseProps) {
   const [input, setInput] = useState("")
+  const [showFeedback, setShowFeedback] = useState(false)
   const [showXp, setShowXp] = useState(false)
   const [isCorrect, setIsCorrect] = useState(false)
 
-  const handleSubmit = () => {
-    const correct = input.toLowerCase().trim() === answer.toLowerCase().trim()
-    setIsCorrect(correct)
-    setShowXp(true)
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInput(e.target.value)
+    if (showFeedback && !isCorrect) {
+      setShowFeedback(false)
+    }
+  }
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    const isAnswerCorrect = input.toLowerCase().trim() === "chetori"
+    setIsCorrect(isAnswerCorrect)
+    setShowFeedback(true)
+
+    if (isAnswerCorrect) {
+      setShowXp(true)  // trigger XP animation
+    }
   }
 
   return (
-    <div className="w-full">
-      <div className="text-center mb-4 sm:mb-6">
-        <h2 className="text-xl xs:text-2xl sm:text-3xl font-bold mb-1 sm:mb-2 text-primary">Type It Out</h2>
-        <p className="text-sm xs:text-base text-muted-foreground">Type the correct answer</p>
+    <div className="w-full max-w-md mx-auto py-2">
+      <div className="text-center mb-4">
+        <h2 className="text-2xl sm:text-3xl font-bold mb-1 text-primary">Practice</h2>
+        <p className="text-muted-foreground">Type the correct word in Finglish</p>
       </div>
-      
-      <div className="bg-white rounded-xl shadow-lg p-3 sm:p-6 relative w-full">
+
+      <div className="bg-white rounded-xl shadow-lg p-4 relative">
         <XpAnimation 
-          amount={points} 
-          show={showXp} 
-          onStart={onXpStart}
+          amount={5} 
+          show={showXp}
           onComplete={() => {
-            setShowXp(false)
-            onComplete(isCorrect)
+            // Removed storage-based XP update; using setXp in parent
+            onComplete(true)  // advance parent immediately
+            setShowXp(false)  // reset for next use
           }}
         />
         
-        <div className="w-full max-w-[600px] mx-auto">
-          <p className="text-base sm:text-lg md:text-xl mb-4 sm:mb-6 text-center px-2">{question}</p>
-          
-          <div className="flex flex-col xs:flex-row gap-2">
-            <Input
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              placeholder="Type your answer..."
-              className="flex-1 text-sm xs:text-base"
-              disabled={showXp}
-            />
-            <Button 
-              onClick={handleSubmit}
-              disabled={!input.trim() || showXp}
-              className="text-sm xs:text-base"
-            >
-              Submit
-            </Button>
+        <div className="space-y-4">
+          <div className="text-center">
+            <p className="text-lg sm:text-xl">
+              Ali says: Salam, <span className="font-semibold">___?</span> (How Are You)
+            </p>
           </div>
-          
-          {showXp && (
-            <div className={`mt-3 sm:mt-4 text-center text-sm xs:text-base ${isCorrect ? 'text-green-600' : 'text-red-600'}`}>
-              {isCorrect ? "Correct! 🎉" : "Try again! 💪"}
+
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="relative">
+              <Input
+                type="text"
+                value={input}
+                onChange={handleInputChange}
+                placeholder="Type your answer..."
+                className={`pr-10 text-base sm:text-lg ${
+                  showFeedback
+                    ? isCorrect
+                      ? "border-green-500 focus-visible:ring-green-500"
+                      : "border-red-500 focus-visible:ring-red-500"
+                    : ""
+                }`}
+                disabled={showFeedback && isCorrect}
+              />
+              <AnimatePresence>
+                {showFeedback && (
+                  <motion.div
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    exit={{ scale: 0 }}
+                    className="absolute right-3 top-1/2 -translate-y-1/2"
+                  >
+                    {isCorrect ? (
+                      <CheckCircle2 className="h-5 w-5 text-green-500" />
+                    ) : (
+                      <XCircle className="h-5 w-5 text-red-500" />
+                    )}
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
-          )}
+
+            <Button
+              type="submit"
+              className="w-full text-base sm:text-lg py-3"
+              disabled={showFeedback && isCorrect}
+            >
+              Check Answer
+            </Button>
+          </form>
+
+          <AnimatePresence>
+            {showFeedback && !isCorrect && (
+              <motion.p
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0 }}
+                className="text-center text-red-500 mt-3 text-sm"
+              >
+                Almost! Try again.
+              </motion.p>
+            )}
+          </AnimatePresence>
         </div>
       </div>
     </div>

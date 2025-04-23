@@ -1,71 +1,125 @@
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
-import { ArrowRight } from "lucide-react"
-import { XpAnimation } from "../../components/XpAnimation"
+import { CheckCircle2, XCircle } from "lucide-react"
+import { motion, AnimatePresence } from "framer-motion"
+import { XpAnimation } from "./XpAnimation"
 
 interface QuizProps {
-  prompt: string
-  options: string[]
-  correct: number
-  points: number
   onComplete: (correct: boolean) => void
-  onXpStart?: () => void
 }
 
-export function Quiz({ prompt, options, correct, points, onComplete, onXpStart }: QuizProps) {
-  const [selected, setSelected] = useState<number | null>(null)
+export function Quiz({ onComplete }: QuizProps) {
+  const [selectedOption, setSelectedOption] = useState<number | null>(null)
+  const [showFeedback, setShowFeedback] = useState(false)
   const [showXp, setShowXp] = useState(false)
+  const [isDisabled, setIsDisabled] = useState(false)
+
+  const options = [
+    { text: "Salam", correct: true },
+    { text: "Khodahafez", correct: false },
+    { text: "Shab Bekheir", correct: false },
+    { text: "Chetori", correct: false },
+  ]
 
   const handleSelect = (index: number) => {
-    if (selected !== null) return
-    setSelected(index)
-    setShowXp(true)
+    setSelectedOption(index)
+    setShowFeedback(true)
+    setIsDisabled(true)
+    
+    if (options[index].correct) {
+      setShowXp(true)  // trigger XP animation
+    } else {
+      setTimeout(() => {
+        setShowFeedback(false)
+        setSelectedOption(null)
+        setIsDisabled(false)
+      }, 700)
+    }
   }
 
-  const isCorrect = selected === correct
-
   return (
-    <div className="w-full">
-      <div className="text-center mb-4 sm:mb-6">
-        <h2 className="text-xl xs:text-2xl sm:text-3xl font-bold mb-1 sm:mb-2 text-primary">Quiz Time!</h2>
-        <p className="text-sm xs:text-base text-muted-foreground">Select the correct answer</p>
+    <div className="w-full max-w-md mx-auto py-2">
+      <div className="text-center mb-4">
+        <h2 className="text-2xl sm:text-3xl font-bold mb-1 text-primary">Quick Quiz</h2>
+        <p className="text-muted-foreground">Test what you've learned!</p>
       </div>
-      
-      <div className="bg-white rounded-xl shadow-lg p-3 sm:p-4 relative w-full">
+
+      <div className="bg-white rounded-xl shadow-lg p-4 relative">
         <XpAnimation 
-          amount={points} 
-          show={showXp} 
-          onStart={onXpStart}
+          amount={5} 
+          show={showXp}
           onComplete={() => {
-            setShowXp(false)
-            onComplete(isCorrect)
+            // Removed storage-based XP update; using setXp in parent
+            onComplete(true)  // advance parent immediately
+            setShowXp(false)  // reset for next use
           }}
         />
         
-        <div className="w-full max-w-[600px] mx-auto">
-          <p className="text-base sm:text-lg md:text-xl mb-4 sm:mb-6 text-center px-2">{prompt}</p>
-          
-          <div className="space-y-2 xs:space-y-3 sm:space-y-4">
-            {options.map((option, index) => (
+        <h3 className="text-lg sm:text-xl font-semibold mb-4 text-center">
+          Ali smiles and says "Hello". What's the right Persian word?
+        </h3>
+
+        <div className="space-y-3">
+          {options.map((option, index) => (
+            <motion.div
+              key={index}
+              initial={false}
+              animate={{
+                x: showFeedback && selectedOption === index && !option.correct ? [0, -10, 10, -10, 10, 0] : 0,
+                borderColor: showFeedback && selectedOption === index
+                  ? option.correct ? "rgb(34 197 94)" : "rgb(239 68 68)"
+                  : "rgb(229 231 235)",
+              }}
+              transition={{
+                x: { duration: 0.5 },
+                borderColor: { duration: 0.3 },
+              }}
+            >
               <Button
-                key={index}
-                variant={selected === index ? (isCorrect ? "default" : "destructive") : "outline"}
-                className={`w-full justify-start gap-2 text-xs xs:text-sm sm:text-base py-2 xs:py-3 ${
-                  selected === index ? (isCorrect ? "bg-primary text-white" : "bg-red-500 text-white") : ""
+                variant={selectedOption === index ? "default" : "outline"}
+                className={`w-full justify-start gap-2 text-base sm:text-lg py-3 ${
+                  showFeedback && selectedOption === index
+                    ? option.correct
+                      ? "bg-green-500 hover:bg-green-600"
+                      : "bg-red-500 hover:bg-red-600"
+                    : ""
                 }`}
                 onClick={() => handleSelect(index)}
-                disabled={selected !== null}
+                disabled={isDisabled}
               >
-                <span className="flex-1 text-left">{option}</span>
-                {selected === index && (
-                  <span className="text-xs xs:text-sm">
-                    {isCorrect ? "✓" : "✗"}
-                  </span>
-                )}
+                <AnimatePresence>
+                  {showFeedback && selectedOption === index && (
+                    <motion.div
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      exit={{ scale: 0 }}
+                    >
+                      {option.correct ? (
+                        <CheckCircle2 className="h-5 w-5" />
+                      ) : (
+                        <XCircle className="h-5 w-5" />
+                      )}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+                {option.text}
               </Button>
-            ))}
-          </div>
+            </motion.div>
+          ))}
         </div>
+
+        <AnimatePresence>
+          {showFeedback && selectedOption !== null && !options[selectedOption].correct && (
+            <motion.p
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0 }}
+              className="text-center text-red-500 mt-3"
+            >
+              Try again!
+            </motion.p>
+          )}
+        </AnimatePresence>
       </div>
     </div>
   )

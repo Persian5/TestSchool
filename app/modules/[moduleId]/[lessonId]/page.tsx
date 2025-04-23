@@ -7,66 +7,15 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { ChevronLeft, Star, ArrowRight, CheckCircle2, XCircle, Medal, Sparkles } from "lucide-react"
 import { Progress } from "@/components/ui/progress"
 import { Flashcard } from "@/app/components/games/Flashcard"
-import { Quiz } from "./components/Quiz" 
-import { InputExercise } from "./components/InputExercise"
+import { Quiz } from "@/app/components/games/Quiz" 
+import { InputExercise } from "@/app/components/games/InputExercise"
 import { DragDropGame } from "@/app/components/games/DragDropGame"
-import { FinalChallenge } from "./components/FinalChallenge"
+import { FinalChallenge } from "@/app/components/games/FinalChallenge"
 import { useParams } from "next/navigation"
 import { getLessonSteps, getLesson, getModule } from "@/lib/config/curriculum"
 import { LessonState, LessonViewType, FlashcardStep, DragDropStep, FinalStep, QuizStep, InputStep, WelcomeStep } from "@/lib/types"
+import { WelcomeIntro } from "@/app/components/games/WelcomeIntro"
 import "./styles.css"
-
-// Welcome component for the first step
-const WelcomeIntro = ({ onStart }: { onStart: () => void }) => (
-  <div className="max-w-md mx-auto text-center">
-    <h1 className="text-3xl sm:text-4xl font-bold mb-4 text-primary">Basic Persian Greetings</h1>
-    <p className="text-lg mb-4 text-muted-foreground">Let's learn the essentials of greeting someone in Persian</p>
-    
-    {/* Ali's story */}
-    <div className="bg-secondary/10 rounded-xl p-6 mb-6">
-      <h3 className="font-bold text-xl mb-3">Let's Help Ali!</h3>
-      <p className="text-sm text-muted-foreground mb-4">
-        Ali is visiting Tehran for the first time and needs to learn basic greetings to make a good impression. 
-        Your mission is to teach him the essential Persian phrases he needs.
-      </p>
-      <div className="flex justify-center">
-        <div className="bg-background rounded-full w-16 h-16 flex items-center justify-center">
-          <span className="text-2xl">👨‍💼</span>
-        </div>
-      </div>
-    </div>
-    
-    <div className="space-y-6">
-      <div className="bg-primary/10 rounded-xl p-6">
-        <p className="text-lg mb-4">In this lesson, you'll learn how to:</p>
-        <ul className="space-y-2 text-left">
-          <li className="flex items-center gap-2">
-            <CheckCircle2 className="h-5 w-5 text-green-500 flex-shrink-0" />
-            <span>Say hello and greet someone</span>
-          </li>
-          <li className="flex items-center gap-2">
-            <CheckCircle2 className="h-5 w-5 text-green-500 flex-shrink-0" />
-            <span>Ask how someone is doing</span>
-          </li>
-          <li className="flex items-center gap-2">
-            <CheckCircle2 className="h-5 w-5 text-green-500 flex-shrink-0" />
-            <span>Welcome someone</span>
-          </li>
-          <li className="flex items-center gap-2">
-            <CheckCircle2 className="h-5 w-5 text-green-500 flex-shrink-0" />
-            <span>Say goodbye properly</span>
-          </li>
-        </ul>
-      </div>
-      <Button 
-        onClick={onStart} 
-        className="w-full py-6 text-lg"
-      >
-        Let's Begin! <ArrowRight className="ml-2 h-5 w-5" />
-      </Button>
-    </div>
-  </div>
-);
 
 export default function LessonPage() {
   const { moduleId, lessonId } = useParams();

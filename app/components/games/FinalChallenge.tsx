@@ -1,139 +1,273 @@
-import { useState } from "react"
+import { useState, useRef, useEffect } from "react"
+import { motion, AnimatePresence } from "framer-motion"
+import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { XpAnimation } from "../../components/XpAnimation"
-import { motion } from "framer-motion"
+import { XpAnimation } from "./XpAnimation"
+import { X } from "lucide-react"
 
 interface FinalChallengeProps {
-  sentence: string[]
-  points: number
   onComplete: (correct: boolean) => void
-  onXpStart?: () => void
 }
 
-export function FinalChallenge({ sentence, points, onComplete, onXpStart }: FinalChallengeProps) {
-  const [inputs, setInputs] = useState<string[]>(Array(sentence.length).fill(""))
-  const [showXp, setShowXp] = useState(false)
+export function FinalChallenge({ onComplete }: FinalChallengeProps) {
+  const [items, setItems] = useState([
+    { id: "salam", text: "Salam", order: null as number | null },
+    { id: "khosh_ahmadid", text: "Khosh Ahmadid", order: null as number | null },
+    { id: "chetori", text: "Chetori", order: null as number | null },
+    { id: "khodahafez", text: "Khodahafez", order: null as number | null },
+  ])
+  
+  const [slots, setSlots] = useState([
+    { id: 1, itemId: null as string | null },
+    { id: 2, itemId: null as string | null },
+    { id: 3, itemId: null as string | null },
+    { id: 4, itemId: null as string | null },
+  ])
+  
+  const [showFeedback, setShowFeedback] = useState(false)
   const [isCorrect, setIsCorrect] = useState(false)
-  const [selectedIndex, setSelectedIndex] = useState<number | null>(null)
-  const [showOptions, setShowOptions] = useState(false)
-  const [options, setOptions] = useState<string[]>([])
+  const [showXp, setShowXp] = useState(false)
+  const confettiCanvasRef = useRef<HTMLDivElement>(null)
 
-  const handleInputChange = (index: number, value: string) => {
-    const newInputs = [...inputs]
-    newInputs[index] = value
-    setInputs(newInputs)
-    setShowOptions(false)
-    setSelectedIndex(null)
-  }
-
-  const handleInputClick = (index: number) => {
-    if (showOptions) {
-      setShowOptions(false)
-      setSelectedIndex(null)
-      return
-    }
+  // Handle clicking on a phrase to add it to the next available slot
+  const handlePhraseClick = (itemId: string) => {
+    // Find the first empty slot
+    const firstEmptySlot = slots.find(slot => slot.itemId === null);
+    if (!firstEmptySlot) return; // No empty slots
     
-    setSelectedIndex(index)
-    // Generate options based on the sentence
-    const possibleOptions = sentence.filter(word => !inputs.includes(word))
-    setOptions(possibleOptions)
-    setShowOptions(true)
-  }
+    // Update the slots state
+    setSlots(slots.map(slot => {
+      if (slot.id === firstEmptySlot.id) {
+        return { ...slot, itemId }
+      }
+      return slot;
+    }))
 
-  const handleOptionSelect = (option: string) => {
-    if (selectedIndex !== null) {
-      handleInputChange(selectedIndex, option)
+    // Update items state with their order
+    setItems(items.map(item => {
+      if (item.id === itemId) {
+        return { ...item, order: firstEmptySlot.id }
+      }
+      return item;
+    }))
+  }
+  
+  // Check if all slots are filled
+  const allSlotsFilled = slots.every(slot => slot.itemId !== null)
+  
+  // Validate order
+  const checkOrder = () => {
+    const correctOrder = [
+      "salam",
+      "khosh_ahmadid",
+      "chetori",
+      "khodahafez"
+    ]
+    
+    const currentOrder = slots.map(slot => {
+      const item = items.find(item => item.id === slot.itemId)
+      return item ? item.id : null
+    })
+    
+    const isOrderCorrect = currentOrder.every((id, index) => id === correctOrder[index])
+    
+    setShowFeedback(true)
+    setIsCorrect(isOrderCorrect)
+    
+    if (isOrderCorrect) {
+      setShowXp(true)  // trigger XP animation
+      
+      // Trigger confetti
+      if (typeof window !== 'undefined') {
+        import('canvas-confetti').then((confetti) => {
+          confetti.default({
+            particleCount: 150,
+            spread: 90,
+            origin: { y: 0.5 },
+            gravity: 0.8,
+          })
+        })
+      }
+    } else {
+      // Shake effect for incorrect order provided by the animate-shake class
+      setTimeout(() => {
+        setShowFeedback(false)
+      }, 2000)
     }
   }
 
-  const handleCheck = () => {
-    const correct = inputs.every((input, index) => 
-      input.toLowerCase().trim() === sentence[index].toLowerCase().trim()
-    )
-    setIsCorrect(correct)
-    setShowXp(true)
+  // Get an item by slotId
+  const getItemForSlot = (slotId: number) => {
+    const slot = slots.find(s => s.id === slotId)
+    if (!slot || !slot.itemId) return null
+    return items.find(item => item.id === slot.itemId)
+  }
+  
+  // Remove item from a slot
+  const removeFromSlot = (slotId: number) => {
+    const slot = slots.find(s => s.id === slotId)
+    if (!slot || !slot.itemId) return
+
+    const itemIdToRemove = slot.itemId;
+
+    setSlots(slots.map(s => 
+      s.id === slotId ? { ...s, itemId: null } : s
+    ))
+    
+    setItems(items.map(item => 
+      item.id === itemIdToRemove ? { ...item, order: null } : item
+    ))
+  }
+
+  // Reset the challenge
+  const resetChallenge = () => {
+    setSlots(slots.map(slot => ({ ...slot, itemId: null })));
+    setItems(items.map(item => ({ ...item, order: null })));
+    setShowFeedback(false);
+    setIsCorrect(false);
   }
 
   return (
-    <div className="w-full">
-      <div className="text-center mb-4 sm:mb-6">
-        <h2 className="text-xl xs:text-2xl sm:text-3xl font-bold mb-1 sm:mb-2 text-primary">Final Challenge</h2>
-        <p className="text-sm xs:text-base text-muted-foreground">
-          {showOptions 
-            ? "Click a word to select it" 
-            : "Type or click to complete the sentence"}
+    <div className="w-full py-2">
+      <div ref={confettiCanvasRef} className="fixed inset-0 pointer-events-none z-50"></div>
+      
+      <div className="text-center mb-4">
+        <h2 className="text-2xl sm:text-3xl font-bold mb-1 text-primary">Final Challenge</h2>
+        <p className="text-muted-foreground text-sm sm:text-base mb-2">
+          Ali meets a new friend in Tehran. Put their conversation in the correct order: 
+          Ali says Hello, welcomes his friend, asks how they are, and finally says Goodbye.
         </p>
       </div>
-      
-      <div className="bg-white rounded-xl shadow-lg p-3 sm:p-6 relative w-full">
-        <XpAnimation 
-          amount={points} 
-          show={showXp} 
-          onStart={onXpStart}
-          onComplete={() => {
-            setShowXp(false)
-            onComplete(isCorrect)
-          }}
-        />
-        
-        <div className="w-full max-w-[600px] mx-auto">
-          <div className="flex flex-wrap gap-2 xs:gap-3 sm:gap-4 justify-center items-center mb-4 sm:mb-6">
-            {sentence.map((word, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
-                className="flex items-center gap-1 xs:gap-2"
-              >
-                <div className="relative">
-                  <Input
-                    value={inputs[index]}
-                    onChange={(e) => handleInputChange(index, e.target.value)}
-                    onClick={() => handleInputClick(index)}
-                    placeholder="Type..."
-                    className={`w-20 xs:w-24 text-center text-sm xs:text-base ${
-                      selectedIndex === index ? "ring-2 ring-primary" : ""
-                    }`}
-                    disabled={showXp}
-                  />
-                  {showOptions && selectedIndex === index && (
-                    <div className="absolute z-10 mt-1 w-full bg-white rounded-lg shadow-lg border border-primary/20">
-                      {options.map((option) => (
-                        <button
-                          key={option}
-                          onClick={() => handleOptionSelect(option)}
-                          className="w-full text-left px-3 py-2 text-sm hover:bg-primary/5 transition-colors"
-                        >
-                          {option}
-                        </button>
-                      ))}
+
+      <Card className="mb-4 w-full">
+        <CardContent className="pt-4">
+          <XpAnimation 
+            amount={20} 
+            show={showXp}
+            onComplete={() => {
+              // Removed storage-based XP update; using setXp in parent
+              onComplete(true)  // advance parent immediately
+              setShowXp(false)  // reset for next use
+            }}
+          />
+          {/* Slots for ordering */}
+          <div 
+            className={`grid grid-cols-1 gap-3 mb-4 ${
+              showFeedback && !isCorrect ? 'animate-shake' : ''
+            }`}
+          >
+            {slots.map((slot) => {
+              const item = getItemForSlot(slot.id)
+              
+              return (
+                <div 
+                  key={slot.id}
+                  className={`
+                    flex items-center p-3 rounded-lg border-2 border-dashed transition-all 
+                    ${item ? 'border-primary bg-primary/5' : 'border-gray-300'}
+                    ${showFeedback && isCorrect ? 'border-green-500 bg-green-50' : ''}
+                    ${showFeedback && !isCorrect ? 'border-red-500 bg-red-50' : ''}
+                  `}
+                >
+                  <div className="flex-shrink-0 w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center mr-2">
+                    <span className="text-primary font-semibold text-sm">{slot.id}</span>
+                  </div>
+                  
+                  {item ? (
+                    <div className="flex justify-between items-center flex-1">
+                      <span className="text-base">{item.text}</span>
+                      <button 
+                        className="text-gray-400 hover:text-red-500 flex items-center ml-2"
+                        onClick={() => removeFromSlot(slot.id)}
+                        disabled={showFeedback && isCorrect}
+                      >
+                        <X size={16} />
+                      </button>
                     </div>
+                  ) : (
+                    <div className="text-gray-400 italic text-sm">Click a phrase below</div>
                   )}
                 </div>
-                {index < sentence.length - 1 && <span className="text-primary/50 text-xs xs:text-sm">→</span>}
-              </motion.div>
+              )
+            })}
+          </div>
+          
+          {/* Clickable phrases */}
+          <div className="flex flex-wrap gap-2 justify-center mb-4">
+            {items.filter(item => item.order === null).map((item) => (
+              <button
+                key={item.id}
+                onClick={() => handlePhraseClick(item.id)}
+                disabled={showFeedback && isCorrect}
+                className="
+                  px-3 py-1.5 bg-accent text-white rounded-lg
+                  shadow-sm hover:shadow-md active:scale-95 transition-all text-sm sm:text-base
+                  disabled:opacity-50 disabled:cursor-not-allowed
+                "
+              >
+                {item.text}
+              </button>
             ))}
           </div>
-
-          <div className="mt-4 sm:mt-6 text-center">
-            <Button 
-              onClick={handleCheck}
-              disabled={inputs.some(input => !input.trim()) || showXp || showOptions}
-              className="text-sm xs:text-base"
-            >
-              Check Answer
-            </Button>
+          
+          {/* Submit button */}
+          <div className="text-center mt-3">
+            {showFeedback && !isCorrect ? (
+              <Button
+                className="px-4 py-2 rounded-lg font-semibold transition-all w-full sm:w-auto text-base"
+                onClick={resetChallenge}
+              >
+                Retry
+              </Button>
+            ) : (
+              <Button
+                className={`
+                  px-4 py-2 rounded-lg font-semibold transition-all w-full sm:w-auto text-base
+                  ${allSlotsFilled 
+                    ? 'bg-primary text-white hover:bg-primary/90'
+                    : 'bg-gray-200 text-gray-400 cursor-not-allowed'}
+                `}
+                disabled={!allSlotsFilled || (showFeedback && isCorrect)}
+                onClick={checkOrder}
+              >
+                Check My Answer
+              </Button>
+            )}
           </div>
-
-          {showXp && (
-            <div className={`mt-3 sm:mt-4 text-center text-sm xs:text-base ${isCorrect ? 'text-green-600' : 'text-red-600'}`}>
-              {isCorrect ? "Perfect! 🎉" : "Try again! 💪"}
-            </div>
-          )}
-        </div>
-      </div>
+        </CardContent>
+      </Card>
+      
+      {/* Feedback */}
+      <AnimatePresence>
+        {showFeedback && (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.3 }}
+            className={`text-center p-3 rounded-lg text-sm ${
+              isCorrect 
+                ? 'bg-green-100 text-green-800' 
+                : 'bg-red-100 text-red-800'
+            }`}
+          >
+            {isCorrect ? (
+              <div>
+                <div className="font-bold text-base sm:text-lg mb-1">
+                  🎉 You're a natural—Ali made a great impression!
+                </div>
+                <div className="text-base">
+                  +20 XP!
+                </div>
+              </div>
+            ) : (
+              <div>
+                <div className="font-bold">Almost there—let's try that order again!</div>
+              </div>
+            )}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   )
 } 
