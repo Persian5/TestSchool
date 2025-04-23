@@ -5,14 +5,7 @@ import { InputExercise } from '@/app/components/games/InputExercise'
 import { DragDropGame } from '@/app/components/games/DragDropGame'
 import { FinalChallenge } from '@/app/components/games/FinalChallenge'
 import { WelcomeIntro } from '@/app/components/games/WelcomeIntro'
-
-export type LessonStep =
-  | { type: 'welcome'; points: number; data: {} }
-  | { type: 'flashcard'; points: number; data: { front: string; back: string } }
-  | { type: 'quiz'; points: number; data: { prompt: string; options: string[]; correct: number } }
-  | { type: 'input'; points: number; data: { question: string; answer: string } }
-  | { type: 'dragdrop'; points: number; data: { items: string[] } }
-  | { type: 'final'; points: number; data: { sentence: string[] } }
+import { LessonStep, WelcomeStep, FlashcardStep, QuizStep, InputStep, DragDropStep, FinalStep } from '@/lib/types'
 
 interface LessonRunnerProps {
   steps: LessonStep[];
@@ -62,14 +55,20 @@ export function LessonRunner({ steps }: LessonRunnerProps) {
 
   switch (step.type) {
     case 'welcome':
-      return <WelcomeIntro onStart={next} />;
+      const welcomeStep = step as WelcomeStep;
+      return <WelcomeIntro 
+        title={welcomeStep.title} 
+        description={welcomeStep.description} 
+        onStart={next} 
+      />;
       
     case 'flashcard':
+      const flashcardStep = step as FlashcardStep;
       return (
         <Flashcard
-          front={step.data.front}
-          back={step.data.back}
-          points={step.points}
+          front={flashcardStep.data.front}
+          back={flashcardStep.data.back}
+          points={flashcardStep.points}
           onContinue={handleFlashcardContinue}
           isFlipped={isFlipped}
           onFlip={handleFlip}
@@ -79,53 +78,45 @@ export function LessonRunner({ steps }: LessonRunnerProps) {
       );
       
     case 'quiz':
+      const quizStep = step as QuizStep;
       return (
         <Quiz
-          prompt={step.data.prompt}
-          options={step.data.options}
-          correct={step.data.correct}
-          points={step.points}
+          prompt={quizStep.data.prompt}
+          options={quizStep.data.options}
+          correct={quizStep.data.correct}
+          points={quizStep.points}
           onComplete={next}
         />
       );
       
     case 'input':
+      const inputStep = step as InputStep;
       return (
         <InputExercise
-          question={step.data.question}
-          answer={step.data.answer}
-          points={step.points}
+          question={inputStep.data.question}
+          answer={inputStep.data.answer}
+          points={inputStep.points}
           onComplete={next}
         />
       );
       
     case 'dragdrop':
-      // Transform items into the format DragDropGame expects
-      const words = step.data.items.slice(0, 2).map((text, idx) => ({ 
-        id: `word${idx+1}`, text, slotId: `slot${idx+1}` 
-      }));
-      
-      const slots = [
-        { id: "slot1", text: "Hello" },
-        { id: "slot2", text: "How are you?" },
-        { id: "slot3", text: "Welcome" },
-        { id: "slot4", text: "Goodbye" }
-      ];
-      
+      const dragDropStep = step as DragDropStep;
       return (
         <DragDropGame
-          words={words}
-          slots={slots}
-          points={step.points}
+          words={dragDropStep.data.words}
+          slots={dragDropStep.data.slots}
+          points={dragDropStep.points}
           onComplete={next}
         />
       );
       
     case 'final':
+      const finalStep = step as FinalStep;
       return (
         <FinalChallenge
-          targetWords={step.data.sentence}
-          points={step.points}
+          targetWords={finalStep.data.targetWords}
+          points={finalStep.points}
           onComplete={next}
         />
       );
