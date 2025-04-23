@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Lock } from "lucide-react"
 import { useRouter } from "next/navigation"
+import { getModules } from "@/lib/config/curriculum"
 
 export default function ModulesPage() {
   const [mounted, setMounted] = useState(false)
@@ -15,50 +16,13 @@ export default function ModulesPage() {
     setMounted(true)
   }, [])
 
-  const modules = [
-    {
-      id: 1,
-      title: "Module 1: Greetings",
-      description: "Learn basic Farsi greetings and introductions",
-      href: "/modules/module1",
-      available: true
-    },
-    {
-      id: 2,
-      title: "Module 2: Numbers",
-      description: "Master counting in Farsi from 1 to 100",
-      href: "#",
-      available: false
-    },
-    {
-      id: 3,
-      title: "Module 3: Family",
-      description: "Learn family-related vocabulary and phrases",
-      href: "#",
-      available: false
-    },
-    {
-      id: 4,
-      title: "Module 4: Food",
-      description: "Explore Farsi food vocabulary and ordering phrases",
-      href: "#",
-      available: false
-    },
-    {
-      id: 5,
-      title: "Module 5: Travel",
-      description: "Essential phrases for traveling in Iran",
-      href: "#",
-      available: false
-    },
-    {
-      id: 6,
-      title: "Module 6: Culture",
-      description: "Understanding Iranian customs and traditions",
-      href: "#",
-      available: false
-    }
-  ]
+  const modules = getModules().map((module, index) => ({
+    id: index + 1, // Use numeric IDs for key purposes in the UI
+    title: module.title,
+    description: module.description,
+    href: module.available ? `/modules/${module.id}` : "#",
+    available: module.available
+  }))
 
   if (!mounted) {
     return null

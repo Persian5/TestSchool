@@ -6,10 +6,12 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { ChevronRight, ChevronLeft } from "lucide-react"
 import { getModule } from "@/lib/config/curriculum"
+import { useParams } from "next/navigation"
 
-export default function Module1Page() {
+export default function ModulePage() {
+  const { moduleId } = useParams()
   const [selectedLesson, setSelectedLesson] = useState<string | null>(null)
-  const module = getModule("module1")
+  const module = getModule(moduleId as string)
   
   // If module isn't found, handle gracefully
   if (!module) {
@@ -46,7 +48,7 @@ export default function Module1Page() {
               {module.title}
             </h1>
             <p className="text-lg sm:text-xl text-muted-foreground mb-3">
-              Master the art of Persian greetings and basic conversations
+              Master the art of Persian {module.id.replace('module', '').toLowerCase() === '1' ? 'greetings' : module.description.split(' ')[1].toLowerCase()}
             </p>
             <p className="text-sm sm:text-base text-muted-foreground mb-5">{module.lessonCount} lessons • {module.estimatedTime}</p>
           </div>
@@ -73,7 +75,7 @@ export default function Module1Page() {
                     <p className="text-base sm:text-lg">{lesson.description}</p>
                   </CardContent>
                   <CardFooter className="py-4">
-                    <Link href={`/modules/module1/${lesson.id === 'lesson1' ? 'lesson1' : lesson.id}`} className="w-full">
+                    <Link href={`/modules/${moduleId}/${lesson.id}`} className="w-full">
                       <Button
                         variant="outline"
                         className={`w-full justify-between group hover:bg-primary/10 py-6 text-lg ${

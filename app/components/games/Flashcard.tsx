@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { ArrowRight } from "lucide-react"
 import { XpAnimation } from "../../components/XpAnimation"
@@ -31,6 +31,24 @@ export function Flashcard({
   const isFlipped = extFlipped ?? localFlip
   const showNext  = showContinueButton ?? localShowNext
 
+  // Handle XP animation completion and continue
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+    
+    if (showXp) {
+      // Call onXpStart immediately when animation shows
+      if (onXpStart) onXpStart();
+      
+      // Allow animation to play fully before continuing
+      timer = setTimeout(() => {
+        setShowXp(false)
+        onContinue()
+      }, 800);
+    }
+    
+    return () => clearTimeout(timer);
+  }, [showXp, onContinue, onXpStart]);
+
   const handleFlip = () => {
     if (extFlip) {
       extFlip()
@@ -55,11 +73,6 @@ export function Flashcard({
         <XpAnimation
           amount={points}
           show={showXp}
-          onStart={onXpStart}
-          onComplete={() => {
-            setShowXp(false)
-            onContinue()
-          }}
         />
 
         <div className="w-full max-w-[600px] mx-auto">

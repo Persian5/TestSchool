@@ -2,62 +2,109 @@
 
 import { useState } from "react"
 import Link from "next/link"
-import { Button } from "../../../../components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "../../../../components/ui/card"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { ChevronLeft, Star, ArrowRight, CheckCircle2, XCircle, Medal, Sparkles } from "lucide-react"
-import { Progress } from "../../../../components/ui/progress"
-import { WelcomeIntro } from "./components/WelcomeIntro"
-import { Flashcard } from "../../../components/games/Flashcard"
-import { Quiz } from "./components/Quiz"
+import { Progress } from "@/components/ui/progress"
+import { Flashcard } from "@/app/components/games/Flashcard"
+import { Quiz } from "./components/Quiz" 
 import { InputExercise } from "./components/InputExercise"
-import { DragDropGame } from "../../../components/games/DragDropGame"
+import { DragDropGame } from "@/app/components/games/DragDropGame"
 import { FinalChallenge } from "./components/FinalChallenge"
+import { useParams } from "next/navigation"
+import { getLessonSteps, getLesson, getModule } from "@/lib/config/curriculum"
+import { LessonState, LessonViewType, FlashcardStep, DragDropStep, FinalStep, QuizStep, InputStep, WelcomeStep } from "@/lib/types"
 import "./styles.css"
 
-const cards = [
-  {
-    id: "salam",
-    front: "👋 Hello",
-    back: "Salam",
-  },
-  {
-    id: "chetori",
-    front: "🤔 How are you?",
-    back: "Chetori",
-  },
-  {
-    id: "khosh_ahmadid",
-    front: "🤗 Welcome",
-    back: "Khosh Ahmadid",
-  },
-  {
-    id: "khodafez",
-    front: "🚪 Goodbye",
-    back: "Khodafez",
+// Welcome component for the first step
+const WelcomeIntro = ({ onStart }: { onStart: () => void }) => (
+  <div className="max-w-md mx-auto text-center">
+    <h1 className="text-3xl sm:text-4xl font-bold mb-4 text-primary">Basic Persian Greetings</h1>
+    <p className="text-lg mb-4 text-muted-foreground">Let's learn the essentials of greeting someone in Persian</p>
+    
+    {/* Ali's story */}
+    <div className="bg-secondary/10 rounded-xl p-6 mb-6">
+      <h3 className="font-bold text-xl mb-3">Let's Help Ali!</h3>
+      <p className="text-sm text-muted-foreground mb-4">
+        Ali is visiting Tehran for the first time and needs to learn basic greetings to make a good impression. 
+        Your mission is to teach him the essential Persian phrases he needs.
+      </p>
+      <div className="flex justify-center">
+        <div className="bg-background rounded-full w-16 h-16 flex items-center justify-center">
+          <span className="text-2xl">👨‍💼</span>
+        </div>
+      </div>
+    </div>
+    
+    <div className="space-y-6">
+      <div className="bg-primary/10 rounded-xl p-6">
+        <p className="text-lg mb-4">In this lesson, you'll learn how to:</p>
+        <ul className="space-y-2 text-left">
+          <li className="flex items-center gap-2">
+            <CheckCircle2 className="h-5 w-5 text-green-500 flex-shrink-0" />
+            <span>Say hello and greet someone</span>
+          </li>
+          <li className="flex items-center gap-2">
+            <CheckCircle2 className="h-5 w-5 text-green-500 flex-shrink-0" />
+            <span>Ask how someone is doing</span>
+          </li>
+          <li className="flex items-center gap-2">
+            <CheckCircle2 className="h-5 w-5 text-green-500 flex-shrink-0" />
+            <span>Welcome someone</span>
+          </li>
+          <li className="flex items-center gap-2">
+            <CheckCircle2 className="h-5 w-5 text-green-500 flex-shrink-0" />
+            <span>Say goodbye properly</span>
+          </li>
+        </ul>
+      </div>
+      <Button 
+        onClick={onStart} 
+        className="w-full py-6 text-lg"
+      >
+        Let's Begin! <ArrowRight className="ml-2 h-5 w-5" />
+      </Button>
+    </div>
+  </div>
+);
+
+export default function LessonPage() {
+  const { moduleId, lessonId } = useParams();
+  
+  // Get data from config
+  const lessonSteps = getLessonSteps(moduleId as string, lessonId as string);
+  const lesson = getLesson(moduleId as string, lessonId as string);
+  const module = getModule(moduleId as string);
+  
+  // If lesson or module isn't found, handle gracefully
+  if (!lesson || !module) {
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <p className="text-lg text-muted-foreground">Lesson not found</p>
+      </div>
+    );
   }
-]
 
-// Define the possible views in the lesson
-type LessonViewType = 'welcome' | 'flashcard' | 'quiz' | 'input' | 'dragdrop' | 'final' | 'completion' | 'summary'
+  // Extract flashcard data from steps
+  const cards = lessonSteps
+    .filter(step => step.type === 'flashcard')
+    .map(step => {
+      const flashcardStep = step as FlashcardStep;
+      return {
+        id: `card-${flashcardStep.data.front}`,
+        front: flashcardStep.data.front,
+        back: flashcardStep.data.back
+      };
+    });
 
-// Define the structure for storing previous states
-interface LessonState {
-  xp: number
-  progress: number
-  currentCardIndex: number
-  currentView: LessonViewType
-  isFlipped: boolean
-  showContinue: boolean
-}
-
-export default function Lesson1Page() {
-  const [xp, setXp] = useState(0)
-  const [progress, setProgress] = useState(0)
-  const [currentCardIndex, setCurrentCardIndex] = useState(0)
-  const [currentView, setCurrentView] = useState<LessonViewType>('welcome')
-  const [isFlipped, setIsFlipped] = useState(false) // State for flashcard flip
-  const [showContinue, setShowContinue] = useState(false) // State for flashcard continue button
-  const [previousStates, setPreviousStates] = useState<LessonState[]>([])
+  // State management (unchanged)
+  const [xp, setXp] = useState(0);
+  const [progress, setProgress] = useState(0);
+  const [currentCardIndex, setCurrentCardIndex] = useState(0);
+  const [currentView, setCurrentView] = useState<LessonViewType>('welcome');
+  const [isFlipped, setIsFlipped] = useState(false); // State for flashcard flip
+  const [showContinue, setShowContinue] = useState(false); // State for flashcard continue button
+  const [previousStates, setPreviousStates] = useState<LessonState[]>([]);
 
   // Function to save the current state before transitioning
   const saveState = () => {
@@ -68,162 +115,183 @@ export default function Lesson1Page() {
       currentView,
       isFlipped,
       showContinue
-    }])
-  }
+    }]);
+  };
 
   const handleStart = () => {
-    saveState()
-    setCurrentView('flashcard')
-    setProgress(5) // Initial progress
-  }
+    saveState();
+    setCurrentView('flashcard');
+    setProgress(5); // Initial progress
+  };
 
   const handleFlip = () => {
-    setIsFlipped(!isFlipped)
+    setIsFlipped(!isFlipped);
     if (!isFlipped) { // If flipping to the back
-      setShowContinue(true)
+      setShowContinue(true);
     }
-  }
+  };
 
   // Logic to advance after clicking continue on a flashcard
   const handleNext = () => {
-    saveState()
-    setXp(prev => prev + 2) // Award XP for viewing flashcard
+    saveState();
+    setXp(prev => prev + 2); // Award XP for viewing flashcard
     
     let nextView: LessonViewType = 'flashcard'; // Default to next flashcard
     let nextProgress = progress + 15;
     let nextCardIndex = currentCardIndex + 1;
 
     if (currentCardIndex === 0) { // After Salam card
-      nextView = 'quiz'
+      nextView = 'quiz';
       nextProgress = 20;
     } else if (currentCardIndex === 1) { // After Chetori card
-      nextView = 'input'
+      nextView = 'input';
       nextProgress = 40;
     } else if (currentCardIndex === 2) { // After Khosh Ahmadid card
-      nextView = 'dragdrop'
+      nextView = 'dragdrop';
       nextProgress = 60;
     } else if (currentCardIndex === 3) { // After Khodafez card
-      nextView = 'final'
+      nextView = 'final';
       nextProgress = 80;
     }
 
-    setCurrentView(nextView)
-    setProgress(nextProgress)
+    setCurrentView(nextView);
+    setProgress(nextProgress);
     // We don't advance card index here, completion handlers do that
     
     // Reset flashcard state for the next view
-    setIsFlipped(false)
-    setShowContinue(false)
-  }
+    setIsFlipped(false);
+    setShowContinue(false);
+  };
 
   const handleBack = () => {
     if (previousStates.length > 0) {
-      const previousState = previousStates.pop()! // Get and remove last state
-      setXp(previousState.xp)
-      setProgress(previousState.progress)
-      setCurrentCardIndex(previousState.currentCardIndex)
-      setCurrentView(previousState.currentView)
-      setIsFlipped(previousState.isFlipped)
-      setShowContinue(previousState.showContinue)
-      setPreviousStates([...previousStates]) // Update state array
+      const previousState = previousStates.pop()!; // Get and remove last state
+      setXp(previousState.xp);
+      setProgress(previousState.progress);
+      setCurrentCardIndex(previousState.currentCardIndex);
+      setCurrentView(previousState.currentView);
+      setIsFlipped(previousState.isFlipped);
+      setShowContinue(previousState.showContinue);
+      setPreviousStates([...previousStates]); // Update state array
     }
-  }
+  };
 
   // Logic after completing the Quiz (Salam)
   const handleQuizComplete = (correct: boolean) => {
     if (correct) {
-      setXp(prev => prev + 5)  // XP state updated here
-      saveState()
+      // Update XP here
+      setXp(prev => prev + 2);
+      saveState();
       // Removed setTimeout; advancing immediately on animation complete
-      setCurrentCardIndex(1) // Move to Chetori card
-      setCurrentView('flashcard')
-      setProgress(25)
-      setIsFlipped(false) // Ensure next card starts unflipped
-      setShowContinue(false)
+      setCurrentCardIndex(1); // Move to Chetori card
+      setCurrentView('flashcard');
+      setProgress(25);
+      setIsFlipped(false); // Ensure next card starts unflipped
+      setShowContinue(false);
     }
-  }
+  };
 
   // Logic after completing the Input Exercise (Chetori)
   const handleInputComplete = (correct: boolean) => {
     if (correct) {
-      setXp(prev => prev + 5)  // XP state updated here
-      saveState()
+      // Update XP here
+      setXp(prev => prev + 2);
+      saveState();
       // Removed setTimeout; advancing immediately on animation complete
-      setCurrentCardIndex(2) // Move to Khosh Ahmadid card
-      setCurrentView('flashcard')
-      setProgress(50)
-      setIsFlipped(false)
-      setShowContinue(false)
+      setCurrentCardIndex(2); // Move to Khosh Ahmadid card
+      setCurrentView('flashcard');
+      setProgress(50);
+      setIsFlipped(false);
+      setShowContinue(false);
     }
-  }
+  };
 
   // Logic after completing the Drag Drop Game (Khosh Ahmadid)
   const handleDragDropComplete = (correct: boolean) => {
     if (correct) {
-      saveState()
-      setCurrentCardIndex(3)
-      setCurrentView('flashcard')
-      setProgress(75)
-      setIsFlipped(false)
-      setShowContinue(false)
+      // Update XP here
+      setXp(prev => prev + 2);
+      saveState();
+      setCurrentCardIndex(3);
+      setCurrentView('flashcard');
+      setProgress(75);
+      setIsFlipped(false);
+      setShowContinue(false);
     }
-  }
+  };
   
   // Logic after completing the Final Challenge
   const handleFinalChallengeComplete = (correct: boolean) => {
     if (correct) {
-      setXp(prev => prev + 20)  // XP state updated here
-      saveState()
+      // Update XP here 
+      setXp(prev => prev + 2);
+      saveState();
       // Removed setTimeout; advancing immediately on animation complete
-      setCurrentView('completion')
-      setProgress(100)
+      setCurrentView('completion');
+      setProgress(100);
     }
-  }
+  };
 
   const handleViewSummary = () => {
-    saveState() // Save completion state before going to summary
-    setCurrentView('summary')
-  }
+    saveState(); // Save completion state before going to summary
+    setCurrentView('summary');
+  };
 
   const resetLesson = () => {
-    setXp(0)
-    setProgress(0)
-    setCurrentCardIndex(0)
-    setCurrentView('welcome')
-    setIsFlipped(false)
-    setShowContinue(false)
-    setPreviousStates([])
-  }
+    setXp(0);
+    setProgress(0);
+    setCurrentCardIndex(0);
+    setCurrentView('welcome');
+    setIsFlipped(false);
+    setShowContinue(false);
+    setPreviousStates([]);
+  };
+
+  // Find steps by type
+  const getStepByType = <T extends LessonViewType>(type: T, index = 0) => {
+    return lessonSteps.filter(step => step.type === type)[index];
+  };
 
   // Determine the current view component based on state
   const RenderCurrentView = () => {
     switch (currentView) {
       case 'welcome':
-        return <WelcomeIntro onStart={handleStart} />
+        const welcomeStep = getStepByType('welcome') as WelcomeStep;
+        return <WelcomeIntro onStart={handleStart} />;
       case 'quiz':
-        return <Quiz onComplete={handleQuizComplete} />
+        const quizStep = getStepByType('quiz') as QuizStep;
+        return <Quiz 
+          prompt={quizStep.data.prompt} 
+          options={quizStep.data.options} 
+          correct={quizStep.data.correct} 
+          points={quizStep.points}
+          onComplete={handleQuizComplete} 
+        />;
       case 'input':
-        return <InputExercise onComplete={handleInputComplete} />
+        const inputStep = getStepByType('input') as InputStep;
+        return <InputExercise 
+          question={inputStep.data.question} 
+          answer={inputStep.data.answer}
+          points={inputStep.points}
+          onComplete={handleInputComplete} 
+        />;
       case 'dragdrop':
+        const dragDropStep = getStepByType('dragdrop') as DragDropStep;
         return (
           <DragDropGame
-            words={[
-              { id: 'salam',          text: 'Salam',         slotId: 'hello'   },
-              { id: 'khosh_ahmadid',  text: 'Khosh Ahmadid', slotId: 'welcome' },
-            ]}
-            slots={[
-              { id: 'hello',      text: 'Hello'      },
-              { id: 'welcome',    text: 'Welcome'    },
-              { id: 'goodbye',    text: 'Goodbye'    },
-              { id: 'goodnight',  text: 'Good Night' },
-            ]}
-            points={2 /* or sum of both if you like */}
-            onXpStart={() => setXp(prev => prev + 2)}
+            words={dragDropStep.data.words}
+            slots={dragDropStep.data.slots}
+            points={dragDropStep.points}
             onComplete={handleDragDropComplete}
           />
-        )
+        );
       case 'final':
-        return <FinalChallenge onComplete={handleFinalChallengeComplete} />
+        const finalStep = getStepByType('final') as FinalStep;
+        return <FinalChallenge 
+          targetWords={finalStep.data.targetWords}
+          points={finalStep.points}
+          onComplete={handleFinalChallengeComplete} 
+        />;
       case 'completion':
         return (
           <div className="max-w-md mx-auto text-center animate-fade-in w-full sm:w-auto">
@@ -254,7 +322,7 @@ export default function Lesson1Page() {
               </div>
             </div>
           </div>
-        )
+        );
       case 'summary':
         return (
           <div className="max-w-lg mx-auto animate-fade-in w-full">
@@ -303,12 +371,12 @@ export default function Lesson1Page() {
                 </div>
                 <div className="pt-4 flex flex-col sm:flex-row justify-between gap-2">
                   <Button variant="outline" onClick={resetLesson} className="w-full sm:w-auto">Practice Again</Button>
-                  <Button variant="outline" asChild className="w-full sm:w-auto"><Link href="/modules/module1">Back to Module 1</Link></Button>
+                  <Button variant="outline" asChild className="w-full sm:w-auto"><Link href={`/modules/${moduleId}`}>Back to {module.title}</Link></Button>
                 </div>
               </CardContent>
             </Card>
           </div>
-        )
+        );
       case 'flashcard':
       default:
         return (
@@ -322,16 +390,16 @@ export default function Lesson1Page() {
             onFlip={handleFlip}
             showContinueButton={showContinue}
           />
-        )
+        );
     }
-  }
+  };
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
       {/* Header */}
       <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="flex h-16 items-center justify-between px-3 sm:px-4">
-          <Link href="/modules" className="flex items-center gap-2 font-bold text-base sm:text-lg text-primary">
+          <Link href={`/modules/${moduleId}`} className="flex items-center gap-2 font-bold text-base sm:text-lg text-primary">
             <ChevronLeft className="h-5 w-5" />
             <span className="hidden sm:inline">Modules</span>
             <span className="sm:hidden">Modules</span>
@@ -369,5 +437,5 @@ export default function Lesson1Page() {
         )}
       </main>
     </div>
-  )
+  );
 } 
