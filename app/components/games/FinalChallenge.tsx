@@ -5,11 +5,17 @@ import { Button } from "@/components/ui/button"
 import { XpAnimation } from "./XpAnimation"
 import { X } from "lucide-react"
 
-interface FinalChallengeProps {
-  onComplete: (correct: boolean) => void
+export interface FinalChallengeProps {
+  targetWords: string[];
+  points: number;
+  onComplete: (success: boolean) => void;
 }
 
-export function FinalChallenge({ onComplete }: FinalChallengeProps) {
+export function FinalChallenge({ 
+  targetWords = ["salam", "chetori", "khodafez"], 
+  points = 20, 
+  onComplete 
+}: FinalChallengeProps) {
   const [items, setItems] = useState([
     { id: "salam", text: "Salam", order: null as number | null },
     { id: "khosh_ahmadid", text: "Khosh Ahmadid", order: null as number | null },
@@ -57,19 +63,20 @@ export function FinalChallenge({ onComplete }: FinalChallengeProps) {
   
   // Validate order
   const checkOrder = () => {
-    const correctOrder = [
-      "salam",
-      "khosh_ahmadid",
-      "chetori",
-      "khodahafez"
-    ]
-    
+    // Get current order of items
     const currentOrder = slots.map(slot => {
       const item = items.find(item => item.id === slot.itemId)
       return item ? item.id : null
     })
     
-    const isOrderCorrect = currentOrder.every((id, index) => id === correctOrder[index])
+    // Check if each filled slot matches the expected target word
+    const filledSlotCount = currentOrder.filter(id => id !== null).length
+    const correctCount = currentOrder.filter((id, index) => 
+      index < targetWords.length && id === targetWords[index]
+    ).length
+    
+    // All filled slots must match expected positions
+    const isOrderCorrect = filledSlotCount === targetWords.length && correctCount === targetWords.length
     
     setShowFeedback(true)
     setIsCorrect(isOrderCorrect)
@@ -142,7 +149,7 @@ export function FinalChallenge({ onComplete }: FinalChallengeProps) {
       <Card className="mb-4 w-full">
         <CardContent className="pt-4">
           <XpAnimation 
-            amount={20} 
+            amount={points} 
             show={showXp}
             onComplete={() => {
               // Removed storage-based XP update; using setXp in parent
@@ -257,7 +264,7 @@ export function FinalChallenge({ onComplete }: FinalChallengeProps) {
                   🎉 You're a natural—Ali made a great impression!
                 </div>
                 <div className="text-base">
-                  +20 XP!
+                  +{points} XP!
                 </div>
               </div>
             ) : (

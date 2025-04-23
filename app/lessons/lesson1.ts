@@ -1,6 +1,8 @@
-import { LessonStep } from '@/components/LessonRunner'
+import { LessonStep } from '@/app/components/LessonRunner'
 
 export const lesson1: LessonStep[] = [
+  { type: 'welcome', points: 0, data: {} },
+  
   { type: 'flashcard', points: 2, data: { front: '👋 Hello', back: 'Salam' } },
   { type: 'flashcard', points: 2, data: { front: '🤔 How are you?', back: 'Chetori' } },
   { type: 'flashcard', points: 2, data: { front: '🤗 Welcome', back: 'Khosh Amadid' } },

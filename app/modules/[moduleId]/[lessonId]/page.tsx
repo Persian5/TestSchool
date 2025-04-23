@@ -15,6 +15,8 @@ import { useParams } from "next/navigation"
 import { getLessonSteps, getLesson, getModule } from "@/lib/config/curriculum"
 import { LessonState, LessonViewType, FlashcardStep, DragDropStep, FinalStep, QuizStep, InputStep, WelcomeStep } from "@/lib/types"
 import { WelcomeIntro } from "@/app/components/games/WelcomeIntro"
+import { lesson1 } from "@/app/lessons/lesson1"
+import { LessonRunner } from "@/app/components/LessonRunner"
 import "./styles.css"
 
 export default function LessonPage() {
@@ -33,18 +35,6 @@ export default function LessonPage() {
       </div>
     );
   }
-
-  // Extract flashcard data from steps
-  const cards = lessonSteps
-    .filter(step => step.type === 'flashcard')
-    .map(step => {
-      const flashcardStep = step as FlashcardStep;
-      return {
-        id: `card-${flashcardStep.data.front}`,
-        front: flashcardStep.data.front,
-        back: flashcardStep.data.back
-      };
-    });
 
   // State management (unchanged)
   const [xp, setXp] = useState(0);
@@ -285,15 +275,17 @@ export default function LessonPage() {
                   <li className="flex items-start gap-3">
                     <div className="flex-shrink-0 mt-1 text-green-500">✅</div>
                     <div>
-                      <p className="font-semibold">Learned {cards.length} essential Persian words</p>
+                      <p className="font-semibold">Learned essential Persian words</p>
                       <ul className="mt-2 grid grid-cols-1 sm:grid-cols-2 gap-2">
-                        {cards.map(card => (
-                          <li key={card.id} className="bg-primary/5 p-2 rounded">
-                            <span className="font-medium">{card.back}</span>
-                            {/* Regex to remove emoji */}
-                            <span className="block text-sm text-muted-foreground">{card.front.replace(/[\u{1F300}-\u{1F5FF}\u{1F600}-\u{1F64F}\u{1F680}-\u{1F6FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}]/gu, '').trim()}</span>
-                          </li>
-                        ))}
+                        {lesson1
+                          .filter(step => step.type === 'flashcard')
+                          .map((step, index) => (
+                            <li key={index} className="bg-primary/5 p-2 rounded">
+                              <span className="font-medium">{step.data.back}</span>
+                              {/* Regex to remove emoji */}
+                              <span className="block text-sm text-muted-foreground">{step.data.front.replace(/[\u{1F300}-\u{1F5FF}\u{1F600}-\u{1F64F}\u{1F680}-\u{1F6FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}]/gu, '').trim()}</span>
+                            </li>
+                          ))}
                       </ul>
                     </div>
                   </li>
@@ -328,11 +320,18 @@ export default function LessonPage() {
         );
       case 'flashcard':
       default:
+        // Get the current flashcard step
+        const flashcardSteps = lessonSteps
+          .filter(step => step.type === 'flashcard')
+          .map(step => step as FlashcardStep);
+        
+        const currentFlashcard = flashcardSteps[currentCardIndex];
+        
         return (
           <Flashcard
-            key={cards[currentCardIndex].id} // Add key for re-render on change
-            front={cards[currentCardIndex].front}
-            back={cards[currentCardIndex].back}
+            key={`card-${currentCardIndex}`}
+            front={currentFlashcard.data.front}
+            back={currentFlashcard.data.back}
             points={2}
             onContinue={handleNext}
             isFlipped={isFlipped}
@@ -372,7 +371,11 @@ export default function LessonPage() {
       <main className="flex-1 flex flex-col px-4 pt-4 pb-4 w-full">
         {/* Main content area top-aligned */}
         <div className="w-full max-w-4xl mx-auto flex-1 flex flex-col items-start justify-start pt-4">
-          <RenderCurrentView />
+          {moduleId === 'module1' && lessonId === 'lesson1' ? (
+            <LessonRunner steps={lesson1} />
+          ) : (
+            <RenderCurrentView />
+          )}
         </div>
         
         {/* Back Button container - Now below content */} 

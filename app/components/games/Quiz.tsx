@@ -4,29 +4,47 @@ import { CheckCircle2, XCircle } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 import { XpAnimation } from "./XpAnimation"
 
-interface QuizProps {
-  onComplete: (correct: boolean) => void
+type QuizOption = {
+  text: string;
+  correct: boolean;
+};
+
+export interface QuizProps {
+  prompt: string;
+  options: string[] | QuizOption[];
+  correct: number;
+  points?: number;
+  onComplete: (correct: boolean) => void;
 }
 
-export function Quiz({ onComplete }: QuizProps) {
+export function Quiz({ 
+  prompt = "Ali smiles and says 'Hello'. What's the right Persian word?",
+  options = [
+    { text: "Salam", correct: true },
+    { text: "Khodahafez", correct: false },
+    { text: "Shab Bekheir", correct: false },
+    { text: "Chetori", correct: false },
+  ],
+  correct = 0,
+  points = 2,
+  onComplete 
+}: QuizProps) {
   const [selectedOption, setSelectedOption] = useState<number | null>(null)
   const [showFeedback, setShowFeedback] = useState(false)
   const [showXp, setShowXp] = useState(false)
   const [isDisabled, setIsDisabled] = useState(false)
 
-  const options = [
-    { text: "Salam", correct: true },
-    { text: "Khodahafez", correct: false },
-    { text: "Shab Bekheir", correct: false },
-    { text: "Chetori", correct: false },
-  ]
+  // Convert string[] to QuizOption[] if needed
+  const formattedOptions: QuizOption[] = Array.isArray(options) && typeof options[0] === 'string'
+    ? (options as string[]).map((opt, i) => ({ text: opt, correct: i === correct }))
+    : options as QuizOption[];
 
   const handleSelect = (index: number) => {
     setSelectedOption(index)
     setShowFeedback(true)
     setIsDisabled(true)
     
-    if (options[index].correct) {
+    if (formattedOptions[index].correct) {
       setShowXp(true)  // trigger XP animation
     } else {
       setTimeout(() => {
@@ -46,7 +64,7 @@ export function Quiz({ onComplete }: QuizProps) {
 
       <div className="bg-white rounded-xl shadow-lg p-4 relative">
         <XpAnimation 
-          amount={5} 
+          amount={points} 
           show={showXp}
           onComplete={() => {
             // Removed storage-based XP update; using setXp in parent
@@ -56,11 +74,11 @@ export function Quiz({ onComplete }: QuizProps) {
         />
         
         <h3 className="text-lg sm:text-xl font-semibold mb-4 text-center">
-          Ali smiles and says "Hello". What's the right Persian word?
+          {prompt}
         </h3>
 
         <div className="space-y-3">
-          {options.map((option, index) => (
+          {formattedOptions.map((option, index) => (
             <motion.div
               key={index}
               initial={false}
@@ -109,7 +127,7 @@ export function Quiz({ onComplete }: QuizProps) {
         </div>
 
         <AnimatePresence>
-          {showFeedback && selectedOption !== null && !options[selectedOption].correct && (
+          {showFeedback && selectedOption !== null && !formattedOptions[selectedOption].correct && (
             <motion.p
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}

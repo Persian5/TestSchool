@@ -1,15 +1,23 @@
-import { useState } from "react"
+import { useState, useRef, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { CheckCircle2, XCircle } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 import { XpAnimation } from "./XpAnimation"
 
-interface InputExerciseProps {
+export interface InputExerciseProps {
+  question: string
+  answer: string
+  points?: number
   onComplete: (correct: boolean) => void
 }
 
-export function InputExercise({ onComplete }: InputExerciseProps) {
+export function InputExercise({ 
+  question = "Type 'How are you?' in Persian (Finglish)",
+  answer = "Chetori",
+  points = 2,
+  onComplete 
+}: InputExerciseProps) {
   const [input, setInput] = useState("")
   const [showFeedback, setShowFeedback] = useState(false)
   const [showXp, setShowXp] = useState(false)
@@ -24,7 +32,7 @@ export function InputExercise({ onComplete }: InputExerciseProps) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    const isAnswerCorrect = input.toLowerCase().trim() === "chetori"
+    const isAnswerCorrect = input.toLowerCase().trim() === answer.toLowerCase().trim()
     setIsCorrect(isAnswerCorrect)
     setShowFeedback(true)
 
@@ -42,7 +50,7 @@ export function InputExercise({ onComplete }: InputExerciseProps) {
 
       <div className="bg-white rounded-xl shadow-lg p-4 relative">
         <XpAnimation 
-          amount={5} 
+          amount={points} 
           show={showXp}
           onComplete={() => {
             // Removed storage-based XP update; using setXp in parent
@@ -54,7 +62,7 @@ export function InputExercise({ onComplete }: InputExerciseProps) {
         <div className="space-y-4">
           <div className="text-center">
             <p className="text-lg sm:text-xl">
-              Ali says: Salam, <span className="font-semibold">___?</span> (How Are You)
+              {question}
             </p>
           </div>
 
