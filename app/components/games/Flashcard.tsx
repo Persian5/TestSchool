@@ -31,23 +31,14 @@ export function Flashcard({
   const isFlipped = extFlipped ?? localFlip
   const showNext  = showContinueButton ?? localShowNext
 
-  // Handle XP animation completion and continue
-  useEffect(() => {
-    let timer: NodeJS.Timeout;
-    
-    if (showXp) {
-      // Call onXpStart immediately when animation shows
-      if (onXpStart) onXpStart();
-      
-      // Allow animation to play fully before continuing
-      timer = setTimeout(() => {
-        setShowXp(false)
-        onContinue()
-      }, 800);
-    }
-    
-    return () => clearTimeout(timer);
-  }, [showXp, onContinue, onXpStart]);
+  const handleXpComplete = () => {
+    // Reset local state
+    setLocalFlip(false);
+    setLocalShowNext(false);
+    setShowXp(false);
+    // Call continue handler
+    onContinue();
+  }
 
   const handleFlip = () => {
     if (extFlip) {
@@ -56,6 +47,11 @@ export function Flashcard({
       setLocalFlip(!localFlip)
       if (!localFlip) setLocalShowNext(true)
     }
+  }
+
+  function handleContinueClick() {
+    // First trigger XP animation
+    setShowXp(true);
   }
 
   return (
@@ -73,6 +69,8 @@ export function Flashcard({
         <XpAnimation
           amount={points}
           show={showXp}
+          onStart={onXpStart}
+          onComplete={handleXpComplete}
         />
 
         <div className="w-full max-w-[600px] mx-auto">
@@ -115,9 +113,7 @@ export function Flashcard({
           <div className="mt-4 sm:mt-6 text-center">
             <Button
               className="gap-2 w-full sm:w-auto text-sm xs:text-base"
-              onClick={() => {
-                setShowXp(true)
-              }}
+              onClick={handleContinueClick}
               disabled={showXp}
             >
               Continue <ArrowRight className="h-4 w-4" />
