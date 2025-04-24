@@ -9,6 +9,8 @@ import { Progress } from "@/components/ui/progress"
 import { Button } from "@/components/ui/button"
 import "./styles.css"
 import { useState } from "react"
+import CompletionPage from "./completion/page"
+import SummaryPage from "./summary/page"
 
 export default function LessonPage() {
   const { moduleId, lessonId } = useParams();
@@ -46,6 +48,43 @@ export default function LessonPage() {
     }
   };
 
+  // Reset lesson to start over
+  const resetLesson = () => {
+    setProgress(0);
+    setCurrentView('welcome');
+    setPreviousStates([]);
+    setXp(0);
+    // Reset to first step
+    const lessonRunnerState = document.getElementById('lesson-runner-state');
+    if (lessonRunnerState) {
+      lessonRunnerState.dispatchEvent(new CustomEvent('go-back', { 
+        detail: { stepIndex: 0 } 
+      }));
+    }
+  };
+
+  // Handle viewing summary
+  const handleViewSummary = () => {
+    setCurrentView('summary');
+  };
+
+  // Get the list of words learned in this lesson
+  const getLearnedWords = () => {
+    const steps = getLessonSteps(moduleId as string, lessonId as string);
+    const words: string[] = [];
+    
+    steps.forEach(step => {
+      if (step.type === 'flashcard' && step.data?.back) {
+        const back = step.data.back;
+        // Remove emoji if present
+        const cleaned = typeof back === 'string' ? back.replace(/[\u{1F600}-\u{1F64F}\u{1F300}-\u{1F5FF}\u{1F680}-\u{1F6FF}\u{1F700}-\u{1F77F}\u{1F780}-\u{1F7FF}\u{1F800}-\u{1F8FF}\u{1F900}-\u{1F9FF}\u{1FA00}-\u{1FA6F}\u{1FA70}-\u{1FAFF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}]/gu, '').trim() : '';
+        words.push(cleaned);
+      }
+    });
+    
+    return words;
+  };
+
   return (
     <div className="flex min-h-screen flex-col bg-background">
       {/* Header */}
@@ -66,7 +105,7 @@ export default function LessonPage() {
       </header>
 
       {/* Progress Bar */}
-      {currentView !== 'welcome' && (
+      {currentView !== 'welcome' && currentView !== 'completion' && currentView !== 'summary' && (
         <div className="w-full bg-primary/10">
           <Progress value={progress} className="h-2" />
         </div>
@@ -75,21 +114,36 @@ export default function LessonPage() {
       <main className="flex-1 flex flex-col px-4 pt-4 pb-4 w-full">
         {/* Main content area top-aligned */}
         <div className="w-full max-w-4xl mx-auto flex-1 flex flex-col items-start justify-start pt-4">
-          {/* Always drive from config */}
-          <LessonRunner 
-            steps={getLessonSteps(moduleId as string, lessonId as string)} 
-            xp={xp}
-            onXpChange={setXp}
-            progress={progress}
-            onProgressChange={setProgress}
-            currentView={currentView}
-            onViewChange={setCurrentView}
-            onSaveState={(state) => setPreviousStates(prev => [...prev, state])}
-          />
+          {/* Render the appropriate content based on currentView */}
+          {currentView === 'completion' ? (
+            <CompletionPage 
+              xp={xp} 
+              resetLesson={resetLesson}
+              handleViewSummary={handleViewSummary}
+            />
+          ) : currentView === 'summary' ? (
+            <SummaryPage 
+              xp={xp}
+              resetLesson={resetLesson}
+              learnedWords={getLearnedWords()}
+            />
+          ) : (
+            /* Always drive from config */
+            <LessonRunner 
+              steps={getLessonSteps(moduleId as string, lessonId as string)} 
+              xp={xp}
+              onXpChange={setXp}
+              progress={progress}
+              onProgressChange={setProgress}
+              currentView={currentView}
+              onViewChange={setCurrentView}
+              onSaveState={(state) => setPreviousStates(prev => [...prev, state])}
+            />
+          )}
         </div>
         
         {/* Back Button container - Below content */} 
-        {currentView !== 'welcome' && currentView !== 'completion' && previousStates.length > 0 && (
+        {currentView !== 'welcome' && currentView !== 'completion' && currentView !== 'summary' && previousStates.length > 0 && (
           <div className="w-full max-w-4xl mx-auto mt-4 flex justify-start">
             <Button variant="ghost" onClick={handleBack} className="text-sm flex items-center self-start">
               <ChevronLeft className="h-4 w-4 mr-1" />

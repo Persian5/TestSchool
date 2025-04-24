@@ -50,13 +50,13 @@ export function WelcomeIntro({
             ))}
           </ul>
         </div>
-        <Button 
-          onClick={onStart} 
+          <Button
+            onClick={onStart}
           className="w-full py-6 text-lg"
-        >
+          >
           Let's Begin! <ArrowRight className="ml-2 h-5 w-5" />
-        </Button>
+          </Button>
       </div>
     </div>
   );
-}
+} 
