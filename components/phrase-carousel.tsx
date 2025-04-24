@@ -16,7 +16,7 @@ export function PhraseCarousel() {
     { persian: "Chetori?", english: "How are you?", emoji: "🙂" },
     { persian: "Khoobam", english: "I'm good", emoji: "😌" },
     { persian: "Esme shoma chieh?", english: "What's your name?", emoji: "🧑‍💼" },
-    { persian: "Khodafez", english: "Goodbye", emoji: "👋" },
+    { persian: "Khodahafez", english: "Goodbye", emoji: "👋" },
   ]
 
   const [currentPhraseIndex, setCurrentPhraseIndex] = useState(0)

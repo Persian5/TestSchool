@@ -87,7 +87,7 @@ export const curriculumData: Module[] = [
             points: 2,
             data: {
               front: "🚪 Goodbye",
-              back: "Khodafez"
+              back: "Khodahafez"
             }
           },
           {
@@ -97,10 +97,10 @@ export const curriculumData: Module[] = [
               words: [
                 { id: "salam", text: "Salam", translation: "Hello" },
                 { id: "chetori", text: "Chetori", translation: "How are you?" },
-                { id: "khoshahmadid", text: "Khosh Ahmadid", translation: "Welcome" },
-                { id: "khodafez", text: "Khodafez", translation: "Goodbye" }
+                { id: "khosh_ahmadid", text: "Khosh Ahmadid", translation: "Welcome" },
+                { id: "khodahafez", text: "Khodahafez", translation: "Goodbye" }
               ],
-              targetWords: ["salam", "chetori", "khodafez"]
+              targetWords: ["salam", "khosh_ahmadid", "chetori", "khodahafez"]
             }
           }
         ]

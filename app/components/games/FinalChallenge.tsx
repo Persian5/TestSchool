@@ -13,7 +13,7 @@ export interface FinalChallengeProps {
 }
 
 export function FinalChallenge({ 
-  targetWords = ["salam", "chetori", "khodafez"], 
+  targetWords = ["salam", "khosh_ahmadid", "chetori", "khodahafez"], 
   points = 20, 
   onComplete,
   onXpStart

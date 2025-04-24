@@ -5,8 +5,8 @@ export const lesson1: LessonStep[] = [
   
   { type: 'flashcard', points: 2, data: { front: '👋 Hello', back: 'Salam' } },
   { type: 'flashcard', points: 2, data: { front: '🤔 How are you?', back: 'Chetori' } },
-  { type: 'flashcard', points: 2, data: { front: '🤗 Welcome', back: 'Khosh Amadid' } },
-  { type: 'flashcard', points: 2, data: { front: '🚪 Goodbye', back: 'Khodafez' } },
+  { type: 'flashcard', points: 2, data: { front: '🤗 Welcome', back: 'Khosh Ahmadid' } },
+  { type: 'flashcard', points: 2, data: { front: '🚪 Goodbye', back: 'Khodahafez' } },
 
   { type: 'quiz', points: 5, data: {
     prompt: "Ali smiles and says 'Hello'. What's the right Persian word?",
@@ -20,10 +20,10 @@ export const lesson1: LessonStep[] = [
   }},
 
   { type: 'dragdrop', points: 3, data: {
-    items: ['Salam', 'Chetori', 'Khosh Amadid', 'Khodafez']
+    items: ['Salam', 'Chetori', 'Khosh Ahmadid', 'Khodahafez']
   }},
 
   { type: 'final', points: 20, data: {
-    sentence: ['Salam', 'Chetori', 'Khodafez']
+    sentence: ['Salam', 'Khosh Ahmadid', 'Chetori', 'Khodahafez']
   }},
 ] 
