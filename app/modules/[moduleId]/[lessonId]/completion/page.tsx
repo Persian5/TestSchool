@@ -71,17 +71,17 @@ export default function CompletionPage({
       <div className="space-y-4">
         <Button 
           className="w-full text-lg py-6" 
-          onClick={navigateToSummary}
+          onClick={handleReset}
         >
-          View Summary <ArrowRight className="ml-2 h-5 w-5" />
+          Sign up for FREE Beta Access Waitlist
         </Button>
         
         <Button 
           variant="outline" 
           className="w-full"
-          onClick={handleReset}
+          onClick={navigateToSummary}
         >
-          Practice Again
+          View Summary <ArrowRight className="ml-2 h-5 w-5" />
         </Button>
       </div>
     </div>
