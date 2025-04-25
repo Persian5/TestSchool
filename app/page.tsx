@@ -173,8 +173,9 @@ export default function HomePage() {
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
-      {/* Navbar */}
-      <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      {/* Navbar with Eslimi-inspired border */}
+      <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 relative">
+        <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-primary/20 via-accent/20 to-primary/20"></div>
         <div className="flex h-16 items-center justify-between px-3 sm:px-4">
           <Link href="/" className="flex items-center gap-2 font-bold text-base sm:text-lg text-primary">
             <span className="hidden sm:inline">Iranopedia Farsi Academy</span>
@@ -187,23 +188,32 @@ export default function HomePage() {
       </header>
 
       <main className="flex-1">
-        {/* Hero Section - Larger text and reduced margins */}
-        <section className="bg-primary/10 py-8 px-3 sm:px-4">
-          <div className="max-w-4xl mx-auto text-center flex flex-col items-center">
+        {/* Hero Section with Toranj Medallion background element */}
+        <section className="bg-primary/10 py-8 px-3 sm:px-4 relative overflow-hidden">
+          <div className="absolute -top-24 -right-24 w-64 h-64 rounded-full border-8 border-primary/5 opacity-20"></div>
+          <div className="absolute -bottom-24 -left-24 w-64 h-64 rounded-full border-8 border-accent/5 opacity-20"></div>
+          <div className="max-w-4xl mx-auto text-center flex flex-col items-center relative z-10">
             <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight text-primary mb-3">
               Learn Farsi. Reconnect with Your Roots.
             </h1>
-            <p className="text-lg sm:text-xl text-muted-foreground mb-3">
-              Bite-sized lessons, real culture, zero pressure.
-            </p>
+            <div className="bg-[url('/girih-tile.svg')] bg-opacity-10 p-4 rounded-lg">
+              <p className="text-lg sm:text-xl text-muted-foreground mb-3">
+                Bite-sized lessons, real culture, zero pressure.
+              </p>
+            </div>
             <p className="text-sm sm:text-base text-muted-foreground mb-5">Connect with your heritage</p>
             {buttonContent}
           </div>
         </section>
 
-        {/* World Map Section - Simplified */}
-        <section className="py-8 px-3 sm:px-4 bg-gradient-to-b from-blue-50 to-green-50">
-          <div className="max-w-6xl mx-auto text-center">
+        {/* Persian Carpet Border */}
+        <div className="w-full h-3 bg-[url('/carpet-border.svg')] bg-repeat-x"></div>
+
+        {/* World Map Section with subtle Girih pattern and Tehran skyline */}
+        <section className="py-8 px-3 sm:px-4 bg-gradient-to-b from-blue-50 to-green-50 relative">
+          <div className="absolute inset-0 opacity-5 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgdmlld0JveD0iMCAwIDQwIDQwIj48cGF0aCBkPSJNMCAwaDQwdjQwSDBWMHptMjAgMTBMMTAgMjBoMjBMMjAgMTB6IiBmaWxsPSIjMjc3QzUyIiBmaWxsLW9wYWNpdHk9IjAuMSIvPjwvc3ZnPg==')]"></div>
+          <div className="absolute inset-x-0 bottom-0 h-48 opacity-15 bg-[url('/tehran.png')] bg-bottom bg-contain bg-repeat-x"></div>
+          <div className="max-w-6xl mx-auto text-center relative z-10">
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-primary mb-4">
               Over 4,500+ learners have already started learning Persian through Iranopedia
             </h2>
@@ -214,16 +224,17 @@ export default function HomePage() {
               onClick={scrollToWaitlist}
               aria-label="Click Here For Free Beta Access"
             >
-              Click Here For Free Beta Access
+              Get Free Beta Access
             </Button>
           </div>
         </section>
 
-        {/* Feature Cards - Reduced margins */}
+        {/* Feature Cards with Khatam Inlay Border */}
         <section className="py-8 px-3 sm:px-4 bg-white">
           <div className="max-w-6xl mx-auto">
             <div className="grid gap-4 sm:gap-5 md:grid-cols-3">
-              <Card className="border-primary/20 shadow-sm hover:shadow-md transition-shadow rounded-xl">
+              <Card className="border-primary/20 shadow-sm hover:shadow-md transition-shadow rounded-xl overflow-hidden">
+                <div className="h-1 bg-gradient-to-r from-primary/10 via-primary/30 to-primary/10"></div>
                 <CardHeader className="pb-3">
                   <CardTitle className="flex items-center gap-3 text-lg sm:text-xl">
                     <span className="text-2xl sm:text-3xl">📚</span> Bite-sized Lessons
@@ -231,12 +242,14 @@ export default function HomePage() {
                 </CardHeader>
                 <CardContent>
                   <p className="text-base sm:text-lg">
+                    <img src="/icons/pistachio.svg" className="inline w-4 h-4 mr-1" alt="Pistachio bullet point" />
                     Learn Farsi in 5-minute chunks that fit into your busy schedule.
                   </p>
                 </CardContent>
               </Card>
 
-              <Card className="border-primary/20 shadow-sm hover:shadow-md transition-shadow rounded-xl">
+              <Card className="border-primary/20 shadow-sm hover:shadow-md transition-shadow rounded-xl overflow-hidden">
+                <div className="h-1 bg-gradient-to-r from-accent/10 via-accent/30 to-accent/10"></div>
                 <CardHeader className="pb-3">
                   <CardTitle className="flex items-center gap-3 text-lg sm:text-xl">
                     <span className="text-2xl sm:text-3xl">🍚</span> Real Iranian Culture
@@ -247,7 +260,8 @@ export default function HomePage() {
                 </CardContent>
               </Card>
 
-              <Card className="border-primary/20 shadow-sm hover:shadow-md transition-shadow rounded-xl">
+              <Card className="border-primary/20 shadow-sm hover:shadow-md transition-shadow rounded-xl overflow-hidden">
+                <div className="h-1 bg-gradient-to-r from-primary/10 via-accent/20 to-primary/10"></div>
                 <CardHeader className="pb-3">
                   <CardTitle className="flex items-center gap-3 text-lg sm:text-xl">
                     <span className="text-2xl sm:text-3xl">✍️</span> Finglish + Persian
@@ -261,17 +275,21 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* Persian Phrases Section - Reduced margins */}
-        <section className="py-8 px-3 sm:px-4 bg-gradient-to-r from-primary/5 to-accent/5">
-          <div className="max-w-6xl mx-auto">
+        {/* Persian Phrases Section with Shamseh sunburst background */}
+        <section className="py-8 px-3 sm:px-4 bg-gradient-to-r from-primary/5 to-accent/5 relative overflow-hidden">
+          <div className="absolute inset-0 opacity-5">
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 rounded-full bg-gradient-to-r from-primary/10 to-accent/10 blur-2xl"></div>
+          </div>
+          <div className="max-w-6xl mx-auto relative z-10">
             <h2 className="text-2xl sm:text-3xl font-bold text-primary text-center mb-6">
               Learn Your First Persian Phrases
             </h2>
 
             <div className="flex justify-center">
               <div
-                className={`transition-opacity duration-500 ${isPhraseFading ? "opacity-0" : "opacity-100"} bg-white rounded-2xl p-6 sm:p-8 max-w-md w-full text-center shadow-sm`}
+                className={`transition-opacity duration-500 ${isPhraseFading ? "opacity-0" : "opacity-100"} bg-white rounded-2xl p-6 sm:p-8 max-w-md w-full text-center shadow-sm relative overflow-hidden`}
               >
+                <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary/10 via-accent/20 to-primary/10"></div>
                 <div className="text-5xl sm:text-6xl mb-4">{phrases[currentPhraseIndex].emoji}</div>
                 <div className="text-2xl sm:text-3xl font-bold text-primary mb-2">
                   {phrases[currentPhraseIndex].persian}
@@ -290,9 +308,10 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* Gamified Features Section - Replacing Track Your Progress */}
-        <section className="py-8 px-3 sm:px-6 bg-gradient-to-br from-blue-50 via-white to-green-50 border-y border-primary/10">
-          <div className="max-w-6xl mx-auto">
+        {/* Gamified Features Section with geometric pattern background */}
+        <section className="py-8 px-3 sm:px-6 bg-gradient-to-br from-blue-50 via-white to-green-50 border-y border-primary/10 relative">
+          <div className="absolute inset-0 opacity-5 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MCIgaGVpZ2h0PSI1MCIgdmlld0JveD0iMCAwIDUwIDUwIj48cGF0aCBkPSJNMjUsMCBMMCwyNSA1MCwyNSBaIE0wLDI1IEwwLDUwIDI1LDI1IFogTTUwLDI1IEw1MCw1MCAyNSwyNSBaIE0yNSw1MCBMMCw1MCAyNSwyNSA1MCw1MCBaIiBmaWxsPSIjMjc3QzUyIiBmaWxsLW9wYWNpdHk9IjAuMSIvPjwvc3ZnPg==')]"></div>
+          <div className="max-w-6xl mx-auto relative z-10">
             <div className="text-center max-w-3xl mx-auto mb-10 animate-fade-in">
               <h2 className="text-2xl sm:text-3xl font-bold mb-4 text-primary inline-flex items-center">
                 <span className="mr-2">🎮</span> Gamified Learning Experience
@@ -308,7 +327,8 @@ export default function HomePage() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
               {/* Card 1: Leaderboard Mockup */}
-              <div className="bg-white rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 p-6 card-hover h-full">
+              <div className="bg-white rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 p-6 card-hover h-full relative overflow-hidden">
+                <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary/10 via-primary/30 to-primary/10"></div>
                 <h3 className="text-xl font-bold mb-4 flex justify-center items-center">
                   <span className="text-2xl mr-2">🏆</span> Leaderboard
                 </h3>
@@ -333,7 +353,8 @@ export default function HomePage() {
               </div>
 
               {/* Card 2: Streak Popup Mockup */}
-              <div className="bg-gradient-to-br from-yellow-100 via-orange-50 to-amber-100 rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 p-6 card-hover text-center h-full">
+              <div className="bg-gradient-to-br from-yellow-100 via-orange-50 to-amber-100 rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 p-6 card-hover text-center h-full relative overflow-hidden">
+                <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-accent/10 via-accent/30 to-accent/10"></div>
                 <h3 className="text-xl font-bold mb-3 flex justify-center items-center">
                   <span className="text-2xl mr-2">🔥</span> Well Done!
                 </h3>
@@ -348,7 +369,8 @@ export default function HomePage() {
               </div>
 
               {/* Card 3: Pronunciation Score Mockup */}
-              <div className="bg-gradient-to-br from-purple-50 via-white to-pink-50 rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 p-6 card-hover text-center h-full">
+              <div className="bg-gradient-to-br from-purple-50 via-white to-pink-50 rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 p-6 card-hover text-center h-full relative overflow-hidden">
+                <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary/10 via-accent/20 to-primary/10"></div>
                 <h3 className="text-xl font-bold mb-4 flex justify-center items-center">
                   <span className="text-2xl mr-2">🎤</span> Pronunciation Score
                 </h3>
@@ -360,7 +382,8 @@ export default function HomePage() {
               </div>
 
               {/* Card 4: Mini Games */}
-              <div className="bg-white rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 p-6 card-hover h-full">
+              <div className="bg-white rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 p-6 card-hover h-full relative overflow-hidden">
+                <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-accent/10 via-accent/30 to-accent/10"></div>
                 <h3 className="text-xl font-bold mb-4 flex justify-center items-center">
                   <span className="text-2xl mr-2">🎮</span> Mini Games
                 </h3>
@@ -383,9 +406,20 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* Badge Preview - Reduced margins */}
-        <section className="py-8 px-3 sm:px-4 bg-white">
-          <div className="max-w-6xl mx-auto">
+        {/* Badge Preview with decorative Shamseh corner elements */}
+        <section className="py-8 px-3 sm:px-4 bg-white relative overflow-hidden">
+          <div className="absolute top-2 right-2 w-24 h-24 opacity-5">
+            <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+              <path d="M50,10 C70,10 90,30 90,50 C90,70 70,90 50,90 C30,90 10,70 10,50 C10,30 30,10 50,10 Z M50,20 C35,20 20,35 20,50 C20,65 35,80 50,80 C65,80 80,65 80,50 C80,35 65,20 50,20 Z" fill="#277C52" />
+              <path d="M50,0 L55,20 L70,5 L65,25 L90,20 L70,35 L90,50 L70,65 L90,80 L65,75 L70,95 L50,80 L30,95 L35,75 L10,80 L30,65 L10,50 L30,35 L10,20 L35,25 L30,5 L50,20 Z" fill="#D61043" fill-opacity="0.3" />
+            </svg>
+          </div>
+          <div className="absolute bottom-2 left-2 w-24 h-24 opacity-5">
+            <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+              <path d="M50,0 L60,40 L100,50 L60,60 L50,100 L40,60 L0,50 L40,40 Z" fill="#D61043" />
+            </svg>
+          </div>
+          <div className="max-w-6xl mx-auto relative z-10">
             <h2 className="text-2xl sm:text-3xl font-bold mb-6 text-primary text-center">🎖️ Badge Preview</h2>
             <div className="grid gap-4 sm:gap-5 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
               <Card className="shadow-sm hover:shadow-md transition-shadow rounded-xl overflow-hidden">
@@ -441,11 +475,12 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* Lesson Block - Removed purple emoji */}
-        <section id="lesson-1" className="py-8 px-3 sm:px-4 bg-accent/5">
-          <div className="max-w-6xl mx-auto">
+        {/* Lesson Block with Eslimi-inspired divider */}
+        <section id="lesson-1" className="py-8 px-3 sm:px-4 bg-accent/5 relative">
+          <div className="max-w-6xl mx-auto relative z-10">
             {/* Coming Up Next Section */}
-            <Card className="shadow-sm rounded-xl border-primary/20 bg-primary/5">
+            <Card className="shadow-sm rounded-xl border-primary/20 bg-primary/5 overflow-hidden">
+              <div className="h-1 bg-gradient-to-r from-primary/10 via-accent/20 to-primary/10"></div>
               <CardHeader className="pb-3">
                 <CardTitle className="text-lg sm:text-xl text-primary flex items-center gap-3">
                   <span>🔮</span> Coming Up Next
@@ -484,7 +519,7 @@ export default function HomePage() {
 
                 <div className="flex items-start gap-4">
                   <div className="bg-white rounded-full p-2 shadow-sm flex items-center justify-center w-14 h-14 shrink-0">
-                    <span className="text-2xl">🎁</span>
+                    <img src="/icons/nowruz.svg" className="inline w-6 h-6 mr-1" alt="Nowruz celebration" />
                   </div>
                   <div>
                     <h4 className="font-medium text-lg mb-1">Bonus: Cultural Insights</h4>
@@ -506,18 +541,27 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* Emotional Callout Section */}
+        {/* Emotional Callout Section with Gol-o-Morgh inspired background */}
         <section className="py-8 px-3 sm:px-4 bg-gradient-to-r from-primary/5 to-accent/5 relative overflow-hidden">
           <div className="absolute inset-0 opacity-5">
             <div className="absolute top-10 left-10 text-6xl">☕</div>
             <div className="absolute top-20 right-20 text-6xl">❤️</div>
             <div className="absolute bottom-10 left-20 text-6xl">🌹</div>
             <div className="absolute bottom-20 right-10 text-6xl">👨‍👩‍👧‍👦</div>
+            <div className="absolute top-1/3 left-1/3 w-24 h-24 opacity-20">
+              <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <path d="M50,10 C70,10 90,30 90,50 C90,70 70,90 50,90 C30,90 10,70 10,50 C10,30 30,10 50,10 Z M50,20 C35,20 20,35 20,50 C20,65 35,80 50,80 C65,80 80,65 80,50 C80,35 65,20 50,20 Z" fill="#277C52" />
+                <path d="M50,0 L55,20 L70,5 L65,25 L90,20 L70,35 L90,50 L70,65 L90,80 L65,75 L70,95 L50,80 L30,95 L35,75 L10,80 L30,65 L10,50 L30,35 L10,20 L35,25 L30,5 L50,20 Z" fill="#D61043" fillOpacity="0.3" />
+              </svg>
+            </div>
           </div>
 
           <div className="max-w-6xl mx-auto relative z-10">
             <div className="max-w-3xl mx-auto text-center">
-              <h2 className="text-3xl sm:text-4xl font-bold text-primary mb-4">Your Future Self Will Thank You</h2>
+              <h2 className="text-3xl sm:text-4xl font-bold text-primary mb-4">
+                Your Future Self Will Thank You
+                <img src="/icons/teacup.svg" className="inline w-5 h-5 ml-2" alt="Persian teacup" />
+              </h2>
               <p className="text-lg sm:text-xl text-gray-700 leading-relaxed">
                 Whether it's to speak with your grandparents, pass it on to your kids, or finally understand those songs
                 you grew up with — you're not too late. You're right on time.
@@ -534,8 +578,10 @@ export default function HomePage() {
         </section>
       </main>
 
-      {/* Waitlist Section */}
+      {/* Waitlist Section with Khatam-inspired border */}
       <section id="waitlist" className="py-8 px-3 sm:px-4 bg-green-50 relative overflow-hidden min-h-[200px] flex items-center justify-center">
+        <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-primary/10 via-accent/20 to-primary/10"></div>
+        <div className="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-primary/10 via-accent/20 to-primary/10"></div>
         {showConfetti && (
           <motion.div
             initial={{ opacity: 0 }}
@@ -614,11 +660,12 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Footer with What is Iranopedia section */}
+      {/* Footer with What is Iranopedia section - Eslimi border */}
       <footer className="bg-gradient-to-b from-white to-green-50 pt-8 pb-8 px-3 sm:px-4">
         <div className="max-w-4xl mx-auto">
           {/* What is Iranopedia Card */}
-          <div className="bg-white rounded-xl shadow-sm p-6 mb-8 text-center mx-auto">
+          <div className="bg-white rounded-xl shadow-sm p-6 mb-8 text-center mx-auto relative overflow-hidden">
+            <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-primary/10 via-accent/20 to-primary/10"></div>
             <h3 className="text-2xl sm:text-3xl font-bold text-primary mb-4">What is Iranopedia?</h3>
             <p className="text-lg sm:text-xl text-gray-600 mb-6">
               Iranopedia is your modern guide to Persian culture — from food and cities to art, history, and language.
@@ -632,8 +679,8 @@ export default function HomePage() {
             </a>
           </div>
 
-          {/* Divider */}
-          <div className="h-px bg-gray-200 max-w-3xl mx-auto mb-6"></div>
+          {/* Divider with Eslimi-style */}
+          <div className="h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent max-w-3xl mx-auto mb-6"></div>
 
           {/* Copyright and Links */}
           <div className="text-center">
