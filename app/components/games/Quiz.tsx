@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button"
 import { CheckCircle2, XCircle } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 import { XpAnimation } from "./XpAnimation"
+import { playSuccessSound } from "./Flashcard"
 
 type QuizOption = {
   text: string;
@@ -47,6 +48,8 @@ export function Quiz({
     setIsDisabled(true)
     
     if (formattedOptions[index].correct) {
+      // Play success sound when the correct answer is selected
+      playSuccessSound();
       setShowXp(true)  // trigger XP animation
     } else {
       setTimeout(() => {

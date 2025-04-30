@@ -3,6 +3,18 @@ import { Button } from "@/components/ui/button"
 import { ArrowRight } from "lucide-react"
 import { XpAnimation } from "@/app/components/games/XpAnimation"
 
+// Reusable success sound player that can be exported and used by other components
+export function playSuccessSound() {
+  try {
+    const successAudio = new Audio('/audio/successfinal.mp3');
+    successAudio.play().catch(error => {
+      console.error("Error playing success audio:", error);
+    });
+  } catch (error) {
+    console.error("Error creating audio:", error);
+  }
+}
+
 interface FlashcardProps {
   front: string
   back: string
@@ -123,6 +135,9 @@ export function Flashcard({
   }
 
   function handleContinueClick() {
+    // Play success sound when continuing
+    playSuccessSound();
+    
     // Don't award XP here - it will be handled by XpAnimation
     // Trigger XP animation
     setShowXp(true);

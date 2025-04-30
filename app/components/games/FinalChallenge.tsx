@@ -4,6 +4,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { XpAnimation } from "./XpAnimation"
 import { X } from "lucide-react"
+import { playSuccessSound } from "./Flashcard"
 
 export interface FinalChallengeProps {
   targetWords: string[];
@@ -84,6 +85,8 @@ export function FinalChallenge({
     setIsCorrect(isOrderCorrect)
     
     if (isOrderCorrect) {
+      // Play success sound for correct order
+      playSuccessSound();
       setShowXp(true)  // trigger XP animation
       
       // Don't award XP here - it will be handled by XpAnimation onStart

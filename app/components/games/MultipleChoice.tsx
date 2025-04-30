@@ -1,6 +1,7 @@
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { XpAnimation } from "./XpAnimation"
+import { playSuccessSound } from "./Flashcard"
 
 interface MultipleChoiceProps {
   question: string
@@ -19,15 +20,21 @@ export function MultipleChoice({
   const [showXp, setShowXp] = useState(false)
   const [isAnswered, setIsAnswered] = useState(false)
 
-  const handleAnswer = (answer: string) => {
+  const handleAnswer = (option: string) => {
     if (isAnswered) return
     
     // Update UI state only
-    setSelectedAnswer(answer)
+    setSelectedAnswer(option)
     setIsAnswered(true)
     
-    // Trigger animation (XP update will happen in onStart callback)
-    setShowXp(true)
+    // If correct answer
+    if (option === correctAnswer) {
+      // Play success sound
+      playSuccessSound();
+      setTimeout(() => {
+        setShowXp(true)
+      }, 300)
+    }
   }
 
   return (

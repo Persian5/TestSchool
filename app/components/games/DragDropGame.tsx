@@ -2,6 +2,7 @@ import { useState, useEffect } from "react"
 import { Button } from "../../../components/ui/button"
 import { XpAnimation } from "../XpAnimation"
 import { motion, AnimatePresence } from "framer-motion"
+import { playSuccessSound } from "./Flashcard"
 
 interface DragDropGameProps {
   words: { id: string; text: string; slotId: string }[]  // two draggable words
@@ -37,6 +38,8 @@ export function DragDropGame({
   // Show XP and advance when all words are matched
   useEffect(() => {
     if (Object.keys(matches).length === words.length) {
+      // Play success sound when all words are matched
+      playSuccessSound();
       // Show XP animation
       setShowXp(true);
       
@@ -73,6 +76,8 @@ export function DragDropGame({
     const correct = selectedWord.slotId === slotId;
     
     if (correct) {
+      // Play success sound when correctly matched
+      playSuccessSound();
       // Add to matches
       setMatches(prev => ({ ...prev, [slotId]: selectedWordId }));
       // Clear selection

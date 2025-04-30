@@ -2,6 +2,7 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { ArrowRight } from "lucide-react"
 import { XpAnimation } from "./XpAnimation"
+import { playSuccessSound } from "./Flashcard"
 
 interface FillInTheBlankProps {
   question: string
@@ -24,6 +25,11 @@ export function FillInTheBlank({
     const correct = answer.toLowerCase().trim() === correctAnswer.toLowerCase().trim()
     setIsCorrect(correct)
     setIsAnswered(true)
+    
+    // If the answer is correct, play success sound
+    if (correct) {
+      playSuccessSound();
+    }
     
     // Trigger animation 
     setShowXp(true)  // trigger XP animation

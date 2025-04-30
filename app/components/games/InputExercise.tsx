@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input"
 import { CheckCircle2, XCircle } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 import { XpAnimation } from "./XpAnimation"
+import { playSuccessSound } from "./Flashcard"
 
 export interface InputExerciseProps {
   question: string
@@ -39,6 +40,8 @@ export function InputExercise({
     setShowFeedback(true)
 
     if (isAnswerCorrect) {
+      // Play success sound for correct answers
+      playSuccessSound();
       setShowXp(true)  // trigger XP animation
     }
   }
