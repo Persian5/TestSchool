@@ -189,19 +189,17 @@ export default function HomePage() {
 
       <main className="flex-1">
         {/* Hero Section with Toranj Medallion background element */}
-        <section className="bg-primary/10 py-8 px-3 sm:px-4 relative overflow-hidden">
-          <div className="absolute -top-24 -right-24 w-64 h-64 rounded-full border-8 border-primary/5 opacity-20"></div>
-          <div className="absolute -bottom-24 -left-24 w-64 h-64 rounded-full border-8 border-accent/5 opacity-20"></div>
+        <section className="bg-primary/10 py-6 px-3 sm:px-4 relative overflow-hidden">
           <div className="max-w-4xl mx-auto text-center flex flex-col items-center relative z-10">
-            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight text-primary mb-3">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight text-primary mb-2">
               Learn Farsi. Reconnect with Your Roots.
             </h1>
-            <div className="bg-[url('/girih-tile.svg')] bg-opacity-10 p-4 rounded-lg">
-              <p className="text-lg sm:text-xl text-muted-foreground mb-3">
+            <div className="p-2 rounded-lg">
+              <p className="text-lg sm:text-xl text-muted-foreground mb-2">
                 Bite-sized lessons, real culture, zero pressure.
               </p>
             </div>
-            <p className="text-sm sm:text-base text-muted-foreground mb-5">Connect with your heritage</p>
+            <p className="text-sm sm:text-base text-muted-foreground mb-4">Connect with your heritage</p>
             {buttonContent}
           </div>
         </section>
