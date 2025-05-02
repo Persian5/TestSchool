@@ -67,7 +67,7 @@ export function Quiz({
         <p className="text-muted-foreground">Test what you've learned!</p>
       </div>
 
-      <div className="bg-white rounded-xl shadow-lg p-4 relative">
+      <div className="relative p-4">
         <XpAnimation 
           amount={points} 
           show={showXp}

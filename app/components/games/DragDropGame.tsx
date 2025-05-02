@@ -122,7 +122,7 @@ export function DragDropGame({
         </p>
       </div>
       
-      <div className="bg-white rounded-xl shadow-lg p-4 sm:p-6 relative w-full touch-manipulation overflow-hidden">
+      <div className="relative w-full touch-manipulation overflow-hidden p-4 sm:p-6">
         <XpAnimation 
           amount={points} 
           show={showXp}

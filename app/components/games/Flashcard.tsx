@@ -154,7 +154,7 @@ export function Flashcard({
         </p>
       </div>
 
-      <div className="bg-white rounded-xl shadow-lg p-3 sm:p-6 relative w-full">
+      <div className="relative p-3 sm:p-6 w-full">
         <XpAnimation
           amount={points}
           show={showXp}
