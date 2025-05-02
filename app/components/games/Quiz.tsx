@@ -61,13 +61,13 @@ export function Quiz({
   }
 
   return (
-    <div className="w-full max-w-md mx-auto py-2">
-      <div className="text-center mb-4">
+    <div className="flex flex-col items-center w-full flex-1 px-2 sm:px-4 md:px-6 min-h-0">
+      <div className="text-center mb-2 sm:mb-3">
         <h2 className="text-2xl sm:text-3xl font-bold mb-1 text-primary">Quick Quiz</h2>
         <p className="text-muted-foreground">Test what you've learned!</p>
       </div>
 
-      <div className="relative p-4">
+      <div className="relative w-full max-w-md sm:max-w-[85vw] md:max-w-[80vw] lg:max-w-[70vw] flex-grow flex flex-col justify-between p-3 sm:p-4 overflow-hidden min-h-0">
         <XpAnimation 
           amount={points} 
           show={showXp}
@@ -78,12 +78,11 @@ export function Quiz({
           }}
         />
         
-        <h3 className="text-lg sm:text-xl font-semibold mb-4 text-center">
+        <h3 className="text-lg sm:text-xl font-semibold mb-2 text-center">
           {prompt}
         </h3>
 
-        {/* 2x2 Grid of Square Answer Options */}
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-2 gap-3 sm:gap-4 flex-grow">
           {formattedOptions.map((option, index) => (
             <motion.div
               key={index}
@@ -99,7 +98,7 @@ export function Quiz({
                 scale: { duration: 0.4, repeat: 0 },
                 boxShadow: { duration: 0.3 },
               }}
-              className="relative aspect-square rounded-lg overflow-hidden"
+              className="relative rounded-lg overflow-hidden h-full"
             >
               <button
                 className={`w-full h-full rounded-lg flex items-center justify-center transition-all text-lg font-semibold
@@ -113,7 +112,7 @@ export function Quiz({
                 disabled={isDisabled}
               >
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <span className="px-3 py-2 text-center">{option.text}</span>
+                  <span className="px-3 py-2 text-center text-base sm:text-lg lg:text-xl">{option.text}</span>
                 </div>
                 
                 <AnimatePresence>
@@ -125,9 +124,9 @@ export function Quiz({
                       className="absolute top-2 right-2"
                     >
                       {option.correct ? (
-                        <CheckCircle2 className="h-6 w-6 text-green-700" />
+                        <CheckCircle2 className="h-5 w-5 sm:h-6 sm:w-6 text-green-700" />
                       ) : (
-                        <XCircle className="h-6 w-6 text-white" />
+                        <XCircle className="h-5 w-5 sm:h-6 sm:w-6 text-white" />
                       )}
                     </motion.div>
                   )}
@@ -143,7 +142,7 @@ export function Quiz({
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0 }}
-              className="text-center text-red-500 mt-3"
+              className="text-center text-red-500 mt-2"
             >
               Try again!
             </motion.p>

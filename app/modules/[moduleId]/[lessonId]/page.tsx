@@ -111,9 +111,9 @@ export default function LessonPage() {
         </div>
       )}
 
-      <main className="flex-1 flex flex-col px-4 pt-4 pb-4 w-full">
+      <main className="flex-1 flex flex-col px-4 pt-4 pb-4 w-full overflow-hidden">
         {/* Main content area top-aligned */}
-        <div className="w-full max-w-4xl mx-auto flex-1 flex flex-col items-start justify-start pt-4">
+        <div className="w-full max-w-4xl mx-auto flex-1 flex flex-col items-start justify-start pt-4 min-h-0">
           {/* Render the appropriate content based on currentView */}
           {currentView === 'completion' ? (
             <CompletionPage 

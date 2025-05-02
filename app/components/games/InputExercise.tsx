@@ -47,7 +47,7 @@ export function InputExercise({
   }
 
   return (
-    <div className="w-full max-w-md mx-auto py-2">
+    <div className="w-full max-w-[90vw] sm:max-w-[80vw] mx-auto py-4">
       <div className="text-center mb-4">
         <h2 className="text-2xl sm:text-3xl font-bold mb-1 text-primary">Practice</h2>
         <p className="text-muted-foreground">Type the correct word in Finglish</p>
@@ -72,18 +72,23 @@ export function InputExercise({
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="relative">
+            <motion.div
+              initial={false}
+              animate={showFeedback && !isCorrect ? { x: [0, -5, 5, -5, 5, 0] } : {}}
+              transition={{ duration: 0.5 }}
+              className="relative"
+            >
               <Input
                 type="text"
                 value={input}
                 onChange={handleInputChange}
                 placeholder="Type your answer..."
-                className={`pr-10 text-base sm:text-lg ${
+                className={`w-full pr-10 text-base sm:text-lg bg-gray-100 text-gray-800 px-4 py-3 rounded-full shadow-sm transition-all ${
                   showFeedback
                     ? isCorrect
-                      ? "border-green-500 focus-visible:ring-green-500"
-                      : "border-red-500 focus-visible:ring-red-500"
-                    : ""
+                      ? "ring-2 ring-green-300"
+                      : "ring-2 ring-red-300"
+                    : "focus:ring-2 focus:ring-primary/50"
                 }`}
                 disabled={showFeedback && isCorrect}
               />
@@ -103,7 +108,7 @@ export function InputExercise({
                   </motion.div>
                 )}
               </AnimatePresence>
-            </div>
+            </motion.div>
 
             <Button
               type="submit"
