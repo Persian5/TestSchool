@@ -21,42 +21,54 @@ export function WelcomeIntro({
 }: WelcomeIntroProps) {
   return (
     <div className="max-w-md mx-auto text-center">
-      <h1 className="text-3xl sm:text-4xl font-bold mb-4 text-primary">{title}</h1>
-      <p className="text-lg mb-4 text-muted-foreground">{description}</p>
+      <h1 className="text-3xl sm:text-4xl font-bold mb-2 text-primary">{title}</h1>
+      <p className="text-lg mb-3 text-muted-foreground">{description}</p>
       
-      {/* Ali's story */}
-      <div className="bg-secondary/10 rounded-xl p-6 mb-6">
-        <h3 className="font-bold text-xl mb-3">Let's Help Ali!</h3>
-        <p className="text-sm text-muted-foreground mb-4">
-          Ali is visiting Tehran for the first time and needs to learn basic greetings to make a good impression. 
-          Your mission is to teach him the essential Persian phrases he needs.
-        </p>
-        <div className="flex justify-center">
-          <div className="bg-background rounded-full w-16 h-16 flex items-center justify-center">
-            <span className="text-2xl">👨‍💼</span>
+      {/* Combined Mission Card */}
+      <div className="bg-gradient-to-br from-secondary/10 to-primary/5 rounded-xl p-5 mb-4 shadow-sm">
+        {/* Ali's Mission */}
+        <div className="mb-2">
+          <div className="flex items-center justify-center gap-3 mb-3">
+            <div className="bg-background rounded-full w-14 h-14 flex items-center justify-center">
+              <span className="text-2xl">👨‍💼</span>
+            </div>
+            <h3 className="font-bold text-xl">Let's Help Ali!</h3>
           </div>
+          <p className="text-sm text-muted-foreground mb-2 text-center">
+            Ali just landed in Tehran and wants to greet people the right way. You'll meet him again at the end of this lesson — let's make sure you're ready to help him when the time comes.
+          </p>
         </div>
-      </div>
-      
-      <div className="space-y-6">
-        <div className="bg-primary/10 rounded-xl p-6">
-          <p className="text-lg mb-4">In this lesson, you'll learn how to:</p>
-          <ul className="space-y-2 text-left">
-            {objectives.map((objective, index) => (
-              <li key={index} className="flex items-center gap-2">
-                <CheckCircle2 className="h-5 w-5 text-green-500 flex-shrink-0" />
-                <span>{objective}</span>
-              </li>
-            ))}
+        
+        {/* Objectives with emojis */}
+        <div className="bg-white/60 rounded-lg p-4">
+          <p className="text-md font-medium mb-2 text-center">Your mission is to get Ali ready. Help him:</p>
+          <ul className="space-y-1 flex flex-col items-center">
+            <li className="flex items-center gap-2">
+              <span className="text-green-500">👋</span>
+              <span>Say "hello" like a local</span>
+            </li>
+            <li className="flex items-center gap-2">
+              <span className="text-green-500">🤔</span>
+              <span>Ask "how are you?"</span>
+            </li>
+            <li className="flex items-center gap-2">
+              <span className="text-green-500">🙏</span>
+              <span>Welcome people properly</span>
+            </li>
+            <li className="flex items-center gap-2">
+              <span className="text-green-500">👋</span>
+              <span>Say goodbye the right way</span>
+            </li>
           </ul>
         </div>
-          <Button
-            onClick={onStart}
-          className="w-full py-6 text-lg"
-          >
-          Let's Begin! <ArrowRight className="ml-2 h-5 w-5" />
-          </Button>
       </div>
+      
+      <Button
+        onClick={onStart}
+        className="w-full py-5 text-lg"
+      >
+        Let's Start! <ArrowRight className="ml-2 h-5 w-5" />
+      </Button>
     </div>
   );
 } 
