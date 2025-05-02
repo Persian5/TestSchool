@@ -23,7 +23,7 @@ export function Quiz({
   prompt = "Ali smiles and says 'Hello'. What's the right Persian word?",
   options = [
     { text: "Salam", correct: true },
-    { text: "Khodahafez", correct: false },
+    { text: "Khodafez", correct: false },
     { text: "Shab Bekheir", correct: false },
     { text: "Chetori", correct: false },
   ],
@@ -67,7 +67,7 @@ export function Quiz({
         <p className="text-muted-foreground">Test what you've learned!</p>
       </div>
 
-      <div className="relative w-full max-w-md sm:max-w-[85vw] md:max-w-[80vw] lg:max-w-[70vw] flex-grow flex flex-col justify-between p-3 sm:p-4 overflow-hidden min-h-0">
+      <div className="relative w-full max-w-md sm:max-w-[85vw] md:max-w-[80vw] lg:max-w-[70vw] flex-grow flex flex-col justify-between p-3 sm:p-4 overflow-visible min-h-0">
         <XpAnimation 
           amount={points} 
           show={showXp}

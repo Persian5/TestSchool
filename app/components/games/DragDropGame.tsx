@@ -40,26 +40,6 @@ export function DragDropGame({
     }
   }, [showFeedback]);
 
-  // Show XP and advance when all words are matched
-  useEffect(() => {
-    if (Object.keys(matches).length === words.length) {
-      // Play success sound when all words are matched
-      playSuccessSound();
-      // Show XP animation
-      setShowXp(true);
-      
-      // Don't award XP here - it will be handled by XpAnimation onStart
-      
-      // After animation completes, advance
-      const timer = setTimeout(() => {
-        onComplete(true);
-        setShowXp(false);
-      }, 800);
-      
-      return () => clearTimeout(timer);
-    }
-  }, [matches, words.length, onXpStart, onComplete]);
-
   // Handle word selection
   const handleWordClick = (wordId: string) => {
     // If this word is already matched, do nothing
@@ -87,12 +67,21 @@ export function DragDropGame({
     const correct = selectedWord.slotId === slotId;
     
     if (correct) {
-      // Play success sound when correctly matched
-      playSuccessSound();
-      // Add to matches
+      // Track next match count
+      const nextCount = Object.keys(matches).length + 1;
+      // Add to matches (no sound per-match)
       setMatches(prev => ({ ...prev, [slotId]: selectedWordId }));
       // Clear selection
       setSelectedWordId(null);
+      // If this was the final match, award XP and advance
+      if (nextCount === words.length) {
+        playSuccessSound();
+        setShowXp(true);
+        setTimeout(() => {
+          onComplete(true);
+          setShowXp(false);
+        }, 800);
+      }
     } else {
       // Show error feedback
       setShowFeedback({ 
@@ -122,7 +111,7 @@ export function DragDropGame({
         </p>
       </div>
       
-      <div className="relative w-full touch-manipulation overflow-hidden p-4 sm:p-6">
+      <div className="relative flex-grow flex flex-col touch-manipulation overflow-visible p-4 sm:p-6">
         <XpAnimation 
           amount={points} 
           show={showXp}

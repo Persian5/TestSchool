@@ -15,7 +15,7 @@ interface SummaryPageProps {
 }
 
 export default function SummaryPage({
-  learnedWords = ["Salam", "Chetori", "Khosh Ahmadid", "Khodahafez"],
+  learnedWords = ["Salam", "Chetori", "Khosh Amadid", "Khodafez"],
   xp = 0,
   resetLesson
 }: SummaryPageProps) {
@@ -163,8 +163,8 @@ export default function SummaryPage({
             </Button>
             
             <Button variant="outline" className="w-full sm:w-auto">
-              <Link href={`/modules/${moduleId}`}>
-                Back to Module 1
+              <Link href="/pricing">
+                FAQ
               </Link>
             </Button>
           </div>

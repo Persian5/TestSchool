@@ -24,7 +24,7 @@ export default function HomePage() {
     { persian: "Chetori?", english: "How are you?", emoji: "🙂" },
     { persian: "Khoobam", english: "I'm good", emoji: "😌" },
     { persian: "Esme shoma chieh?", english: "What's your name?", emoji: "🧑‍💼" },
-    { persian: "Khodahafez", english: "Goodbye", emoji: "👋" },
+    { persian: "Khodafez", english: "Goodbye", emoji: "👋" },
   ]
 
   const [currentPhraseIndex, setCurrentPhraseIndex] = useState(0)

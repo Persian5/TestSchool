@@ -14,16 +14,16 @@ export interface FinalChallengeProps {
 }
 
 export function FinalChallenge({ 
-  targetWords = ["salam", "khosh_ahmadid", "chetori", "khodahafez"], 
+  targetWords = ["salam", "khosh_ahmadid", "chetori", "khodafez"], 
   points = 20, 
   onComplete,
   onXpStart
 }: FinalChallengeProps) {
   const [items, setItems] = useState([
-    { id: "salam", text: "Salam", order: null as number | null },
-    { id: "khosh_ahmadid", text: "Khosh Ahmadid", order: null as number | null },
+    { id: "khodafez", text: "Khodafez", order: null as number | null },
     { id: "chetori", text: "Chetori", order: null as number | null },
-    { id: "khodahafez", text: "Khodahafez", order: null as number | null },
+    { id: "salam", text: "Salam", order: null as number | null },
+    { id: "khosh_ahmadid", text: "Khosh Amadid", order: null as number | null },
   ])
   
   const [slots, setSlots] = useState([

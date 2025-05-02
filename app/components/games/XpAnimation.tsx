@@ -18,7 +18,7 @@ export function XpAnimation({ amount, show, onStart, onComplete }: XpAnimationPr
           transition={{ duration: 0.8 }}
           onAnimationStart={onStart}
           onAnimationComplete={onComplete}
-          className="absolute top-0 right-0 -mt-5 -mr-5 bg-green-100 text-green-700 rounded-full px-4 py-2 text-base font-bold shadow-md z-[100]"
+          className="absolute top-0 right-0 -mt-5 -mr-5 bg-green-100 text-green-700 rounded-full px-4 py-2 text-base font-bold shadow-md z-[1000]"
         >
           +{amount} XP
         </motion.div>

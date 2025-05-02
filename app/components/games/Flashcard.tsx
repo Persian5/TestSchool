@@ -40,9 +40,9 @@ function getAudioFilename(text: string): string {
     "how are you?": "howareyou.mp3",
     "chetori": "chetori.mp3",
     "goodbye": "goodbye.mp3",
-    "khodahafez": "khodafez.mp3",
+    "khodafez": "khodafez.mp3",
     "welcome": "welcome.mp3",
-    "khosh ahmadid": "khoshamadid.mp3"
+    "khosh amadid": "khoshamadid.mp3"
   };
   
   return audioMap[cleanText] || "";
