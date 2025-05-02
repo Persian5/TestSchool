@@ -181,22 +181,31 @@ export default function HomePage() {
             <span className="hidden sm:inline">Iranopedia Farsi Academy</span>
             <span className="sm:hidden">Iranopedia Farsi Academy</span>
           </Link>
-          <Button size="sm" className="bg-accent hover:bg-accent/90 text-white" onClick={scrollToWaitlist}>
-            Start Now
-          </Button>
+          <div className="flex items-center gap-2">
+            <Link href="/pricing">
+              <Button variant="ghost" size="sm" className="hover:bg-primary/10">
+                Pricing
+              </Button>
+            </Link>
+            <Button size="sm" className="bg-accent hover:bg-accent/90 text-white" onClick={scrollToWaitlist}>
+              Start Now
+            </Button>
+          </div>
         </div>
       </header>
 
       <main className="flex-1">
         {/* Hero Section with Toranj Medallion background element */}
         <section className="bg-primary/10 py-6 px-3 sm:px-4 relative overflow-hidden">
+          <div className="absolute -top-24 -right-24 w-64 h-64 rounded-full border-8 border-primary/5 opacity-20"></div>
+          <div className="absolute -bottom-24 -left-24 w-64 h-64 rounded-full border-8 border-accent/5 opacity-20"></div>
           <div className="max-w-4xl mx-auto text-center flex flex-col items-center relative z-10">
             <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight text-primary mb-2">
               Learn Farsi. Reconnect with Your Roots.
             </h1>
             <div className="p-2 rounded-lg">
               <p className="text-lg sm:text-xl text-muted-foreground mb-2">
-                Bite-sized lessons, real culture, zero pressure.
+                Start speaking Persian today — with fun, bite-sized lessons
               </p>
             </div>
             <p className="text-sm sm:text-base text-muted-foreground mb-4">Connect with your heritage</p>
@@ -540,37 +549,19 @@ export default function HomePage() {
         </section>
 
         {/* Emotional Callout Section with Gol-o-Morgh inspired background */}
-        <section className="py-8 px-3 sm:px-4 bg-gradient-to-r from-primary/5 to-accent/5 relative overflow-hidden">
+        <section className="py-4 px-3 sm:px-4 bg-gradient-to-r from-primary/5 to-accent/5 relative overflow-hidden">
           <div className="absolute inset-0 opacity-5">
-            <div className="absolute top-10 left-10 text-6xl">☕</div>
-            <div className="absolute top-20 right-20 text-6xl">❤️</div>
-            <div className="absolute bottom-10 left-20 text-6xl">🌹</div>
-            <div className="absolute bottom-20 right-10 text-6xl">👨‍👩‍👧‍👦</div>
-            <div className="absolute top-1/3 left-1/3 w-24 h-24 opacity-20">
-              <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                <path d="M50,10 C70,10 90,30 90,50 C90,70 70,90 50,90 C30,90 10,70 10,50 C10,30 30,10 50,10 Z M50,20 C35,20 20,35 20,50 C20,65 35,80 50,80 C65,80 80,65 80,50 C80,35 65,20 50,20 Z" fill="#277C52" />
-                <path d="M50,0 L55,20 L70,5 L65,25 L90,20 L70,35 L90,50 L70,65 L90,80 L65,75 L70,95 L50,80 L30,95 L35,75 L10,80 L30,65 L10,50 L30,35 L10,20 L35,25 L30,5 L50,20 Z" fill="#D61043" fillOpacity="0.3" />
-              </svg>
-            </div>
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 rounded-full bg-gradient-to-r from-primary/10 to-accent/10 blur-2xl"></div>
           </div>
-
           <div className="max-w-6xl mx-auto relative z-10">
             <div className="max-w-3xl mx-auto text-center">
-              <h2 className="text-3xl sm:text-4xl font-bold text-primary mb-4">
+              <h2 className="text-3xl sm:text-4xl font-bold text-primary mb-2">
                 Your Future Self Will Thank You
-                <img src="/icons/teacup.svg" className="inline w-5 h-5 ml-2" alt="Persian teacup" />
               </h2>
               <p className="text-lg sm:text-xl text-gray-700 leading-relaxed">
                 Whether it's to speak with your grandparents, pass it on to your kids, or finally understand those songs
                 you grew up with — you're not too late. You're right on time.
               </p>
-
-              <Button
-                className="mt-6 bg-accent hover:bg-accent/90 text-white rounded-full px-8 py-6 text-lg"
-                onClick={scrollToWaitlist}
-              >
-                Start Your Journey
-              </Button>
             </div>
           </div>
         </section>

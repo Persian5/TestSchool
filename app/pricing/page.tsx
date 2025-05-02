@@ -1,0 +1,190 @@
+"use client";
+
+import React, { useState } from "react";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { CheckCircle2 } from "lucide-react";
+
+export default function PricingPage() {
+  const handleWaitlistClick = () => {
+    console.log('waitlist placeholder');
+  };
+
+  // Function to scroll to waitlist (assuming a waitlist section exists or will be added)
+  const scrollToWaitlist = () => {
+    document.getElementById("waitlist")?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  return (
+    <div className="flex flex-col min-h-screen bg-background">
+      {/* Navbar from Landing Page */}
+      <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 relative">
+        <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-primary/20 via-accent/20 to-primary/20"></div>
+        <div className="flex h-16 items-center justify-between px-3 sm:px-4">
+          <Link href="/" className="flex items-center gap-2 font-bold text-base sm:text-lg text-primary">
+            <span className="hidden sm:inline">Iranopedia Farsi Academy</span>
+            <span className="sm:hidden">Iranopedia Farsi Academy</span>
+          </Link>
+          {/* Assuming the "Start Now" button should function similarly, perhaps scroll to a CTA on this page? */}
+          {/* If no specific scroll target, maybe link back home or to modules? */}
+          {/* For now, just keep the button text as is or change to "Home"? */}
+          <Button size="sm" className="bg-accent hover:bg-accent/90 text-white" onClick={handleWaitlistClick}> 
+            Start Now
+          </Button>
+        </div>
+      </header>
+
+      {/* Hero Section - Minimized top padding */}
+      <section className="flex flex-col items-center justify-center px-6 pt-4 pb-6 bg-primary/5">
+        {/* Title Outside Card - Reduced bottom margin MORE */}
+        <div className="w-full max-w-6xl mx-auto">
+          <h1 className="text-5xl md:text-6xl lg:text-7xl font-extrabold text-primary text-center mb-4">
+            Ready to speak Farsi for less than a snack?
+          </h1>
+        </div>
+
+        {/* Pricing Card - Reduced vertical padding */}
+        <div className="w-full max-w-6xl bg-white rounded-3xl shadow-2xl px-8 sm:px-10 py-6 text-center">
+          {/* Disclaimer - Moved above pricing boxes */}
+          <p className="text-xs text-gray-500 mb-6 text-center">
+            These plans go live after launch. Waitlist members get notified first and pay just $0.99 for month one.
+          </p>
+
+          {/* Price Blocks Container */}
+          <div className="flex flex-col sm:flex-row gap-4 w-full justify-center max-w-5xl mx-auto">
+            {/* Monthly Block */}
+            <div 
+              className="rounded-xl border-2 shadow-md p-6 bg-primary text-white hover:scale-105 active:scale-95 hover:ring-2 hover:ring-accent transition-all cursor-pointer sm:w-1/2 flex flex-col justify-between text-center"
+              onClick={handleWaitlistClick}
+            >
+              <div>
+                <p className="font-semibold">Monthly</p>
+                {/* Discounted price - Moved up */}
+                <p className="text-lg font-semibold text-white mt-1">$0.99 for your first month</p>
+                {/* Original price struck through - Moved down */}
+                <p className="text-sm mt-1">
+                  <span className="line-through text-primary-foreground/50">$9.99 / mo</span>
+                </p>
+                {/* Waitlist note - Updated text */}
+                <p className="text-sm text-white italic opacity-90">🔒 Waitlist Members Only – Lock it in now</p>
+              </div>
+              <p className="text-sm text-primary-foreground/80 mt-2">Try it risk-free, cancel anytime</p>
+            </div>
+            
+            {/* Yearly Block */}
+            <div 
+              className="rounded-xl border-2 border-primary shadow-md p-6 bg-white text-primary hover:scale-105 active:scale-95 hover:ring-2 hover:ring-accent transition-all cursor-pointer sm:w-1/2 flex flex-col justify-between"
+              onClick={handleWaitlistClick}
+            >
+              <div>
+                <p className="font-semibold">Yearly</p>
+                <p className="text-xl font-bold">$89 / yr</p>
+                <p className="text-xs text-gray-500">(3 months free)</p>
+              </div>
+              <p className="text-sm text-gray-500 mt-1">Best value – save 3 months</p>
+            </div>
+          </div>
+          
+          {/* CTA Button - Consistent across all screen sizes */}
+          <Button
+            className="w-full max-w-5xl mx-auto bg-[#E11D48] text-white font-semibold text-base py-2.5 px-5 rounded-full shadow-md text-center mt-8"
+            onClick={handleWaitlistClick}
+          >
+            👉 Tap for Early Access — Join the Waitlist
+          </Button>
+
+          {/* Feature Boxes Grid - Added more top margin */}
+          <div className="grid grid-cols-1 md:grid-cols-8 gap-6 mt-8 text-center max-w-5xl mx-auto">
+            {/* Box 1: What's Included - Reduced padding and heading margin */}
+            <div className="border rounded-lg p-5 bg-gray-50/50 shadow-sm md:col-span-4">
+              <h3 className="text-xl font-bold mb-2 text-primary">What's Included</h3>
+              <ul className="space-y-1 text-sm text-gray-700">
+                <li className="flex items-center justify-center gap-2">• Tap-to-learn lessons that actually stick</li>
+                <li className="flex items-center justify-center gap-2">• XP, streaks & milestones to track your growth</li>
+                <li className="flex items-center justify-center gap-2">• Real-life phrases you'll actually use</li>
+                <li className="flex items-center justify-center gap-2">• Designed for modern learners on the go</li>
+                <li className="flex items-center justify-center gap-2">• Cultural extras like jokes, slang, and poems</li>
+                <li className="flex items-center justify-center gap-2">• Useful sentences — not textbook fluff</li>
+                <li className="flex items-center justify-center gap-2">• Speak from day one, no Farsi background needed</li>
+              </ul>
+            </div>
+
+            {/* Box 2: Coming Soon - Reduced padding and heading margin */}
+            <div className="border rounded-lg p-5 bg-gray-50/50 shadow-sm md:col-span-2">
+              <h3 className="text-xl font-bold mb-2 text-primary">Coming Soon</h3>
+              <ul className="space-y-1 text-sm text-gray-700">
+                <li className="flex items-center justify-center gap-2">🧠 AI pronunciation coach</li>
+                <li className="flex items-center justify-center gap-2">🧍 1-on-1 tutoring (roadmap)</li>
+                <li className="flex items-center justify-center gap-2">🧵 Community forum</li>
+                <li className="flex items-center justify-center gap-2">🏆 Global leaderboard</li>
+                <li className="flex items-center justify-center gap-2">📚 Story mode dialogue</li>
+                <li className="flex items-center justify-center gap-2">✈️ Travel crash course</li>
+              </ul>
+            </div>
+
+            {/* Box 3: Built for Trust - Reduced padding and heading margin */}
+            <div className="border rounded-lg p-5 bg-gray-50/50 shadow-sm md:col-span-2">
+              <h3 className="text-xl font-bold mb-2 text-primary/80">Built for Trust</h3>
+              <ul className="space-y-1 text-sm text-gray-600 italic">
+                <li className="flex items-center justify-center gap-2">🔁 Cancel anytime</li>
+                <li className="flex items-center justify-center gap-2">🔐 No ads, ever</li>
+                <li className="flex items-center justify-center gap-2">🧩 Always improving</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ Section - Reduced padding and heading margin */}
+      <section className="py-10 px-6 bg-white">
+        <div className="max-w-2xl mx-auto">
+          <h2 className="text-3xl font-bold text-center mb-6 text-primary">Frequently Asked Questions</h2>
+          
+          <div className="space-y-4">
+            <details className="bg-white p-4 rounded-lg shadow-sm">
+              <summary className="font-medium text-lg cursor-pointer">When will I be charged?</summary>
+              <p className="mt-2 text-gray-700">You'll only be charged after our official launch. Your first month will be just $0.99 as a Founding Learner.</p>
+            </details>
+            
+            <details className="bg-white p-4 rounded-lg shadow-sm">
+              <summary className="font-medium text-lg cursor-pointer">Can I cancel anytime?</summary>
+              <p className="mt-2 text-gray-700">Yes, you can cancel your subscription at any time with no questions asked.</p>
+            </details>
+            
+            <details className="bg-white p-4 rounded-lg shadow-sm">
+              <summary className="font-medium text-lg cursor-pointer">Is there a money-back guarantee?</summary>
+              <p className="mt-2 text-gray-700">Yes, we offer a 7-day money-back guarantee once billing starts.</p>
+            </details>
+            
+            <details className="bg-white p-4 rounded-lg shadow-sm">
+              <summary className="font-medium text-lg cursor-pointer">Will there be offline access?</summary>
+              <p className="mt-2 text-gray-700">Offline access is planned for a future update.</p>
+            </details>
+            
+            <details className="bg-white p-4 rounded-lg shadow-sm">
+              <summary className="font-medium text-lg cursor-pointer">What advanced features are coming?</summary>
+              <p className="mt-2 text-gray-700">We're working on AI pronunciation coaching, community forums, and 1-on-1 classes with native speakers.</p>
+            </details>
+          </div>
+        </div>
+      </section>
+
+      {/* Final CTA Banner - Reduced padding and heading margin */}
+      <section className="py-10 px-6 bg-primary/5 border-t border-gradient-to-r from-primary via-accent to-primary">
+        <div className="max-w-md mx-auto text-center">
+          <h2 className="text-2xl font-bold mb-4 text-primary">Ready to start your Farsi journey?</h2>
+          <Button
+            className="bg-accent hover:brightness-105 transition text-white font-semibold py-6 px-8 rounded-full shadow-lg hover:scale-105 active:scale-95"
+            aria-label="Join waitlist placeholder"
+            onClick={handleWaitlistClick}
+          >
+            Join the Waitlist — No Payment
+          </Button>
+          <p className="text-sm text-gray-700 font-medium mt-4">
+            Founding Learners get their first month for just $0.99
+          </p>
+        </div>
+      </section>
+    </div>
+  );
+} 
