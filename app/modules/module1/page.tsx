@@ -29,12 +29,13 @@ export default function Module1Page() {
         <div className="flex h-16 items-center justify-between px-3 sm:px-4">
           <Link href="/modules" className="flex items-center gap-2 font-bold text-base sm:text-lg text-primary">
             <ChevronLeft className="h-5 w-5" />
-            <span className="hidden sm:inline">Back to Modules</span>
-            <span className="sm:hidden">Back</span>
+            <span>Modules</span>
           </Link>
-          <Button size="sm" className="bg-accent hover:bg-accent/90 text-white">
-            Start Learning
-          </Button>
+          <Link href="/">
+            <Button size="sm" className="bg-accent hover:bg-accent/90 text-white">
+              Home
+            </Button>
+          </Link>
         </div>
       </header>
 
