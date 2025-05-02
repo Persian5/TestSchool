@@ -82,51 +82,57 @@ export function Quiz({
           {prompt}
         </h3>
 
-        <div className="space-y-3">
+        {/* 2x2 Grid of Square Answer Options */}
+        <div className="grid grid-cols-2 gap-4">
           {formattedOptions.map((option, index) => (
             <motion.div
               key={index}
               initial={false}
               animate={{
+                scale: showFeedback && selectedOption === index && option.correct ? [1, 1.05, 1] : 1,
                 x: showFeedback && selectedOption === index && !option.correct ? [0, -10, 10, -10, 10, 0] : 0,
-                borderColor: showFeedback && selectedOption === index
-                  ? option.correct ? "rgb(34 197 94)" : "rgb(239 68 68)"
-                  : "rgb(229 231 235)",
+                boxShadow: showFeedback && selectedOption === index && option.correct ? 
+                  "0 0 0 3px rgba(34, 197, 94, 0.2)" : "none",
               }}
               transition={{
                 x: { duration: 0.5 },
-                borderColor: { duration: 0.3 },
+                scale: { duration: 0.4, repeat: 0 },
+                boxShadow: { duration: 0.3 },
               }}
+              className="relative aspect-square rounded-lg overflow-hidden"
             >
-              <Button
-                variant={selectedOption === index ? "default" : "outline"}
-                className={`w-full justify-start gap-2 text-base sm:text-lg py-3 ${
-                  showFeedback && selectedOption === index
-                    ? option.correct
-                      ? "bg-green-500 hover:bg-green-600"
-                      : "bg-red-500 hover:bg-red-600"
-                    : ""
-                }`}
-                onClick={() => handleSelect(index)}
+              <button
+                className={`w-full h-full rounded-lg flex items-center justify-center transition-all text-lg font-semibold
+                  ${selectedOption === index ? 
+                    (showFeedback ? 
+                      (option.correct ? "bg-green-100 text-green-700 ring-4 ring-green-100/50" : "bg-red-500 text-white") 
+                    : "bg-primary/20 text-primary") 
+                  : "bg-white border-2 border-primary/20 text-gray-800 hover:bg-primary/10 hover:scale-[1.03]"}
+                  active:scale-95 shadow-sm hover:shadow-md`}
+                onClick={() => !isDisabled && handleSelect(index)}
                 disabled={isDisabled}
               >
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <span className="px-3 py-2 text-center">{option.text}</span>
+                </div>
+                
                 <AnimatePresence>
                   {showFeedback && selectedOption === index && (
                     <motion.div
-                      initial={{ scale: 0 }}
-                      animate={{ scale: 1 }}
-                      exit={{ scale: 0 }}
+                      initial={{ scale: 0, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      exit={{ scale: 0, opacity: 0 }}
+                      className="absolute top-2 right-2"
                     >
                       {option.correct ? (
-                        <CheckCircle2 className="h-5 w-5" />
+                        <CheckCircle2 className="h-6 w-6 text-green-700" />
                       ) : (
-                        <XCircle className="h-5 w-5" />
+                        <XCircle className="h-6 w-6 text-white" />
                       )}
                     </motion.div>
                   )}
                 </AnimatePresence>
-                {option.text}
-              </Button>
+              </button>
             </motion.div>
           ))}
         </div>
