@@ -50,7 +50,6 @@ export default function ModulePage() {
             <p className="text-lg sm:text-xl text-muted-foreground mb-3">
               Master the art of Persian {module.id.replace('module', '').toLowerCase() === '1' ? 'greetings' : module.description.split(' ')[1].toLowerCase()}
             </p>
-            <p className="text-sm sm:text-base text-muted-foreground mb-5">{module.lessonCount} lessons • {module.estimatedTime}</p>
           </div>
         </section>
 
