@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { CheckCircle2, XCircle } from "lucide-react"
+import { CheckCircle2, XCircle, ChevronDown, ChevronUp } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 import { XpAnimation } from "./XpAnimation"
 import { playSuccessSound } from "./Flashcard"
@@ -25,6 +25,7 @@ export function InputExercise({
   const [showFeedback, setShowFeedback] = useState(false)
   const [showXp, setShowXp] = useState(false)
   const [isCorrect, setIsCorrect] = useState(false)
+  const [showHint, setShowHint] = useState(false)
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInput(e.target.value)
@@ -43,7 +44,17 @@ export function InputExercise({
       // Play success sound for correct answers
       playSuccessSound();
       setShowXp(true)  // trigger XP animation
+    } else {
+      // If incorrect, show feedback briefly and then reset
+      setTimeout(() => {
+        setShowFeedback(false);
+        setInput("");
+      }, 1500); // Reset after 1.5 seconds
     }
+  }
+
+  const toggleHint = () => {
+    setShowHint(prev => !prev);
   }
 
   return (
@@ -109,6 +120,47 @@ export function InputExercise({
                 )}
               </AnimatePresence>
             </motion.div>
+
+            {/* Motivation Bubble - MOVED ABOVE HINT */}
+            <div className="my-2">
+              <motion.div 
+                initial={{ opacity: 0, y: 5 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
+                className="bg-primary/5 p-3 rounded-xl text-center"
+              >
+                <p className="text-sm text-gray-600 font-normal">
+                  💡 Remember what you learned from the flashcard!
+                </p>
+              </motion.div>
+            </div>
+
+            {/* Hint Toggle (Collapsible Pill) - MOVED BELOW MOTIVATION */}
+            <div className="mt-3 mb-1">
+              <div className="bg-gray-100 rounded-full">
+                <button 
+                  type="button"
+                  onClick={toggleHint}
+                  className="w-full flex items-center justify-center p-2 text-sm text-gray-600 hover:bg-gray-200 transition-colors duration-200"
+                >
+                  <span className="mr-1">🔍</span>
+                  <span>Need a hint?</span>
+                  {showHint ? 
+                    <ChevronUp className="ml-1 h-4 w-4" /> : 
+                    <ChevronDown className="ml-1 h-4 w-4" />
+                  }
+                </button>
+                
+                {/* Simplified hint display without height animation */}
+                {showHint && (
+                  <div className="px-4 pb-3 pt-1">
+                    <p className="text-center text-green-700 font-medium">
+                      <span className="mr-1">📣</span> Starts with: "che..."
+                    </p>
+                  </div>
+                )}
+              </div>
+            </div>
 
             <Button
               type="submit"
