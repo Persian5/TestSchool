@@ -90,8 +90,7 @@ export default function LessonPage() {
       {/* Header */}
       <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="flex h-16 items-center justify-between px-3 sm:px-4">
-          <Link href={`/modules/${moduleId}`} className="flex items-center gap-2 font-bold text-base sm:text-lg text-primary">
-            <ChevronLeft className="h-5 w-5" />
+          <Link href={`/modules/${moduleId}`} className="font-bold text-base sm:text-lg text-primary">
             <span className="hidden sm:inline">Modules</span>
             <span className="sm:hidden">Modules</span>
           </Link>
@@ -112,45 +111,51 @@ export default function LessonPage() {
       )}
 
       <main className="flex-1 flex flex-col px-4 pt-4 pb-4 w-full overflow-hidden">
-        {/* Main content area top-aligned */}
-        <div className="w-full max-w-4xl mx-auto flex-1 flex flex-col items-start justify-start pt-4 min-h-0">
-          {/* Render the appropriate content based on currentView */}
-          {currentView === 'completion' ? (
-            <CompletionPage 
-              xp={xp} 
-              resetLesson={resetLesson}
-              handleViewSummary={handleViewSummary}
-            />
-          ) : currentView === 'summary' ? (
-            <SummaryPage 
-              xp={xp}
-              resetLesson={resetLesson}
-              learnedWords={getLearnedWords()}
-            />
-          ) : (
-            /* Always drive from config */
-            <LessonRunner 
-              steps={getLessonSteps(moduleId as string, lessonId as string)} 
-              xp={xp}
-              onXpChange={setXp}
-              progress={progress}
-              onProgressChange={setProgress}
-              currentView={currentView}
-              onViewChange={setCurrentView}
-              onSaveState={(state) => setPreviousStates(prev => [...prev, state])}
-            />
-          )}
-        </div>
-        
-        {/* Back Button container - Below content */} 
-        {currentView !== 'welcome' && currentView !== 'completion' && currentView !== 'summary' && previousStates.length > 0 && (
-          <div className="w-full max-w-4xl mx-auto mt-4 flex justify-start">
-            <Button variant="ghost" onClick={handleBack} className="text-sm flex items-center self-start">
-              <ChevronLeft className="h-4 w-4 mr-1" />
-              Go Back
-            </Button>
+        {/* Main content area with Back button */}
+        <div className="w-full max-w-4xl mx-auto flex flex-col flex-1 min-h-0">
+          
+          {/* Back Button container - Moved above main content but below progress */}
+          <div className="h-8 flex items-center"> {/* Fixed height container */}
+            {currentView !== 'welcome' && currentView !== 'completion' && currentView !== 'summary' && previousStates.length > 0 && (
+              <Button variant="ghost" onClick={handleBack} className="text-sm flex items-center self-start pl-0 hover:bg-transparent">
+                <ChevronLeft className="h-4 w-4 mr-1" />
+                Go Back
+              </Button>
+            )}
           </div>
-        )}
+
+          {/* Content Area - takes remaining space */}
+          <div className="flex-1 flex flex-col items-center justify-start min-h-0">
+            {/* Render the appropriate content based on currentView */}
+            {currentView === 'completion' ? (
+              <CompletionPage 
+                xp={xp} 
+                resetLesson={resetLesson}
+                handleViewSummary={handleViewSummary}
+              />
+            ) : currentView === 'summary' ? (
+              <SummaryPage 
+                xp={xp}
+                resetLesson={resetLesson}
+                learnedWords={getLearnedWords()}
+              />
+            ) : (
+              /* Always drive from config */
+              <LessonRunner 
+                steps={getLessonSteps(moduleId as string, lessonId as string)} 
+                xp={xp}
+                onXpChange={setXp}
+                progress={progress}
+                onProgressChange={setProgress}
+                currentView={currentView}
+                onViewChange={setCurrentView}
+                onSaveState={(state) => setPreviousStates(prev => [...prev, state])}
+              />
+            )}
+          </div>
+          
+          {/* Removed the old Back Button container from here */}
+        </div>
       </main>
     </div>
   );
