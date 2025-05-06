@@ -82,7 +82,7 @@ export function InputExercise({
             </p>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form id="answerForm" onSubmit={handleSubmit} className="space-y-4">
             <motion.div
               initial={false}
               animate={showFeedback && !isCorrect ? { x: [0, -5, 5, -5, 5, 0] } : {}}
@@ -109,7 +109,7 @@ export function InputExercise({
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
                     exit={{ scale: 0 }}
-                    className="absolute right-3 top-1/2 -translate-y-1/2"
+                    className="absolute right-3 top-0 bottom-0 flex items-center"
                   >
                     {isCorrect ? (
                       <CheckCircle2 className="h-5 w-5 text-green-500" />
@@ -121,22 +121,8 @@ export function InputExercise({
               </AnimatePresence>
             </motion.div>
 
-            {/* Motivation Bubble - MOVED ABOVE HINT */}
-            <div className="my-2">
-              <motion.div 
-                initial={{ opacity: 0, y: 5 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 }}
-                className="bg-primary/5 p-3 rounded-xl text-center"
-              >
-                <p className="text-sm text-gray-600 font-normal">
-                  💡 Remember what you learned from the flashcard!
-                </p>
-              </motion.div>
-            </div>
-
-            {/* Hint Toggle (Collapsible Pill) - MOVED BELOW MOTIVATION */}
-            <div className="mt-3 mb-1">
+            {/* Hint Toggle (Collapsible Pill) - Added more margin, responsive */}
+            <div className="mt-3 mb-4 sm:mb-6">
               <div className="bg-gray-100 rounded-full">
                 <button 
                   type="button"
@@ -161,14 +147,6 @@ export function InputExercise({
                 )}
               </div>
             </div>
-
-            <Button
-              type="submit"
-              className="w-full text-base sm:text-lg py-3"
-              disabled={showFeedback && isCorrect}
-            >
-              Check Answer
-            </Button>
           </form>
 
           <AnimatePresence>
@@ -185,6 +163,25 @@ export function InputExercise({
           </AnimatePresence>
         </div>
       </div>
+      
+      {/* Motivation Bubble - Moved outside the main container */}
+      <div className="mt-5 mb-4 sm:mt-6 sm:mb-5">
+        <div className="bg-primary/5 p-3 rounded-xl text-center">
+          <p className="text-sm text-gray-600 font-normal">
+            💡 Remember what you learned from the flashcard!
+          </p>
+        </div>
+      </div>
+      
+      {/* Submit button - Moved outside the main container */}
+      <Button
+        type="submit"
+        form="answerForm"
+        className="w-full text-base sm:text-lg py-3 mt-2"
+        disabled={showFeedback && isCorrect}
+      >
+        Check Answer
+      </Button>
     </div>
   )
 }
