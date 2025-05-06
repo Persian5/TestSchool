@@ -27,7 +27,7 @@ export const curriculumData: Module[] = [
           },
           {
             type: "flashcard",
-            points: 2,
+            points: 1,
             data: {
               front: "👋 Hello",
               back: "Salam"
@@ -44,7 +44,7 @@ export const curriculumData: Module[] = [
           },
           {
             type: "flashcard",
-            points: 2,
+            points: 1,
             data: {
               front: "🤔 How are you?",
               back: "Chetori"
@@ -60,7 +60,7 @@ export const curriculumData: Module[] = [
           },
           {
             type: "flashcard",
-            points: 2,
+            points: 1,
             data: {
               front: "🤗 Welcome",
               back: "Khosh Amadid"
@@ -84,7 +84,7 @@ export const curriculumData: Module[] = [
           },
           {
             type: "flashcard",
-            points: 2,
+            points: 1,
             data: {
               front: "🚪 Goodbye",
               back: "Khodafez"

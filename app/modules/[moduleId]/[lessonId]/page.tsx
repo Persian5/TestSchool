@@ -154,6 +154,15 @@ export default function LessonPage() {
             )}
           </div>
           
+          {/* XP Disclaimer - Only visible when not on welcome/intro screen */}
+          {currentView !== 'welcome' && (
+            <div className="w-full text-center mt-3 mb-1">
+              <p className="text-xs text-muted-foreground opacity-70">
+                Heads up: XP resets on refresh — full tracking and leaderboards coming at official launch!
+              </p>
+            </div>
+          )}
+          
           {/* Removed the old Back Button container from here */}
         </div>
       </main>
