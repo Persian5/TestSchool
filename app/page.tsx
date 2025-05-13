@@ -155,7 +155,7 @@ export default function HomePage() {
       className="bg-accent hover:bg-accent/90 text-white transition-all duration-300 hover:scale-105 hover:shadow-lg rounded-full px-8 py-6 text-lg"
       aria-label="Preview Lesson 1"
       onClick={() => {
-        window.location.href = '/modules';
+        window.location.href = '/modules/module1/lesson1';
       }}
     >
       Preview Lesson 1
@@ -178,8 +178,7 @@ export default function HomePage() {
         <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-primary/20 via-accent/20 to-primary/20"></div>
         <div className="flex h-16 items-center justify-between px-3 sm:px-4">
           <Link href="/" className="flex items-center gap-2 font-bold text-base sm:text-lg text-primary">
-            <span className="hidden sm:inline">Iranopedia Farsi Academy</span>
-            <span className="sm:hidden">Iranopedia Farsi Academy</span>
+            Home
           </Link>
           <div className="flex items-center gap-2">
             <Link href="/pricing">
@@ -187,9 +186,23 @@ export default function HomePage() {
                 Pricing
               </Button>
             </Link>
-            <Button size="sm" className="bg-accent hover:bg-accent/90 text-white" onClick={scrollToWaitlist}>
-              Start Now
-            </Button>
+            {isClient ? (
+              isSubscribed ? (
+                <Link href="/modules/module1/lesson1">
+                  <Button size="sm" className="bg-accent hover:bg-accent/90 text-white">
+                    Start Now
+                  </Button>
+                </Link>
+              ) : (
+                <Button size="sm" className="bg-accent hover:bg-accent/90 text-white" onClick={scrollToWaitlist}>
+                  Start Now
+                </Button>
+              )
+            ) : (
+              <Button size="sm" className="bg-accent hover:bg-accent/90 text-white" disabled>
+                Loading...
+              </Button>
+            )}
           </div>
         </div>
       </header>
@@ -201,7 +214,7 @@ export default function HomePage() {
           <div className="absolute -bottom-24 -left-24 w-64 h-64 rounded-full border-8 border-accent/5 opacity-20"></div>
           <div className="max-w-4xl mx-auto text-center flex flex-col items-center relative z-10">
             <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight text-primary mb-2">
-              Learn Farsi. Reconnect with Your Roots.
+              Learn Persian. Reconnect with Your Roots.
             </h1>
             <div className="p-2 rounded-lg">
               <p className="text-lg sm:text-xl text-muted-foreground mb-2">
@@ -222,7 +235,7 @@ export default function HomePage() {
           <div className="absolute inset-x-0 bottom-0 h-48 opacity-15 bg-[url('/tehran.png')] bg-bottom bg-contain bg-repeat-x"></div>
           <div className="max-w-6xl mx-auto text-center relative z-10">
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-primary mb-4">
-              Over 4,500+ learners have already started learning Persian through Iranopedia
+              Join The Hundreds Already On The Waitlist To Learn Persian With Iranopedia!
             </h2>
             <p className="text-lg sm:text-xl text-gray-600 mb-6">Iranian culture is everywhere. You belong here.</p>
             <Button
@@ -593,11 +606,13 @@ export default function HomePage() {
           >
             {isSubscribed ? (
               <div className="text-center">
-                <h3 className="text-2xl sm:text-3xl font-bold text-primary mb-2">You're on the list! 🎉</h3>
-                <p className="text-lg sm:text-xl text-gray-700 mb-6">
-                  Thanks for joining the waitlist. We'll keep you updated on our progress.
-                </p>
-                <Link href="/modules">
+                <h3 className="text-2xl sm:text-3xl font-bold text-primary mb-6">
+                  <div>You're in 🎉</div>
+                  <div>Your first lesson is ready, let's get started!</div>
+                  <div>We'll keep you posted on new features and launch updates.</div>
+                </h3>
+                
+                <Link href="/modules/module1/lesson1">
                   <Button 
                     size="lg"
                     className="bg-accent hover:bg-accent/90 text-white transition-all duration-300 hover:scale-105 hover:shadow-lg rounded-full px-8 py-6 text-lg"
@@ -650,7 +665,7 @@ export default function HomePage() {
       </section>
 
       {/* Footer with What is Iranopedia section - Eslimi border */}
-      <footer className="bg-gradient-to-b from-white to-green-50 pt-8 pb-8 px-3 sm:px-4">
+      <footer className="bg-gradient-to-b from-green-50 to-green-50 pb-8 px-3 sm:px-4">
         <div className="max-w-4xl mx-auto">
           {/* What is Iranopedia Card */}
           <div className="bg-white rounded-xl shadow-sm p-6 mb-8 text-center mx-auto relative overflow-hidden">
@@ -674,7 +689,7 @@ export default function HomePage() {
           {/* Copyright and Links */}
           <div className="text-center">
             <p className="text-gray-500 text-sm mb-8">
-              © 2025 Iranopedia Farsi Academy — Made with ❤️ for anyone learning Farsi
+              © 2025 Iranopedia — Made with ❤️ for anyone learning Persian(Farsi)
             </p>
 
             {/* Nav Links */}
