@@ -1,22 +1,86 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { CheckCircle2 } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { motion, AnimatePresence } from "framer-motion";
+import Confetti from 'react-confetti';
 
 export default function PricingPage() {
+  // Waitlist Form State
+  const [email, setEmail] = useState("");
+  const [error, setError] = useState("");
+  const [isSubscribed, setIsSubscribed] = useState(false);
+  const [isClient, setIsClient] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [showConfetti, setShowConfetti] = useState(false);
+  const [showWaitlistForm, setShowWaitlistForm] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+    const storedValue = localStorage.getItem('isSubscribed');
+    setIsSubscribed(storedValue === 'true');
+  }, []);
+
   const handleWaitlistClick = () => {
-    console.log('waitlist placeholder');
+    setShowWaitlistForm(true);
   };
 
-  // Function to scroll to waitlist (assuming a waitlist section exists or will be added)
+  const handleCloseWaitlistForm = () => {
+    setShowWaitlistForm(false);
+  };
+
+  const handleWaitlistSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
+    setIsLoading(true);
+
+    try {
+      const response = await fetch("/api/waitlist", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email }),
+      });
+
+      // Check if the response is JSON
+      const contentType = response.headers.get("content-type");
+      if (contentType && contentType.includes("application/json")) {
+        const data = await response.json();
+        if (!response.ok) {
+          throw new Error(data.error || 'Failed to subscribe');
+        }
+        setIsSubscribed(true);
+        localStorage.setItem('isSubscribed', 'true');
+        setShowConfetti(true);
+        setEmail("");
+
+        // Hide confetti after 3 seconds
+        setTimeout(() => setShowConfetti(false), 3000);
+      } else {
+        // If not JSON, get the text and throw an error
+        const text = await response.text();
+        throw new Error('Server error: ' + text);
+      }
+    } catch (err) {
+      console.error('Waitlist submission error:', err);
+      setError(err instanceof Error ? err.message : 'Failed to subscribe. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Function to scroll to waitlist
   const scrollToWaitlist = () => {
     document.getElementById("waitlist")?.scrollIntoView({ behavior: "smooth" });
   };
 
   return (
     <div className="flex flex-col min-h-screen bg-background">
+      {showConfetti && isClient && <Confetti recycle={false} numberOfPieces={200} />}
+      
       {/* Navbar from Landing Page */}
       <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 relative">
         <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-primary/20 via-accent/20 to-primary/20"></div>
@@ -175,7 +239,7 @@ export default function PricingPage() {
           <h2 className="text-2xl font-bold mb-4 text-primary">Ready to start your Farsi journey?</h2>
           <Button
             className="bg-accent hover:brightness-105 transition text-white font-semibold py-6 px-8 rounded-full shadow-lg hover:scale-105 active:scale-95"
-            aria-label="Join waitlist placeholder"
+            aria-label="Join waitlist"
             onClick={handleWaitlistClick}
           >
             Join the Waitlist — No Payment
@@ -185,6 +249,81 @@ export default function PricingPage() {
           </p>
         </div>
       </section>
+
+      {/* Waitlist Modal */}
+      <AnimatePresence>
+        {showWaitlistForm && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50"
+            onClick={handleCloseWaitlistForm}
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="bg-white rounded-xl p-6 max-w-md w-full"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {isSubscribed ? (
+                <>
+                  <h3 className="text-2xl sm:text-3xl font-bold mb-4 text-primary text-center">
+                    You're on the list! 🎉
+                  </h3>
+                  <p className="text-lg sm:text-xl text-center text-gray-600 mb-6">
+                    You're officially part of the early access crew! We'll let you know the moment the full platform is ready.
+                  </p>
+                  <Button 
+                    onClick={handleCloseWaitlistForm}
+                    className="w-full bg-primary hover:bg-primary/90 text-white text-lg"
+                  >
+                    Close
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <h3 className="text-2xl sm:text-3xl font-bold mb-4 text-primary text-center">
+                    Join Our Free Beta Waitlist
+                  </h3>
+                  <p className="text-lg sm:text-xl text-center text-gray-600 mb-6">
+                    Waitlist closes before launch. No commitment. Reserve your spot.
+                  </p>
+                  <form onSubmit={handleWaitlistSubmit} className="w-full mx-auto">
+                    <div className="flex flex-col gap-2">
+                      <Input
+                        type="email"
+                        placeholder="Enter your email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        required
+                        className="text-lg"
+                        disabled={isLoading}
+                        aria-label="Email address"
+                        aria-describedby="email-error"
+                      />
+                      <Button 
+                        type="submit" 
+                        className="bg-primary hover:bg-primary/90 text-white text-lg"
+                        disabled={isLoading}
+                        aria-label="Join waitlist"
+                      >
+                        {isLoading ? 'Joining...' : 'Join Waitlist'}
+                      </Button>
+                    </div>
+                    {error && (
+                      <p id="email-error" className="text-red-500 mt-2 text-sm text-center" role="alert">
+                        {error}
+                      </p>
+                    )}
+                  </form>
+                </>
+              )}
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 } 

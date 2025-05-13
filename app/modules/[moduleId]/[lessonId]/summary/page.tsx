@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Check, Sparkles } from "lucide-react"
 import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
+import Confetti from 'react-confetti'
 
 interface SummaryPageProps {
   learnedWords?: string[];
@@ -79,6 +80,8 @@ export default function SummaryPage({
   
   return (
     <div className="max-w-lg mx-auto animate-fade-in w-full py-8">
+      {showConfetti && isClient && <Confetti recycle={false} numberOfPieces={200} />}
+      
       <Card className="w-full">
         <CardHeader>
           <CardTitle className="text-center text-2xl">
@@ -171,69 +174,82 @@ export default function SummaryPage({
         </CardContent>
       </Card>
 
-      {/* Confetti effect */}
-      {showConfetti && (
+      {/* Waitlist Modal */}
+      <AnimatePresence>
+        {showWaitlistModal && (
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 pointer-events-none z-50"
-        >
-          <div className="absolute inset-0 bg-primary/5" />
-          <Sparkles className="absolute top-0 left-1/2 -translate-x-1/2 text-primary" size={48} />
-        </motion.div>
-      )}
-
-      {/* Waitlist Modal */}
-      {showWaitlistModal && (
-        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 max-w-md w-full shadow-xl relative">
-            <button
-              onClick={() => setShowWaitlistModal(false)}
-              className="absolute top-3 right-3 text-gray-400 hover:text-gray-600"
+            className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50"
+            onClick={() => setShowWaitlistModal(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="bg-white rounded-xl p-6 max-w-md w-full shadow-xl"
+              onClick={(e) => e.stopPropagation()}
             >
-              ×
-            </button>
-            
             {isSubscribed ? (
-              <div className="text-center p-6">
-                <h4 className="text-lg font-semibold mb-2">Thank you!</h4>
-                <p>You'll be notified when we officially launch.</p>
-              </div>
+                <>
+                  <h3 className="text-2xl sm:text-3xl font-bold mb-4 text-primary text-center">
+                    You're on the list! 🎉
+                  </h3>
+                  <p className="text-lg sm:text-xl text-center text-gray-600 mb-6">
+                    You're officially part of the early access crew! We'll let you know the moment the full platform is ready.
+                  </p>
+                  <Button 
+                    onClick={() => setShowWaitlistModal(false)}
+                    className="w-full bg-primary hover:bg-primary/90 text-white text-lg"
+                  >
+                    Close
+                  </Button>
+                </>
             ) : (
               <>
-                <h3 className="text-xl font-semibold mb-4">Join the Waitlist</h3>
+                  <h3 className="text-2xl sm:text-3xl font-bold mb-4 text-primary text-center">
+                    Join Our Free Beta Waitlist
+                  </h3>
+                  <p className="text-lg sm:text-xl text-center text-gray-600 mb-6">
+                    Waitlist closes before launch. No commitment. Reserve your spot.
+                  </p>
                 <form
                   onSubmit={handleWaitlistSubmit}
-                  className="space-y-3"
+                    className="w-full mx-auto"
                 >
+                    <div className="flex flex-col gap-2">
                   <input
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    placeholder="Your email"
+                        placeholder="Enter your email"
                     required
-                    className="w-full border rounded px-3 py-2"
+                        className="w-full border rounded px-3 py-2 text-lg"
                     disabled={isLoading}
+                        aria-label="Email address"
+                        aria-describedby="email-error"
                   />
-                  <button
+                      <Button 
                     type="submit"
-                    className="w-full bg-green-700 text-white py-2 px-4 rounded hover:bg-green-800"
+                        className="w-full bg-primary hover:bg-primary/90 text-white text-lg"
                     disabled={isLoading}
                   >
-                    {isLoading ? 'Joining...' : 'Submit'}
-                  </button>
+                        {isLoading ? 'Joining...' : 'Join Waitlist'}
+                      </Button>
+                    </div>
                   {error && (
-                    <p className="text-red-500 mt-2 text-sm text-center" role="alert">
+                      <p id="email-error" className="text-red-500 mt-2 text-sm text-center" role="alert">
                       {error}
                     </p>
                   )}
                 </form>
               </>
             )}
-          </div>
-        </div>
+            </motion.div>
+          </motion.div>
       )}
+      </AnimatePresence>
     </div>
   );
 } 
