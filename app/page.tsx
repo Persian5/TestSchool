@@ -263,7 +263,7 @@ export default function HomePage() {
                 <CardContent>
                   <p className="text-base sm:text-lg">
                     <img src="/icons/pistachio.svg" className="inline w-4 h-4 mr-1" alt="Pistachio bullet point" />
-                    Learn Farsi in 5-minute chunks that fit into your busy schedule.
+                    Learn Persian in 5-minute chunks that fit into your busy schedule.
                   </p>
                 </CardContent>
               </Card>
@@ -358,7 +358,7 @@ export default function HomePage() {
                     <span className="text-gray-600">2,540 XP</span>
                   </div>
                   <div className="flex justify-between items-center py-2 px-3">
-                    <span className="font-medium">FarsiFanatic</span>
+                    <span className="font-medium">PersianFanatic</span>
                     <span className="text-gray-600">2,210 XP</span>
                   </div>
                   <div className="flex justify-between items-center py-2 px-3 bg-gray-50 rounded-lg">
@@ -513,7 +513,7 @@ export default function HomePage() {
                   </div>
                   <div>
                     <h4 className="font-medium text-lg mb-1">Lesson 1: Persian Greetings</h4>
-                    <p className="text-base text-muted-foreground">Learn basic Farsi greetings and introductions</p>
+                    <p className="text-base text-muted-foreground">Learn basic Persian greetings and introductions</p>
                   </div>
                 </div>
 
@@ -689,7 +689,7 @@ export default function HomePage() {
           {/* Copyright and Links */}
           <div className="text-center">
             <p className="text-gray-500 text-sm mb-8">
-              © 2025 Iranopedia — Made with ❤️ for anyone learning Persian(Farsi)
+              © 2025 Iranopedia — Made with ❤️ for anyone learning Persian
             </p>
 
             {/* Nav Links */}

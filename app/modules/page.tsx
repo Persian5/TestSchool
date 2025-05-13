@@ -10,19 +10,29 @@ import { getModules } from "@/lib/config/curriculum"
 
 export default function ModulesPage() {
   const [mounted, setMounted] = useState(false)
+  const [isSubscribed, setIsSubscribed] = useState(false)
+  const [isClient, setIsClient] = useState(false)
   const router = useRouter()
 
   useEffect(() => {
     setMounted(true)
+    setIsClient(true)
+    const storedValue = localStorage.getItem('isSubscribed')
+    setIsSubscribed(storedValue === 'true')
   }, [])
 
   const modules = getModules().map((module, index) => ({
     id: index + 1, // Use numeric IDs for key purposes in the UI
     title: module.title,
     description: module.description,
+    emoji: module.emoji,
     href: module.available ? `/modules/${module.id}` : "#",
     available: module.available
   }))
+
+  const handleWaitlistClick = () => {
+    router.push('/#waitlist')
+  }
 
   if (!mounted) {
     return null
@@ -34,9 +44,32 @@ export default function ModulesPage() {
       <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="flex h-16 items-center justify-between px-3 sm:px-4">
           <Link href="/" className="flex items-center gap-2 font-bold text-base sm:text-lg text-primary">
-            <span className="hidden sm:inline">Iranopedia Farsi Academy</span>
-            <span className="sm:hidden">Iranopedia Farsi Academy</span>
+            Home
           </Link>
+          <div className="flex items-center gap-2">
+            <Link href="/pricing">
+              <Button variant="ghost" size="sm" className="hover:bg-primary/10">
+                Pricing
+              </Button>
+            </Link>
+            {isClient ? (
+              isSubscribed ? (
+                <Link href="/modules/module1/lesson1">
+                  <Button size="sm" className="bg-accent hover:bg-accent/90 text-white">
+                    Start Now
+                  </Button>
+                </Link>
+              ) : (
+                <Button size="sm" className="bg-accent hover:bg-accent/90 text-white" onClick={handleWaitlistClick}>
+                  Start Now
+                </Button>
+              )
+            ) : (
+              <Button size="sm" className="bg-accent hover:bg-accent/90 text-white" disabled>
+                Loading...
+              </Button>
+            )}
+          </div>
         </div>
       </header>
 
@@ -47,11 +80,11 @@ export default function ModulesPage() {
               Choose Your Module
             </h1>
             <p className="text-xl text-muted-foreground">
-              Start your Farsi learning journey
+              Start your Persian learning journey
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
             {modules.map((module) => (
               <Card 
                 key={module.id} 
@@ -60,12 +93,13 @@ export default function ModulesPage() {
                 }`}
               >
                 <CardHeader>
-                  <CardTitle className="text-xl sm:text-2xl text-center">
-                    {module.title}
+                  <CardTitle className="text-xl sm:text-2xl text-center flex items-center justify-center gap-2">
+                    <span className="text-2xl">{module.emoji}</span>
+                    <span>{module.title}</span>
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="text-center">
-                  <p className="text-muted-foreground mb-4">{module.description}</p>
+                  <p className="text-muted-foreground mb-6 min-h-[80px]">{module.description}</p>
                   {module.available ? (
                     <Link href={module.href}>
                       <Button className="w-full bg-accent hover:bg-accent/90 text-white">
@@ -94,7 +128,7 @@ export default function ModulesPage() {
           <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
             <div className="text-center md:text-left">
               <p className="text-sm text-muted-foreground">
-                © 2024 Iranopedia Farsi Academy. All rights reserved.
+                © 2024 Iranopedia. All rights reserved.
               </p>
             </div>
             <div className="flex gap-4">

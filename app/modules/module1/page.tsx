@@ -46,10 +46,9 @@ export default function Module1Page() {
             <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight text-primary mb-3">
               {module.title}
             </h1>
-            <p className="text-lg sm:text-xl text-muted-foreground mb-3">
+            <p className="text-lg sm:text-xl text-muted-foreground mb-5">
               Master the art of Persian greetings and basic conversations
             </p>
-            <p className="text-sm sm:text-base text-muted-foreground mb-5">{module.lessonCount} lessons • {module.estimatedTime}</p>
           </div>
         </section>
 

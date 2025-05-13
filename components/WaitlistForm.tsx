@@ -58,7 +58,7 @@ export function WaitlistForm({ onSuccess }: WaitlistFormProps) {
       <CardHeader>
         <CardTitle>Join the Waitlist</CardTitle>
         <CardDescription>
-          Be the first to know when we launch our Farsi learning platform.
+          Be the first to know when we launch our Persian learning platform.
         </CardDescription>
       </CardHeader>
       <CardContent>

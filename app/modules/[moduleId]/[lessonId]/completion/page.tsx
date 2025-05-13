@@ -125,7 +125,7 @@ export default function CompletionPage({
       
       {/* Encouraging Text */}
       <p className="text-muted-foreground mb-8">
-        You're making incredible progress! Keep going to become fluent in Farsi!
+        You're making incredible progress! Keep going to become fluent in Persian!
       </p>
       
       {/* Action Buttons */}

@@ -4,8 +4,8 @@ import { Module, LessonStep } from "../types";
 export const curriculumData: Module[] = [
   {
     id: "module1",
-    title: "Module 1: Greetings",
-    description: "Learn basic Farsi greetings and introductions",
+    title: "Module 1: Greetings & Politeness",
+    description: "Start a conversation the right way. Learn how to say hello, goodbye, thank you, please, and the difference between formal and casual tone.",
     emoji: "👋",
     lessonCount: 4,
     estimatedTime: "20 minutes",
@@ -136,8 +136,8 @@ export const curriculumData: Module[] = [
   },
   {
     id: "module2",
-    title: "Module 2: Numbers",
-    description: "Master counting in Farsi from 1 to 100",
+    title: "Module 2: Numbers & Age",
+    description: "Count, ask age, and talk prices. Learn numbers from 1 to 100, how to ask about age, and use simple math in daily conversation.",
     emoji: "🔢",
     lessonCount: 4,
     estimatedTime: "30 minutes",
@@ -146,8 +146,8 @@ export const curriculumData: Module[] = [
   },
   {
     id: "module3",
-    title: "Module 3: Family",
-    description: "Learn family-related vocabulary and phrases",
+    title: "Module 3: Family & Relationships",
+    description: "Describe your family or ask about someone else's. Includes parents, siblings, friends, and possessive structures.",
     emoji: "👪",
     lessonCount: 3,
     estimatedTime: "25 minutes",
@@ -156,8 +156,8 @@ export const curriculumData: Module[] = [
   },
   {
     id: "module4",
-    title: "Module 4: Food",
-    description: "Explore Farsi food vocabulary and ordering phrases",
+    title: "Module 4: Food & Ordering at a Restaurant",
+    description: "Order like a pro. Learn how to ask for the check, express what you want or don't want, and talk about Persian dishes.",
     emoji: "🍽️",
     lessonCount: 5,
     estimatedTime: "40 minutes",
@@ -166,9 +166,9 @@ export const curriculumData: Module[] = [
   },
   {
     id: "module5",
-    title: "Module 5: Travel",
-    description: "Essential phrases for traveling in Iran",
-    emoji: "✈️",
+    title: "Module 5: Daily Activities & Routines",
+    description: "Talk about your daily schedule. Wake up, go to work or school, and describe habits and everyday actions.",
+    emoji: "📅",
     lessonCount: 3,
     estimatedTime: "30 minutes",
     available: false,
@@ -176,11 +176,61 @@ export const curriculumData: Module[] = [
   },
   {
     id: "module6",
-    title: "Module 6: Culture",
-    description: "Understanding Iranian customs and traditions",
-    emoji: "🏺",
+    title: "Module 6: Getting Around (Travel & Directions)",
+    description: "Navigate with ease. Ask for directions, take taxis, and find locations using common travel vocabulary.",
+    emoji: "🚕",
     lessonCount: 3,
     estimatedTime: "30 minutes",
+    available: false,
+    lessons: []
+  },
+  {
+    id: "module7",
+    title: "Module 7: Feelings & Small Talk",
+    description: "Talk about how you feel. Learn casual check-ins, emotions, and how to keep a conversation going.",
+    emoji: "😊",
+    lessonCount: 3,
+    estimatedTime: "25 minutes",
+    available: false,
+    lessons: []
+  },
+  {
+    id: "module8",
+    title: "Module 8: Persian Slang & Humor",
+    description: "Speak like a true Tehrani. Learn playful, everyday expressions used with friends and family.",
+    emoji: "😎",
+    lessonCount: 3,
+    estimatedTime: "30 minutes",
+    available: false,
+    lessons: []
+  },
+  {
+    id: "module9",
+    title: "Module 9: Shopping, Prices & Bargaining",
+    description: "Ask how much, negotiate prices, and describe items by size, color, and quality.",
+    emoji: "🛍️",
+    lessonCount: 3,
+    estimatedTime: "25 minutes",
+    available: false,
+    lessons: []
+  },
+  {
+    id: "module10",
+    title: "Module 10: Celebrations & Holidays",
+    description: "Join the fun. Learn phrases for Nowruz, Yalda, birthdays, weddings, and other cultural events.",
+    emoji: "🎉",
+    lessonCount: 3,
+    estimatedTime: "30 minutes",
+    available: false,
+    lessons: []
+  },
+  {
+    id: "module11",
+    title: "Module 11: Story Mode – A Day in Tehran",
+    description: "Practice what you've learned in an interactive choose-your-path story through real-life situations.",
+    emoji: "📚",
+    lessonCount: 4,
+    estimatedTime: "45 minutes",
     available: false,
     lessons: []
   }

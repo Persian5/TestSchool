@@ -79,7 +79,7 @@ export default function SummaryPage({
   }
   
   return (
-    <div className="max-w-lg mx-auto animate-fade-in w-full py-8">
+    <div className="max-w-lg mx-auto animate-fade-in w-full pb-8">
       {showConfetti && isClient && <Confetti recycle={false} numberOfPieces={200} />}
       
       <Card className="w-full">

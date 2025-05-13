@@ -86,15 +86,25 @@ export default function PricingPage() {
         <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-primary/20 via-accent/20 to-primary/20"></div>
         <div className="flex h-16 items-center justify-between px-3 sm:px-4">
           <Link href="/" className="flex items-center gap-2 font-bold text-base sm:text-lg text-primary">
-            <span className="hidden sm:inline">Iranopedia Farsi Academy</span>
-            <span className="sm:hidden">Iranopedia Farsi Academy</span>
+            Home
           </Link>
-          {/* Assuming the "Start Now" button should function similarly, perhaps scroll to a CTA on this page? */}
-          {/* If no specific scroll target, maybe link back home or to modules? */}
-          {/* For now, just keep the button text as is or change to "Home"? */}
-          <Button size="sm" className="bg-accent hover:bg-accent/90 text-white" onClick={handleWaitlistClick}> 
-            Start Now
-          </Button>
+          {isClient ? (
+            isSubscribed ? (
+              <Link href="/modules/module1/lesson1">
+                <Button size="sm" className="bg-accent hover:bg-accent/90 text-white">
+                  Start Now
+                </Button>
+              </Link>
+            ) : (
+              <Button size="sm" className="bg-accent hover:bg-accent/90 text-white" onClick={handleWaitlistClick}> 
+                Start Now
+              </Button>
+            )
+          ) : (
+            <Button size="sm" className="bg-accent hover:bg-accent/90 text-white" disabled>
+              Loading...
+            </Button>
+          )}
         </div>
       </header>
 
@@ -103,7 +113,7 @@ export default function PricingPage() {
         {/* Title Outside Card - Reduced bottom margin MORE */}
         <div className="w-full max-w-6xl mx-auto">
           <h1 className="text-5xl md:text-6xl lg:text-7xl font-extrabold text-primary text-center mb-4">
-            Ready to speak Farsi for less than a snack?
+            Ready to speak Persian for less than a snack?
           </h1>
         </div>
 
@@ -115,10 +125,10 @@ export default function PricingPage() {
           </p>
 
           {/* Price Blocks Container */}
-          <div className="flex flex-col sm:flex-row gap-4 w-full justify-center max-w-5xl mx-auto">
+          <div className="flex flex-col gap-4 w-full max-w-5xl mx-auto">
             {/* Monthly Block */}
             <div 
-              className="rounded-xl border-2 shadow-md p-6 bg-primary text-white hover:scale-105 active:scale-95 hover:ring-2 hover:ring-accent transition-all cursor-pointer sm:w-1/2 flex flex-col justify-between text-center"
+              className="rounded-xl border-2 shadow-md p-6 bg-primary text-white hover:scale-105 active:scale-95 hover:ring-2 hover:ring-accent transition-all cursor-pointer flex flex-col justify-between text-center"
               onClick={handleWaitlistClick}
             >
               <div>
@@ -135,7 +145,7 @@ export default function PricingPage() {
               <p className="text-sm text-primary-foreground/80 mt-2">Try it risk-free, cancel anytime</p>
             </div>
             
-            {/* Yearly Block */}
+            {/* Yearly Block - THIS ENTIRE DIV WILL BE REMOVED
             <div 
               className="rounded-xl border-2 border-primary shadow-md p-6 bg-white text-primary hover:scale-105 active:scale-95 hover:ring-2 hover:ring-accent transition-all cursor-pointer sm:w-1/2 flex flex-col justify-between"
               onClick={handleWaitlistClick}
@@ -147,6 +157,7 @@ export default function PricingPage() {
               </div>
               <p className="text-sm text-gray-500 mt-1">Best value – save 3 months</p>
             </div>
+            */}
           </div>
           
           {/* CTA Button - Consistent across all screen sizes */}
@@ -169,7 +180,7 @@ export default function PricingPage() {
                 <li className="flex items-center justify-center gap-2">• Designed for modern learners on the go</li>
                 <li className="flex items-center justify-center gap-2">• Cultural extras like jokes, slang, and poems</li>
                 <li className="flex items-center justify-center gap-2">• Useful sentences — not textbook fluff</li>
-                <li className="flex items-center justify-center gap-2">• Speak from day one, no Farsi background needed</li>
+                <li className="flex items-center justify-center gap-2">• Speak from day one, no Persian background needed</li>
               </ul>
             </div>
 
@@ -206,28 +217,31 @@ export default function PricingPage() {
           
           <div className="space-y-4">
             <details className="bg-white p-4 rounded-lg shadow-sm">
-              <summary className="font-medium text-lg cursor-pointer">When will I be charged?</summary>
-              <p className="mt-2 text-gray-700">You'll only be charged after our official launch. Your first month will be just $0.99 as a Founding Learner.</p>
+              <summary className="font-medium text-lg cursor-pointer capitalize">
+                Is Joining The Waitlist Free?
+              </summary>
+              <p className="mt-2 text-gray-700">100% free. No payment. No credit card. No commitment. Just sign up and we'll save your spot. You'll also unlock early access to new lessons, features, and the $0.99 launch offer available only to waitlist members.</p>
             </details>
             
             <details className="bg-white p-4 rounded-lg shadow-sm">
-              <summary className="font-medium text-lg cursor-pointer">Can I cancel anytime?</summary>
-              <p className="mt-2 text-gray-700">Yes, you can cancel your subscription at any time with no questions asked.</p>
+              <summary className="font-medium text-lg cursor-pointer capitalize">
+                What Features Are Coming Soon?
+              </summary>
+              <p className="mt-2 text-gray-700">We're building everything from an AI-powered pronunciation scorer and immersive story mode to interactive games, XP competitions, global leaderboards, and a vibrant community for learners and native speakers — and as a waitlist member, you'll be the first to experience it all.</p>
             </details>
             
             <details className="bg-white p-4 rounded-lg shadow-sm">
-              <summary className="font-medium text-lg cursor-pointer">Is there a money-back guarantee?</summary>
-              <p className="mt-2 text-gray-700">Yes, we offer a 7-day money-back guarantee once billing starts.</p>
+              <summary className="font-medium text-lg cursor-pointer capitalize">
+                Why Should I Join The Waitlist Instead Of Waiting For Launch?
+              </summary>
+              <p className="mt-2 text-gray-700">Waitlist members get early access, sneak peeks of new features, and exclusive pricing! You'll be the first to speak Persian while others are still on the sidelines.</p>
             </details>
             
             <details className="bg-white p-4 rounded-lg shadow-sm">
-              <summary className="font-medium text-lg cursor-pointer">Will there be offline access?</summary>
-              <p className="mt-2 text-gray-700">Offline access is planned for a future update.</p>
-            </details>
-            
-            <details className="bg-white p-4 rounded-lg shadow-sm">
-              <summary className="font-medium text-lg cursor-pointer">What advanced features are coming?</summary>
-              <p className="mt-2 text-gray-700">We're working on AI pronunciation coaching, community forums, and 1-on-1 classes with native speakers.</p>
+              <summary className="font-medium text-lg cursor-pointer capitalize">
+                Will This Help Me Talk To Family Or Travel To Iran?
+              </summary>
+              <p className="mt-2 text-gray-700">Whether you want to connect with Persian-speaking loved ones or prep for a trip, our lessons focus on practical conversation, not academic grammar drills.</p>
             </details>
           </div>
         </div>
@@ -236,7 +250,7 @@ export default function PricingPage() {
       {/* Final CTA Banner - Reduced padding and heading margin */}
       <section className="py-10 px-6 bg-primary/5 border-t border-gradient-to-r from-primary via-accent to-primary">
         <div className="max-w-md mx-auto text-center">
-          <h2 className="text-2xl font-bold mb-4 text-primary">Ready to start your Farsi journey?</h2>
+          <h2 className="text-2xl font-bold mb-4 text-primary">Ready to start your Persian journey?</h2>
           <Button
             className="bg-accent hover:brightness-105 transition text-white font-semibold py-6 px-8 rounded-full shadow-lg hover:scale-105 active:scale-95"
             aria-label="Join waitlist"

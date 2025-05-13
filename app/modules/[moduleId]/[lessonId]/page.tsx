@@ -91,8 +91,8 @@ export default function LessonPage() {
       <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="flex h-16 items-center justify-between px-3 sm:px-4">
           <Link href={`/modules/${moduleId}`} className="font-bold text-base sm:text-lg text-primary">
-            <span className="hidden sm:inline">Modules</span>
-            <span className="sm:hidden">Modules</span>
+            <span className="hidden sm:inline">Module 1</span>
+            <span className="sm:hidden">Module 1</span>
           </Link>
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2 overflow-x-auto">

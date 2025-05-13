@@ -7,8 +7,8 @@ import { ThemeProvider } from "@/components/theme-provider"
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" })
 
 export const metadata: Metadata = {
-  title: "Iranopedia Farsi Academy",
-  description: "Learn Farsi. Reconnect with Your Roots.",
+  title: "Iranopedia",
+  description: "Learn Persian. Reconnect with Your Roots.",
   viewport: "width=device-width, initial-scale=1, maximum-scale=1"
 }
 
